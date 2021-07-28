@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const knex = require('knex');
 require('dotenv').config();
+const axios = require('axios');
 
 const db = knex({
     client: 'pg',
@@ -33,7 +34,7 @@ app.get('/', (req, res) => {
             console.log(err);
         });
 });
-
+/*
 // POST: Add parts to table
 app.post('/add-part', (req, res) => {
     const { partid,count,pr,mod} = req.body;
@@ -83,6 +84,126 @@ app.put('/update-part', (req, res) => {
             console.log(err);
         });
 });
+*/
+// GET
+app.get('/online/harperdb', (req, res) => {
+    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Parts' };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+// POST
+app.post('/online/harperdb/add-part', (req, res) => {
+    const { partid,count,pr,mod} = req.body;
+    console.log(req.body);
+    const data = {
+        operation: 'insert',
+        schema: 'Mechanics',
+        table: 'Parts',
+        records: [
+            {
+                part_id: partid,
+                part_count: count,
+                price: pr,
+                model: mod,
+            },
+        ],
+    };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+//DELETE
+app.delete('/online/harperdb/delete-part', (req, res) => {
+    const partid = req.body.partid;
+    console.log(partid);
+
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Parts WHERE part_id = ${partid}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            res.send({ msg: 'Part Deleted' });
+            console.log('Part Deleted');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+//PUT
+app.put('/online/harperdb/update-part', (req, res) => {
+    const partid = req.body.partid;
+    console.log(partid);
+
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.Parts SET part_count = '40' WHERE part_id = ${partid}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            res.send({ msg: 'Part Updated' });
+            console.log('Part Updated');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+
 
 const port = process.env.PORT || 5000;
 

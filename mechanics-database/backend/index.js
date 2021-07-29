@@ -24,7 +24,7 @@ app.use(cors());
 //POST: Create employees and add them to the database
 app.post('/add-employee', (req, res) => {
     const { employee_id, employee_name, employee_password, job_title} = req.body;
-    db('Employee')
+    db('employee')
         .insert({
             employee_id: employee_id,
             employee_name: employee_name,

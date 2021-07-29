@@ -77,7 +77,8 @@ form div {
     margin-bottom: 1.3rem;
 }
 
-.movie-container {
+
+.employee-container {
     background: #fcee0b;
     padding: 4rem;
     margin-top: 2rem;
@@ -86,51 +87,18 @@ form div {
     max-width: 100%;
 }
 
-.movie-container h1 {
+.employee-container h1 {
     font-size: 3rem;
 }
 
-.movie-container p {
+.employee-container p {
     margin: 1rem 0 1rem 0;
     font-size: 2rem;
 }
 
-.movie-container img {
+.employee-container img {
     width: 10rem;
     height: 15rem;
-}
-
-.high {
-    background: #66cc32;
-    width: 4rem;
-    color: #ffffff;
-    text-align: center;
-    font-weight: 700;
-    display: inline-block;
-    padding: 0.5rem;
-    border-radius: 1rem;
-}
-
-.medium {
-    background: #ffcc32;
-    width: 4rem;
-    color: #ffffff;
-    text-align: center;
-    font-weight: 700;
-    display: inline-block;
-    padding: 0.5rem;
-    border-radius: 1rem;
-}
-
-.low {
-    background: #ff0100;
-    width: 4rem;
-    color: #ffffff;
-    text-align: center;
-    font-weight: 700;
-    display: inline-block;
-    padding: 0.5rem;
-    border-radius: 1rem;
 }
 
 @media screen and (max-width: 1094px) {
@@ -139,4 +107,3 @@ form div {
         /* margin: 0 auto; */
     }
 }
-

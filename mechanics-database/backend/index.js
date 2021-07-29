@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const knex = require('knex');
-require('dotenv').config();
 const axios = require('axios');
+require('dotenv').config();
 
 const db = knex({
     client: 'pg',
@@ -18,27 +18,95 @@ const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
-// CORS implemented so that we don't get errors when trying to access the server from a different server location
 app.use(cors());
 
-// GET: Fetch all parts from the local database
-app.get('/', (req, res) => {
-    db.select('*')
-        .from('parts')
-        .then((data) => {
+
+/*|~~~~~~~~~~~~~~~~~~~~~~                                       ~~~~~~~~~~~~~~~~~~~~~~~|
+  |                      Manipulating and pulling from Harper DB                       |
+  |~~~~~~~~~~~~~~~~~~~~~~                                       ~~~~~~~~~~~~~~~~~~~~~~~|*/
+
+
+
+//~~~~~~~~~~~~~~~~~~~~~Employee Table CRUD~~~~~~~~~~~~~~~~~~~~~
+
+//GET
+app.get('/online/harperdb/employee', (req, res) => {
+    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Employee' };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
             console.log(data);
             res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+//POST: Create employees and add them to the database
+app.post('/online/harperdb/employee/add-employee', (req, res) => {
+    const { employee_id, employee_name, employee_password, job_title} = req.body;
+    db('employee')
+        .insert({
+            employee_id: employee_id,
+            employee_name: employee_name,
+            employee_password: employee_password,
+            job_title: job_title,
+        })
+        .then(() => {
+            console.log('Employee Added');
+            return res.json({ msg: 'Employee Added' });
         })
         .catch((err) => {
             console.log(err);
         });
 });
 
+// PUT: Update employee by employee_id from the database
+app.put('/online/harperdb/employee/update-employee', (req, res) => {
+    db('employee')
+        .where('employee_id', '=', 1)
+        .update({ employee_name: 'Divia Joseph' })
+        .then(() => {
+            console.log('Employee Name Updated');
+            return res.json({ msg: 'Employee Name Updated' });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
 
-//~~~~~~~~~~~~~~~~~~~~~~Manipulating and pulling from Harper DB~~~~~~~~~~~~~~~~~~~~~~
+// DELETE: Delete movie by movieId from the database
+app.delete('/online/harperdb/employee/delete-employee', (req, res) => {
+    const employeeID = req.body;
+    const employeeIdToDelete = String(employeeId.employee_id);
+    console.log(employeeIdToDelete);
+    db('employee')
+        .where('employee_id', '=', employeeIdToDelete)
+        .del()
+        .then(() => {
+            console.log('Employee Deleted');
+            return res.json({ msg: 'Employee Deleted' });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
 
-//~~~~~~~Parts Table CRUD~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~End of Employee Table CRUD~~~~~~~~~~~~~~~~~~~~~
+
+//~~~~~~~~~~~~~~~~~~~~~Parts Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
 // GET All values from Parts table
 app.get('/online/harperdb/parts', (req, res) => {
@@ -160,10 +228,10 @@ app.delete('/online/harperdb/parts/delete-part', (req, res) => {
         });
 });
 
-//~~~~~~~End of Parts Table CRUD~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~End of Parts Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
 
-//~~~~~~~PartsType Table CRUD~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~PartsType Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
 // GET
 app.get('/online/harperdb/partstype', (req, res) => {
@@ -227,6 +295,7 @@ app.post('/online/harperdb/partstype/add-type', (req, res) => {
         });
 });
 
+
 //PUT
 app.put('/online/harperdb/partstype/update-type', (req, res) => {
     const {mod,mk} = req.body;
@@ -282,7 +351,7 @@ app.delete('/online/harperdb/partstype/delete-type', (req, res) => {
 });
 
 
-//~~~~~~~End of PartsType Table CRUD~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~End of PartsType Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
 const port = process.env.PORT || 5000;
 

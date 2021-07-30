@@ -3,8 +3,6 @@ import { BrowserRouter as Router,Link, Route, Switch } from "react-router-dom";
 import {Home, Employees,Vehicles, Parts, Repairs, Customers, AddEmployee, Navigation} from "./Components";
 import './App.css';
 
-
-
 export default function App() {
   return (
     <div className="App">

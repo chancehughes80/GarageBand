@@ -20,6 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 
+<<<<<<< HEAD
 
 /*|~~~~~~~~~~~~~~~~~~~~~~                                       ~~~~~~~~~~~~~~~~~~~~~~~|
   |                      Manipulating and pulling from Harper DB                       |
@@ -27,11 +28,11 @@ app.use(cors());
 
 
 
-//~~~~~~~~~~~~~~~~~~~~~Employee Table CRUD~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~Customer Table CRUD~~~~~~~~~~~~~~~~~~~~~~
 
-//GET
-app.get('/online/harperdb/employee', (req, res) => {
-    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Employee' };
+//get all the customers and read
+app.get('/', (req, res) => {
+    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Customer' };
 
     const config = {
         method: 'post',
@@ -54,6 +55,139 @@ app.get('/online/harperdb/employee', (req, res) => {
         });
 });
 
+
+//create and insert new customers
+app.post('/AddCustomer', (req, res) => {
+    const { c_id,c_name,c_password,b_addr,e_addr,phone_num} = req.body;
+    console.log(req.body);
+    const data = {
+        operation: 'insert',
+        schema: 'Mechanics',
+        table: 'Customer',
+        records: [
+            {
+                customer_id: c_id,
+                customer_name: c_name,
+                customer_password: c_password,
+                billing_address: b_addr,
+                email_address: e_addr,
+                phone_number: phone_num
+            },
+        ],
+    };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+
+//update customer
+app.put('/UpdateCustomer', (req, res) => {
+    const {c_id,c_name,c_password,b_addr,e_addr,phone_num} = req.body;
+    console.log(req.body);
+
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.Parts SET customer_id = ${c_id}, customer_name = ${c_name}, customer_password = ${c_password}, 
+    billing_address = ${b_addr}, email_address = ${e_addr}, phone_number = ${phone_num}
+    WHERE customer_id = ${c_id}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            res.send({ msg: 'Part Updated' });
+            console.log('Part Updated');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+
+//delete customer
+app.delete('/DeleteCustomer', (req, res) => {
+    const customerid = req.body.partid;
+    console.log(customerid);
+
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Customer WHERE customer_id = ${customerid}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            res.send({ msg: 'Customer Deleted' });
+            console.log('Customer Deleted');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+
+//~~~~~~~~~~~~~~~~~~~~~~End of Customer Table CRUD~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+//~~~~~~~~~~~~~~~~~~~~~Employee Table CRUD~~~~~~~~~~~~~~~~~~~~~
+
+
+//GET
+app.get('/online/harperdb/employee', (req, res) => {
+    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Employee' };
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+
 //POST: Create employees and add them to the database
 app.post('/online/harperdb/employee/add-employee', (req, res) => {
     const { employee_id, employee_name, employee_password, job_title} = req.body;
@@ -73,6 +207,7 @@ app.post('/online/harperdb/employee/add-employee', (req, res) => {
         });
 });
 
+
 // PUT: Update employee by employee_id from the database
 app.put('/online/harperdb/employee/update-employee', (req, res) => {
     db('employee')
@@ -86,6 +221,7 @@ app.put('/online/harperdb/employee/update-employee', (req, res) => {
             console.log(err);
         });
 });
+
 
 // DELETE: Delete movie by movieId from the database
 app.delete('/online/harperdb/employee/delete-employee', (req, res) => {
@@ -104,10 +240,12 @@ app.delete('/online/harperdb/employee/delete-employee', (req, res) => {
         });
 });
 
+
 //~~~~~~~~~~~~~~~~~~~~~End of Employee Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
 
 //~~~~~~~~~~~~~~~~~~~~~Parts Table CRUD~~~~~~~~~~~~~~~~~~~~~
+
 
 // GET All values from Parts table
 app.get('/online/harperdb/parts', (req, res) => {
@@ -133,6 +271,7 @@ app.get('/online/harperdb/parts', (req, res) => {
             console.log(error);
         });
 });
+
 
 // POST: Add new part to table
 app.post('/online/harperdb/parts/add-part', (req, res) => {
@@ -237,7 +376,6 @@ app.delete('/online/harperdb/parts/delete-part', (req, res) => {
 // GET
 app.get('/online/harperdb/partstype', (req, res) => {
     const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.PartsType' };
-
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,
@@ -258,6 +396,7 @@ app.get('/online/harperdb/partstype', (req, res) => {
             console.log(error);
         });
 });
+
 
 // POST
 app.post('/online/harperdb/partstype/add-type', (req, res) => {

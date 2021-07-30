@@ -86,8 +86,9 @@ app.use(cors());
 
 // HarperDB Database routes
 
+//get all the customers and read
 app.get('/', (req, res) => {
-    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Employee' };
+    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Customer' };
 
     const config = {
         method: 'post',
@@ -104,6 +105,103 @@ app.get('/', (req, res) => {
             const data = response.data;
             console.log(data);
             res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+//create and insert new customers
+app.post('/AddCustomer', (req, res) => {
+    const { c_id,c_name,c_password,b_addr,e_addr,phone_num} = req.body;
+    console.log(req.body);
+    const data = {
+        operation: 'insert',
+        schema: 'Mechanics',
+        table: 'Customer',
+        records: [
+            {
+                customer_id: c_id,
+                customer_name: c_name,
+                customer_password: c_password,
+                billing_address: b_addr,
+                email_address: e_addr,
+                phone_number: phone_num
+            },
+        ],
+    };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+//delete customer
+app.delete('/DeleteCustomer', (req, res) => {
+    const customerid = req.body.partid;
+    console.log(customerid);
+
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Customer WHERE customer_id = ${customerid}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            res.send({ msg: 'Customer Deleted' });
+            console.log('Customer Deleted');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+//update customer
+app.put('/UpdateCustomer', (req, res) => {
+    const {c_id,c_name,c_password,b_addr,e_addr,phone_num} = req.body;
+    console.log(req.body);
+
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.Parts SET customer_id = ${c_id}, customer_name = ${c_name}, customer_password = ${c_password}, 
+    billing_address = ${b_addr}, email_address = ${e_addr}, phone_number = ${phone_num}
+    WHERE customer_id = ${c_id}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            res.send({ msg: 'Part Updated' });
+            console.log('Part Updated');
         })
         .catch((error) => {
             console.log(error);

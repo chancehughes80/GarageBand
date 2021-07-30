@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router,Link, Route, Switch } from "react-router-dom";
-import {Home, Employees,Vehicles,Parts, AddEmployee, Navigation} from "./Components";
+import {Home, Employees,Vehicles, Parts, Repairs, Customers, AddEmployee, Navigation} from "./Components";
 import './App.css';
 
 
@@ -15,6 +15,8 @@ export default function App() {
           <Route path="/Employees" exact component={() => <Employees />} />
           <Route path="/Vehicles" exact component={() => <Vehicles />} />
           <Route path="/Parts" exact component={() => <Parts />} />
+          <Route path="/Repairs" exact component={() => <Repairs />} />
+          <Route path="/Customers" exact component={() => <Customers />} />
         </Switch>
       </Router>
     </div>

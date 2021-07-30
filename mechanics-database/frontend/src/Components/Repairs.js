@@ -2,12 +2,12 @@ import React, { Fragment, useState, useEffect } from 'react';
 import './App.css';
 
 
-function Repairs() {
+function Repair() {
     useEffect(() => {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/parts';
+            const API = 'http://127.0.0.1:5000/online/harperdb/repair';
 
             fetch(API)
                 .then((response) => {
@@ -27,22 +27,22 @@ function Repairs() {
 
     return(
         <main>
-            <a href="/AddEmployee">Add Employee</a>
+            <a href="/AddRepairs">Add Repairs</a>
             {loading === true ? (
                 <div>
                     <h1>Loading...</h1>
                 </div>
             ) : (
                 <section>
-                    {apiData.map((employee) => {
+                    {apiData.map((repair) => {
                         return (
-                            <div className="employee-container" key={String(employee.employee_id)}>
-                                <h1>{employee.employee_name}</h1>
+                            <div className="repair-container" key={String(repair.repair_id)}>
+                                <h1>{repair.repair_description}</h1>
                                 <p>
-                                    <strong>ID:</strong> {employee.employee_id}
+                                    <strong>ID:</strong> {repair.repair_id}
                                 </p>
                                 <p>
-                                    <strong>Job:</strong> {employee.job_title}
+                                    <strong>Job:</strong> {repair.repair_cost}
                                 </p>
                             </div>
                         );
@@ -54,4 +54,4 @@ function Repairs() {
 }
 
 
-export default Repairs;
+export default Repair;

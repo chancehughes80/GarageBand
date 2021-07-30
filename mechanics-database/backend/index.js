@@ -492,6 +492,254 @@ app.delete('/online/harperdb/partstype/delete-type', (req, res) => {
 
 //~~~~~~~~~~~~~~~~~~~~~End of PartsType Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
+
+//~~~~~~~~~~~~~~~~~~~~~Repairs Table CRUD~~~~~~~~~~~~~~~~~~~~~
+
+// GET All values from Repair table
+app.get('/', (req, res) => {
+    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Repairs' };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+// POST: Add new Repair to table
+app.post('/AddRepair', (req, res) => {
+    const { r_id, r_descr, etor, r_cost} = req.body;
+    console.log(req.body);
+    const data = {
+        operation: 'insert',
+        schema: 'Mechanics',
+        table: 'Repairs',
+        records: [
+            {
+                repair_id: r_id,
+                repair_description: r_descr,
+                estimated_time_for_repair: etor,
+                repair_cost: r_cost,
+            },
+        ],
+    };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+
+//PUT: Update Repair
+app.put('/UpdateRepair', (req, res) => {
+    const {r_id, r_descr, etor, r_cost} = req.body;
+    console.log(req.body);
+
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.Repair SET repair_id= ${r_id}, repair_description = ${r_descr}, estimated_time_for_repair= ${etor}, repair_cost = ${r_cost} WHERE repair_id = ${r_id}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            res.send({ msg: 'Repair Updated' });
+            console.log('Repair Updated');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+
+//DELETE Repair
+app.delete('/DeleteRepair', (req, res) => {
+    const r_id = req.body.r_id;
+    console.log(r_id);
+
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Repair WHERE repair_id = ${r_id}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            res.send({ msg: 'Repair Deleted' });
+            console.log('Repair Deleted');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+//~~~~~~~~~~~~~~~~~~~~~End of Repair Table CRUD~~~~~~~~~~~~~~~~~~~~~
+
+//~~~~~~~~~~~~~~~~~~~~~PartsRepair Table CRUD~~~~~~~~~~~~~~~~~~~~~
+
+// GET All values from PartsRepair table
+app.get('/', (req, res) => {
+    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.PartsRepair' };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+// POST: Add new PartsRepair
+app.post('/AddPartsRepair', (req, res) => {
+    const { r_id, p_id} = req.body;
+    console.log(req.body);
+    const data = {
+        operation: 'insert',
+        schema: 'Mechanics',
+        table: 'PartsRepair',
+        records: [
+            {
+                repair_id: r_id,
+                part_id: p_id,
+            },
+        ],
+    };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+
+//PUT: Update PartsRepair
+app.put('/UpdatePartsRepair', (req, res) => {
+    const {r_id, p_id} = req.body;
+    console.log(req.body);
+
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.PartsRepair SET repair_id= ${r_id}, part_id=${p_id} WHERE repair_id = ${r_id} AND part_id = ${p_id}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            res.send({ msg: 'Repair Updated' });
+            console.log('Repair Updated');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+
+//DELETE PartsRepair
+app.delete('/DeleteRepair', (req, res) => {
+    const r_id = req.body.r_id;
+    const p_id = req.body.p_id;
+    console.log(r_id, p_id);
+
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Repair WHERE repair_id = ${r_id} AND part_id = ${p_id}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            res.send({ msg: 'PartsRepair Deleted' });
+            console.log('PartsRepair Deleted');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+//~~~~~~~~~~~~~~~~~~~~~End of PartsRepair Table CRUD~~~~~~~~~~~~~~~~~~~~~
+
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`Server running on port ${port}, http://localhost:${port}`));

@@ -29,7 +29,7 @@ app.use(cors());
 //~~~~~~~~~~~~~~~~~~~~~~Customer Table CRUD~~~~~~~~~~~~~~~~~~~~~~
 
 //get all the customers and read
-app.get('/', (req, res) => {
+app.get('/online/harperdb/customer', (req, res) => {
     const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Customer' };
 
     const config = {
@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
 
 
 //create and insert new customers
-app.post('/AddCustomer', (req, res) => {
+app.post('/online/harperdb/customer/add-customer', (req, res) => {
     const { c_id,c_name,c_password,b_addr,e_addr,phone_num} = req.body;
     console.log(req.body);
     const data = {
@@ -97,7 +97,7 @@ app.post('/AddCustomer', (req, res) => {
 
 
 //update customer
-app.put('/UpdateCustomer', (req, res) => {
+app.put('/online/harperdb/customer/update-customer', (req, res) => {
     const {c_id,c_name,c_password,b_addr,e_addr,phone_num} = req.body;
     console.log(req.body);
 
@@ -127,7 +127,7 @@ app.put('/UpdateCustomer', (req, res) => {
 
 
 //delete customer
-app.delete('/DeleteCustomer', (req, res) => {
+app.delete('/online/harperdb/customer/delete-customer', (req, res) => {
     const customerid = req.body.partid;
     console.log(customerid);
 

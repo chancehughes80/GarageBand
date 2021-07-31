@@ -219,6 +219,40 @@ app.get('/online/harperdb/employee', (req, res) => {
 //POST: Create employees and add them to the database
 app.post('/online/harperdb/employee/add-employee', (req, res) => {
     const { employee_id, employee_name, employee_password, job_title} = req.body;
+    const data = {
+        operation: 'insert',
+        schema: 'Mechanics',
+        table: 'Employee',
+        records: [
+            {
+                employee_id: employee_id,
+                employee_name: employee_name,
+                employee_password: employee_password,
+                job_title: job_title,
+            },
+        ],
+    };
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+/*
     db('employee')
         .insert({
             employee_id: employee_id,
@@ -233,7 +267,45 @@ app.post('/online/harperdb/employee/add-employee', (req, res) => {
         .catch((err) => {
             console.log(err);
         });
+});*/
+/*
+
+    const data = {
+        operation: 'insert',
+        schema: 'Mechanics',
+        table: 'Parts',
+        records: [
+            {
+                part_id: partid,
+                part_count: count,
+                price: pr,
+                model: mod,
+            },
+        ],
+    };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 });
+
+*/
 
 
 // PUT: Update employee by employee_id from the database

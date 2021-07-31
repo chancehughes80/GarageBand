@@ -809,9 +809,9 @@ app.post('/online/harperdb/add-vehicle', (req, res) => {
 
 // PUT: Update vehicle by VIN from the database
 app.put('/online/harperdb/update-vehicle', (req, res) => {
-    const VIN = req.body.VIN;
-    console.log(VIN);
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.Vehicle SET model = 'Sentra' WHERE VIN = ${VIN}` };
+    const {VIN, yr, plt, colr, cust_id, md} = req.body;
+    console.log(req.body);
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.Vehicle SET year = ${yr}, plate = ${plt}, color = ${colr}, customer_id = ${cust_id}, model = ${md} WHERE VIN = ${VIN}` };
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,
@@ -928,10 +928,10 @@ app.post('/online/harperdb/add-vehicle_type', (req, res) => {
 
 // PUT: Update vehicle type by model from the database
 app.put('/online/harperdb/update-vehicle-type', (req, res) => {
-    const model = req.body.model;
-    console.log(model);
+    const {md, mk} = req.body;
+    console.log(req.body);
 
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.VehicleType SET make = 'Nissan' WHERE model = ${model}` };
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.VehicleType SET make = ${mk} WHERE model = ${md}` };
 
     const config = {
         method: 'post',
@@ -956,10 +956,10 @@ app.put('/online/harperdb/update-vehicle-type', (req, res) => {
 
 // DELETE: Delete vehicle type by model from the database
 app.delete('/online/harperdb/delete-vehicle-type', (req, res) => {
-    const model = req.body.model;
-    console.log(model);
+    const md = req.body.md;
+    console.log(md);
 
-    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.VehicleType WHERE model = ${model}` };
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.VehicleType WHERE model = ${md}` };
 
     const config = {
         method: 'post',
@@ -1050,10 +1050,10 @@ app.post('/online/harperdb/add-vehicle-repair', (req, res) => {
 
 // PUT: Update vehicle repair by VIN from the database
 app.put('/online/harperdb/update-vehicle-repair', (req, res) => {
-    const VIN = req.body.VIN;
-    console.log(VIN);
+    const {VIN, rep_id} = req.body;
+    console.log(req.body);
 
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.VehicleRepair SET repair_id = '123456789A' WHERE VIN = ${VIN}` };
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.VehicleRepair SET repair_id = ${rep_id} WHERE VIN = ${VIN}` };
 
     const config = {
         method: 'post',

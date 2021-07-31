@@ -6,7 +6,7 @@ function Employees() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/employee';
+            const API = 'http://127.0.0.1:5000/employee';
 
             fetch(API)
                 .then((response) => {
@@ -29,7 +29,7 @@ function Employees() {
         <header>
                   <h1>Employees</h1>
         </header>
-        <form method="POST" action="http://127.0.0.1:5000/add-employee">
+        <form method="POST" action="http://127.0.0.1:5000/employee/add-employee">
             <div>
                 <label>Employee ID</label>
                 <input type="text" name="employee_id" required />

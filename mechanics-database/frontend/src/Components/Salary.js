@@ -6,7 +6,7 @@ function Salary() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:3000/online/harperdb/salary';
+            const API = 'http://127.0.0.1:5000/online/harperdb/salary';
 
             fetch(API)
                 .then((response) => {
@@ -29,7 +29,7 @@ function Salary() {
         <header>
                   <h1>Salary</h1>
         </header>
-        <form method="POST" action="http://127.0.0.1:3000/add-salary">
+        <form method="POST" action="http://127.0.0.1:5000/add-salary">
             <div>
                 <label>Job Title</label>
                 <input type="text" name="job_title" required />
@@ -57,7 +57,7 @@ function Salary() {
                 })}
              </section>
          </main>
-         <form method="PUT" action="http://127.0.0.1:3000/update-salary">
+         <form method="PUT" action="http://127.0.0.1:5000/update-salary">
              <div>
                  <label>Job Title</label>
                  <input type="text" name="job_title" required />
@@ -70,7 +70,7 @@ function Salary() {
                  <button type="submit">Update Salary</button>
              </div>
          </form>
-         <form method="DELETE" action="http://127.0.0.1:3000/delete-salary">
+         <form method="DELETE" action="http://127.0.0.1:5000/delete-salary">
              <div>
                  <label>Job Title</label>
                  <input type="text" name="job_title" required />

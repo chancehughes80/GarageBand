@@ -1,59 +1,24 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React from "react";
+import { BrowserRouter as Router,Link, Route, Switch } from "react-router-dom";
+import {Home, Employees,Vehicles, Parts, Repairs, Customers, AddEmployee, Navigation} from "./Components";
 import './App.css';
 
-const App = () => {
-    useEffect(() => {
-        const getAPI = () => {
-            // Change this endpoint to whatever local or online address you have
-            // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/';
 
-            fetch(API)
-                .then((response) => {
-                    console.log(response);
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log(data);
-                    setLoading(false);
-                    setApiData(data);
-                });
-        };
-        getAPI();
-    }, []);
-    const [apiData, setApiData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    return (
-        // <Fragment>
-            <header>
-                <h1>Garage Band</h1>
-            </header>
-        //     <div className="form-container">
-        //         <h2>Add Employee</h2>
-        //         <form method="POST" action="http://127.0.0.1:5000/add-employee">
-        //             <div>
-        //                 <label>Employee ID</label>
-        //                 <input type="text" name="employee_id" required />
-        //             </div>
-        //             <div>
-        //                 <label>Employee Name</label>
-        //                 <input type="text" name="employee_name" required />
-        //             </div>
-        //             <div>
-        //                 <label>Job</label>
-        //                 <input type="text" name="job_title" required />
-        //             </div>
-        //             <div>
-        //                 <label>Password</label>
-        //                 <input type="text" name="employee_password" required />
-        //             </div>
-        //             <div>
-        //                 <button type="submit">Add Employee</button>
-        //             </div>
-        //         </form>
-        //     </div>
-        // </Fragment>
-    );
-};
 
-export default App;
+export default function App() {
+  return (
+    <div className="App">
+      <Router>
+        <Navigation />
+        <Switch>
+          <Route path="/" exact component={() => <Home />} />
+          <Route path="/Employees" exact component={() => <Employees />} />
+          <Route path="/Vehicles" exact component={() => <Vehicles />} />
+          <Route path="/Parts" exact component={() => <Parts />} />
+          <Route path="/Repairs" exact component={() => <Repairs />} />
+          <Route path="/Customers" exact component={() => <Customers />} />
+        </Switch>
+      </Router>
+    </div>
+  );
+}

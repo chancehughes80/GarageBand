@@ -161,7 +161,7 @@ app.delete('/DeleteCustomer', (req, res) => {
 //~~~~~~~~~~~~~~~~~~~~~Employee Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
 
-//GET
+//GET get all employees
 app.get('/online/harperdb/employee', (req, res) => {
     const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Employee' };
     const config = {
@@ -173,6 +173,34 @@ app.get('/online/harperdb/employee', (req, res) => {
         },
         data: data,
     };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+//GET get an employee by employee_id
+app.get('/online/harperdb/employee', (req, res) => {
+  const employee_id = req.params.employee_id;
+  console.log(employee_id);
+
+  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Employee WHERE id = ${employee_id}` };
+
+  const config = {
+      method: 'post',
+      url: process.env.HARPERDB_URL,
+      headers: {
+          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+          'Content-Type': 'application/json',
+      },
+      data: data,
+  };
 
     axios(config)
         .then((response) => {
@@ -208,20 +236,33 @@ app.post('/online/harperdb/employee/add-employee', (req, res) => {
 
 // PUT: Update employee by employee_id from the database
 app.put('/online/harperdb/employee/update-employee', (req, res) => {
-    db('employee')
-        .where('employee_id', '=', 1)
-        .update({ employee_name: 'Divia Joseph' })
-        .then(() => {
-            console.log('Employee Name Updated');
-            return res.json({ msg: 'Employee Name Updated' });
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+  const {employee_id, employee_name, employee_password, job_title} = req.body;
+  console.log(req.body);
+
+  const data = { operation: 'sql', sql: `UPDATE Mechanics.Employee SET employee_name = ${employee_name}, employee_password = ${employee_password}, job_title = ${job_title} WHERE employee_id = ${employee_id}` };
+
+  const config = {
+      method: 'post',
+      url: process.env.HARPERDB_URL,
+      headers: {
+          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+          'Content-Type': 'application/json',
+      },
+      data: data,
+  };
+
+  axios(config)
+      .then((response) => {
+          res.send({ msg: 'Employee Updated' });
+          console.log('Employee Updated');
+      })
+      .catch((error) => {
+          console.log(error);
+      });
 });
 
 
-// DELETE: Delete movie by movieId from the database
+// DELETE: Delete employee by employee_id from the database
 app.delete('/online/harperdb/employee/delete-employee', (req, res) => {
     const employeeID = req.body;
     const employeeIdToDelete = String(employeeId.employee_id);
@@ -1102,6 +1143,130 @@ app.delete('/online/harperdb/delete-vehicle-repair', (req, res) => {
             console.log(error);
         });
 });
+//~~~~~~~~~~~~~~~~~~~~~End of VehicleRepair Table CRUD~~~~~~~~~~~~~~~~~~~~~
+
+
+//~~~~~~~~~~~~~~~~~~~~~Salary Table CRUD~~~~~~~~~~~~~~~~~~~~~
+
+
+//GET get all salaries
+app.get('/online/harperdb/salary', (req, res) => {
+    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Salary' };
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+//GET get an salary by job_title
+app.get('/online/harperdb/salary', (req, res) => {
+  const job_title = req.params.job_title;
+  console.log(job_title);
+
+  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Salary WHERE id = ${job_title}` };
+
+  const config = {
+      method: 'post',
+      url: process.env.HARPERDB_URL,
+      headers: {
+          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+          'Content-Type': 'application/json',
+      },
+      data: data,
+  };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+
+//POST: Create salaries and add them to the database
+app.post('/online/harperdb/salary/add-salary', (req, res) => {
+    const { job_title, wage} = req.body;
+    db('salary')
+        .insert({
+            job_title: job_title,
+            wage: wage,
+        })
+        .then(() => {
+            console.log('Salary Added');
+            return res.json({ msg: 'Salary Added' });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
+
+
+// PUT: Update salary by job_title from the database
+app.put('/online/harperdb/salary/update-salary', (req, res) => {
+  const {job_title, wage} = req.body;
+  console.log(req.body);
+
+  const data = { operation: 'sql', sql: `UPDATE Mechanics.Salary SET wage = ${wage} WHERE job_title = ${job_title}` };
+
+  const config = {
+      method: 'post',
+      url: process.env.HARPERDB_URL,
+      headers: {
+          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+          'Content-Type': 'application/json',
+      },
+      data: data,
+  };
+
+  axios(config)
+      .then((response) => {
+          res.send({ msg: 'Salary Updated' });
+          console.log('Salary Updated');
+      })
+      .catch((error) => {
+          console.log(error);
+      });
+});
+
+
+// DELETE: Delete salary by job_title from the database
+app.delete('/online/harperdb/salary/delete-salary', (req, res) => {
+    const job_title = req.body;
+    const jobTitleToDelete = String(job_title.job_title);
+    console.log(jobTitleToDelete);
+    db('salary')
+        .where('job_title', '=', jobTitleToDelete)
+        .del()
+        .then(() => {
+            console.log('Salary Deleted');
+            return res.json({ msg: 'Salary Deleted' });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
+
+
+//~~~~~~~~~~~~~~~~~~~~~End of Salary Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
 const port = process.env.PORT || 5000;
 

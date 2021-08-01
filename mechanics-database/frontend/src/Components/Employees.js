@@ -65,27 +65,28 @@ function Employees() {
                             <p>
                                 <strong>Job:</strong> {Employee.job_title}
                             </p>
+
                         </div>
                     );
                 })}
              </section>
          </main>
-         <form method="PUT" action="http://127.0.0.1:5000/online/harperdb/employee/update-employee">
+         <form method="POST" action="http://127.0.0.1:5000/online/harperdb/employee/update-employee">
              <div>
                  <label>Employee ID</label>
-                 <input type="text" name="employee_id" required />
+                 <input type="text"  name="employee_id" required />
              </div>
              <div>
                  <label>Employee Name</label>
-                 <input type="text" name="employee_name" required />
+                 <input type="text"  name="employee_name" required />
              </div>
              <div>
                  <label>Employee Password</label>
-                 <input type="text" name="employee_password" required />
+                 <input type="text"  name="employee_password" required />
              </div>
              <div>
                  <label>Job Title</label>
-                 <input type="text" name="job_title" required />
+                 <input type="text"  name="job_title" required />
              </div>
              <div>
                  <button type="submit">Update Employee</button>

@@ -78,7 +78,7 @@ function Employees() {
                          </div>
                      </form>
 
-                     <form method="DELETE" action="http://127.0.0.1:5000/delete-employee">
+                     <form method="DELETE" action="http://127.0.0.1:5000/online/harperdb/employee/delete-employee">
                          <div>
                              <label>Employee ID</label>
                              <input type="text" name="employee_id" required />

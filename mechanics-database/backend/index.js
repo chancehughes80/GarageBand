@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const knex = require('knex');
-const axios = require('axios');
 require('dotenv').config();
+const axios = require('axios');
 
 const db = knex({
     client: 'pg',
@@ -29,7 +29,7 @@ app.use(cors());
 //~~~~~~~~~~~~~~~~~~~~~~Customer Table CRUD~~~~~~~~~~~~~~~~~~~~~~
 
 //get all the customers and read
-app.get('/', (req, res) => {
+app.get('/online/harperdb/customer', (req, res) => {
     const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Customer' };
 
     const config = {
@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
 
 
 //create and insert new customers
-app.post('/AddCustomer', (req, res) => {
+app.post('/online/harperdb/customer/add-customer', (req, res) => {
     const { c_id,c_name,c_password,b_addr,e_addr,phone_num} = req.body;
     console.log(req.body);
     const data = {
@@ -97,7 +97,7 @@ app.post('/AddCustomer', (req, res) => {
 
 
 //update customer
-app.put('/UpdateCustomer', (req, res) => {
+app.put('/online/harperdb/customer/update-customer', (req, res) => {
     const {c_id,c_name,c_password,b_addr,e_addr,phone_num} = req.body;
     console.log(req.body);
 
@@ -127,7 +127,7 @@ app.put('/UpdateCustomer', (req, res) => {
 
 
 //delete customer
-app.delete('/DeleteCustomer', (req, res) => {
+app.delete('/online/harperdb/customer/delete-customer', (req, res) => {
     const customerid = req.body.partid;
     console.log(customerid);
 
@@ -161,8 +161,8 @@ app.delete('/DeleteCustomer', (req, res) => {
 //~~~~~~~~~~~~~~~~~~~~~Employee Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
 
-//GET get all employees
-app.get('/online/harperdb/employee', (req, res) => {
+//GET: get all employees
+app.get('/online/harperdb/employee/', (req, res) => {
     const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Employee' };
     const config = {
         method: 'post',
@@ -187,11 +187,11 @@ app.get('/online/harperdb/employee', (req, res) => {
 });
 
 //GET get an employee by employee_id
-app.get('/online/harperdb/employee', (req, res) => {
+app.get('/online/harperdb/employee/:employee_id', (req, res) => {
   const employee_id = req.params.employee_id;
   console.log(employee_id);
 
-  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Employee WHERE id = ${employee_id}` };
+  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Employee WHERE employee_id = ${employee_id}` };
 
   const config = {
       method: 'post',
@@ -218,49 +218,52 @@ app.get('/online/harperdb/employee', (req, res) => {
 
 //POST: Create employees and add them to the database
 app.post('/online/harperdb/employee/add-employee', (req, res) => {
-    const { employee_id, employee_name, employee_password, job_title} = req.body;
-    const data = {
-        operation: 'insert',
-        schema: 'Mechanics',
-        table: 'Employee',
-        records: [
-            {
-                employee_id: employee_id,
-                employee_name: employee_name,
-                employee_password: employee_password,
-                job_title: job_title,
-            },
-        ],
-    };
-    const config = {
-        method: 'post',
-        url: process.env.HARPERDB_URL,
-        headers: {
-            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
-            'Content-Type': 'application/json',
-        },
-        data: data,
-    };
+  const { employee_id, employee_name, employee_password, job_title } = req.body;
+  console.log(req.body);
 
-    axios(config)
-        .then((response) => {
-            const data = response.data;
-            console.log(data);
-            return res.redirect('http://localhost:3000/Employees');
-            res.json(data);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+  const data = {
+      operation: 'insert',
+      schema: 'Mechanics',
+      table: 'Employee',
+      records: [
+          {
+            employee_id: employee_id,
+            employee_name: employee_name,
+            employee_password: employee_password,
+            job_title: job_title,
+          },
+      ],
+  };
+
+  const config = {
+      method: 'post',
+      url: process.env.HARPERDB_URL,
+      headers: {
+          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+          'Content-Type': 'application/json',
+      },
+      data: data,
+  };
+
+  axios(config)
+      .then((response) => {
+          const data = response.data;
+          console.log('Employee Added');
+          return res.redirect('http://localhost:3000/Employees')
+      })
+      .catch((error) => {
+          console.log(error);
+      });
 });
 
 
 // PUT: Update employee by employee_id from the database
 app.put('/online/harperdb/employee/update-employee', (req, res) => {
+
   const {employee_id, employee_name, employee_password, job_title} = req.body;
   console.log(req.body);
 
-  const data = { operation: 'sql', sql: `UPDATE Mechanics.Employee SET employee_name = ${employee_name}, employee_password = ${employee_password}, job_title = ${job_title} WHERE employee_id = ${employee_id}` };
+  const data = { operation: 'sql', sql: `UPDATE Mechanics.Employee SET employee_name = "'${employee_name}'", employee_password = ${employee_password}, job_title = "'${job_title}'" WHERE employee_id = ${employee_id}` };
 
   const config = {
       method: 'post',
@@ -286,18 +289,29 @@ app.put('/online/harperdb/employee/update-employee', (req, res) => {
 
 // DELETE: Delete employee by employee_id from the database
 app.delete('/online/harperdb/employee/delete-employee', (req, res) => {
-    const employeeID = req.body;
-    const employeeIdToDelete = String(employeeId.employee_id);
-    console.log(employeeIdToDelete);
-    db('employee')
-        .where('employee_id', '=', employeeIdToDelete)
-        .del()
-        .then(() => {
+    const employee_id = req.body.employee_id;
+    console.log(employee_id);
+
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Employee WHERE employee_id = ${employee_id}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            res.send({ msg: 'Employee Deleted' });
             console.log('Employee Deleted');
-            return res.redirect('http://localhost:5000/Employees');
+            return res.redirect('http://localhost:5000/Employees');s
         })
-        .catch((err) => {
-            console.log(err);
+        .catch((error) => {
+            console.log(error);
         });
 });
 
@@ -558,7 +572,7 @@ app.delete('/online/harperdb/partstype/delete-type', (req, res) => {
 
 // GET All values from Repair table
 app.get('/', (req, res) => {
-    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Repairs' };
+    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Repair' };
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,
@@ -587,7 +601,7 @@ app.post('/AddRepair', (req, res) => {
     const data = {
         operation: 'insert',
         schema: 'Mechanics',
-        table: 'Repairs',
+        table: 'Repair',
         records: [
             {
                 repair_id: r_id,
@@ -872,9 +886,9 @@ app.post('/online/harperdb/add-vehicle', (req, res) => {
 
 // PUT: Update vehicle by VIN from the database
 app.put('/online/harperdb/update-vehicle', (req, res) => {
-    const VIN = req.body.VIN;
-    console.log(VIN);
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.Vehicle SET model = 'Sentra' WHERE VIN = ${VIN}` };
+    const {VIN, yr, plt, colr, cust_id, md} = req.body;
+    console.log(req.body);
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.Vehicle SET year = ${yr}, plate = ${plt}, color = ${colr}, customer_id = ${cust_id}, model = ${md} WHERE VIN = ${VIN}` };
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,
@@ -991,10 +1005,10 @@ app.post('/online/harperdb/add-vehicle_type', (req, res) => {
 
 // PUT: Update vehicle type by model from the database
 app.put('/online/harperdb/update-vehicle-type', (req, res) => {
-    const model = req.body.model;
-    console.log(model);
+    const {md, mk} = req.body;
+    console.log(req.body);
 
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.VehicleType SET make = 'Nissan' WHERE model = ${model}` };
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.VehicleType SET make = ${mk} WHERE model = ${md}` };
 
     const config = {
         method: 'post',
@@ -1019,10 +1033,10 @@ app.put('/online/harperdb/update-vehicle-type', (req, res) => {
 
 // DELETE: Delete vehicle type by model from the database
 app.delete('/online/harperdb/delete-vehicle-type', (req, res) => {
-    const model = req.body.model;
-    console.log(model);
+    const md = req.body.md;
+    console.log(md);
 
-    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.VehicleType WHERE model = ${model}` };
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.VehicleType WHERE model = ${md}` };
 
     const config = {
         method: 'post',
@@ -1113,10 +1127,10 @@ app.post('/online/harperdb/add-vehicle-repair', (req, res) => {
 
 // PUT: Update vehicle repair by VIN from the database
 app.put('/online/harperdb/update-vehicle-repair', (req, res) => {
-    const VIN = req.body.VIN;
-    console.log(VIN);
+    const {VIN, rep_id} = req.body;
+    console.log(req.body);
 
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.VehicleRepair SET repair_id = '123456789A' WHERE VIN = ${VIN}` };
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.VehicleRepair SET repair_id = ${rep_id} WHERE VIN = ${VIN}` };
 
     const config = {
         method: 'post',

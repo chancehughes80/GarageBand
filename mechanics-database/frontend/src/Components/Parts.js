@@ -26,23 +26,85 @@ function Parts() {
     const [loading, setLoading] = useState(true);
 
     return(
+        <Fragment>
+        <header>
+                  <h1>Parts</h1>
+        </header>
+        <div class="container">
+            <div class="row justify-items-center">
+        <div class="col-lg-4 top" >
+                    <form method="POST" action="http://127.0.0.1:5000/online/harperdb/employee/add-employee">
+                        <div>
+                            <label>Part ID</label>
+                            <input type="text" name="employee_id" required />
+                        </div>
+                        <div>
+                            <label>Count</label>
+                            <input type="text" name="employee_name" required />
+                        </div>
+                        <div>
+                            <label>Price </label>
+                            <input type="text" name="employee_password" required />
+                        </div>
+                        <div>
+                            <label>Model </label>
+                            <input type="text" name="job_title" required />
+                        </div>
+                        <div>
+                            <button type="submit">Add Part</button>
+                        </div>
+                    </form>
+
+           
+                    <form method="PUT" action="http://127.0.0.1:5000/online/harperdb/employee/update-employee">
+                         <div>
+                            <label>Part ID</label>
+                            <input type="text" name="employee_id" required />
+                        </div>
+                        <div>
+                            <label>Count</label>
+                            <input type="text" name="employee_name" required />
+                        </div>
+                        <div>
+                            <label>Price </label>
+                            <input type="text" name="employee_password" required />
+                        </div>
+                        <div>
+                            <label>Model </label>
+                            <input type="text" name="job_title" required />
+                        </div>
+                         <div>
+                             <button type="submit">Update Employee</button>
+                         </div>
+                     </form>
+
+                     <form method="DELETE" action="http://127.0.0.1:5000/online/harperdb/employee/delete-employee">
+                         <div>
+                             <label>Employee ID</label>
+                             <input type="text" name="employee_id" required />
+                         </div>
+                         <div>
+                             <button type="submit">Delete Employee</button>
+                         </div>
+                    </form>
+                </div>
+                <div class="col-lg-8">
         <main>
-            <a href="/AddEmployee">Add Employee</a>
             {loading === true ? (
                 <div>
                     <h1>Loading...</h1>
                 </div>
             ) : (
                 <section>
-                    {apiData.map((employee) => {
+                    {apiData.map((parts) => {
                         return (
-                            <div className="employee-container" key={String(employee.employee_id)}>
-                                <h1>{employee.employee_name}</h1>
+                            <div className="employee-container" key={String(parts.part_id)}>
+                                <h1>{parts.model}</h1>
                                 <p>
-                                    <strong>ID:</strong> {employee.employee_id}
+                                    <strong>Count:</strong> {parts.part_count}
                                 </p>
                                 <p>
-                                    <strong>Job:</strong> {employee.job_title}
+                                    <strong>Price:</strong> {parts.price}
                                 </p>
                             </div>
                         );
@@ -50,6 +112,10 @@ function Parts() {
                  </section>
             )}
          </main>
+         </div>
+         </div>
+         </div>
+         </Fragment>
     );
 }
 

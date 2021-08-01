@@ -30,9 +30,8 @@ function Employees() {
                   <h1>Employees</h1>
         </header>
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-4">
-
+            <div class="row justify-items-center">
+                <div class="col-lg-4 top" >
                     <form method="POST" action="http://127.0.0.1:5000/online/harperdb/employee/add-employee">
                         <div>
                             <label>Employee ID</label>

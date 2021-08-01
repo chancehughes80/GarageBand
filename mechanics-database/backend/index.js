@@ -101,7 +101,7 @@ app.put('/online/harperdb/customer/update-customer', (req, res) => {
     const {c_id,c_name,c_password,b_addr,e_addr,phone_num} = req.body;
     console.log(req.body);
 
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.Parts SET customer_id = ${c_id}, customer_name = ${c_name}, customer_password = ${c_password},
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.Customer SET customer_id = ${c_id}, customer_name = ${c_name}, customer_password = ${c_password},
     billing_address = ${b_addr}, email_address = ${e_addr}, phone_number = ${phone_num}
     WHERE customer_id = ${c_id}` };
 
@@ -571,7 +571,7 @@ app.delete('/online/harperdb/partstype/delete-type', (req, res) => {
 //~~~~~~~~~~~~~~~~~~~~~Repairs Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
 // GET All values from Repair table
-app.get('/', (req, res) => {
+app.get('/online/harperdb/repairs', (req, res) => {
     const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Repair' };
     const config = {
         method: 'post',
@@ -842,7 +842,7 @@ app.get('/online/harperdb/vehicle', (req, res) => {
 
 
 // POST: Create vehicles and add them to the database
-app.post('/online/harperdb/add-vehicle', (req, res) => {
+app.post('/online/harperdb/vehicle/add-vehicle', (req, res) => {
     const { VIN, plate, vehicle_year, color, customer_id, model } = req.body;
     console.log(req.body);
 

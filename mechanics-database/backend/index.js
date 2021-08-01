@@ -276,7 +276,7 @@ app.put('/online/harperdb/employee/update-employee', (req, res) => {
       .then((response) => {
           res.send({ msg: 'Employee Updated' });
           console.log('Employee Updated');
-          return res.redirect('http://localhost:5000/Employees');
+          return res.redirect('http://localhost:3000/Employees');
       })
       .catch((error) => {
           console.log(error);

@@ -179,7 +179,7 @@ app.get('/online/harperdb/employee', (req, res) => {
             const data = response.data;
             console.log(data);
             res.json(data);
-            return res.redirect('http://localhost:3000/Employees');
+            return res.redirect('http://localhost:5000/Employees');
         })
         .catch((error) => {
             console.log(error);
@@ -208,7 +208,7 @@ app.get('/online/harperdb/employee', (req, res) => {
             const data = response.data;
             console.log(data);
             res.json(data);
-            return res.redirect('http://localhost:3000/Employees');
+            return res.redirect('http://localhost:5000/Employees');
         })
         .catch((error) => {
             console.log(error);
@@ -276,7 +276,7 @@ app.put('/online/harperdb/employee/update-employee', (req, res) => {
       .then((response) => {
           res.send({ msg: 'Employee Updated' });
           console.log('Employee Updated');
-          return res.redirect('http://localhost:3000/Employees');
+          return res.redirect('http://localhost:5000/Employees');
       })
       .catch((error) => {
           console.log(error);
@@ -294,7 +294,7 @@ app.delete('/online/harperdb/employee/delete-employee', (req, res) => {
         .del()
         .then(() => {
             console.log('Employee Deleted');
-            return res.redirect('http://localhost:3000/Employees');
+            return res.redirect('http://localhost:5000/Employees');
         })
         .catch((err) => {
             console.log(err);

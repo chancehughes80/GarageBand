@@ -68,7 +68,7 @@ function Employees() {
                 })}
              </section>
          </main>
-         <form method="PUT" action="http://127.0.0.1:3000/update-employee">
+         <form method="PUT" action="http://127.0.0.1:5000/update-employee">
              <div>
                  <label>Employee ID</label>
                  <input type="text" name="employee_id" required />
@@ -89,7 +89,7 @@ function Employees() {
                  <button type="submit">Update Employee</button>
              </div>
          </form>
-         <form method="DELETE" action="http://127.0.0.1:3000/delete-employee">
+         <form method="DELETE" action="http://127.0.0.1:5000/delete-employee">
              <div>
                  <label>Employee ID</label>
                  <input type="text" name="employee_id" required />

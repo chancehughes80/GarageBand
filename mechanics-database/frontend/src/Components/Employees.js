@@ -29,7 +29,7 @@ function Employees() {
         <header>
                   <h1>Employees</h1>
         </header>
-        <form method="POST" action="http://127.0.0.1:3000/add-employee">
+        <form method="POST" action="http://127.0.0.1:5000/online/harperdb/employee/add-employee">
             <div>
                 <label>Employee ID</label>
                 <input type="text" name="employee_id" required />

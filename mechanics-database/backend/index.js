@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const knex = require('knex');
-const axios = require('axios');
 require('dotenv').config();
+const axios = require('axios');
 
 const db = knex({
     client: 'pg',
@@ -161,8 +161,8 @@ app.delete('/online/harperdb/customer/delete-customer', (req, res) => {
 //~~~~~~~~~~~~~~~~~~~~~Employee Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
 
-//GET get all employees
-app.get('/employee/', (req, res) => {
+//GET: get all employees
+app.get('/online/harperdb/employee/', (req, res) => {
     const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Employee' };
     const config = {
         method: 'post',
@@ -187,7 +187,7 @@ app.get('/employee/', (req, res) => {
 });
 
 //GET get an employee by employee_id
-app.get('/employee/:employee_id', (req, res) => {
+app.get('/online/harperdb/employee/:employee_id', (req, res) => {
   const employee_id = req.params.employee_id;
   console.log(employee_id);
 
@@ -217,7 +217,7 @@ app.get('/employee/:employee_id', (req, res) => {
 
 
 //POST: Create employees and add them to the database
-app.post('/employee/add-employee', (req, res) => {
+app.post('/online/harperdb/employee/add-employee', (req, res) => {
   const { employee_id, employee_name, employee_password, job_title } = req.body;
   console.log(req.body);
 
@@ -249,8 +249,7 @@ app.post('/employee/add-employee', (req, res) => {
       .then((response) => {
           const data = response.data;
           console.log('Employee Added');
-          res.json(data);
-          //return res.redirect('http://localhost:3000')
+          return res.redirect('http://localhost:3000/Employees')
       })
       .catch((error) => {
           console.log(error);
@@ -259,11 +258,12 @@ app.post('/employee/add-employee', (req, res) => {
 
 
 // PUT: Update employee by employee_id from the database
-app.put('/employee/update-employee', (req, res) => {
+app.put('/online/harperdb/employee/update-employee', (req, res) => {
+
   const {employee_id, employee_name, employee_password, job_title} = req.body;
   console.log(req.body);
 
-  const data = { operation: 'sql', sql: `UPDATE Mechanics.Employee SET employee_name = ${employee_name}, employee_password = ${employee_password}, job_title = ${job_title} WHERE employee_id = ${employee_id}` };
+  const data = { operation: 'sql', sql: `UPDATE Mechanics.Employee SET employee_name = "'${employee_name}'", employee_password = ${employee_password}, job_title = "'${job_title}'" WHERE employee_id = ${employee_id}` };
 
   const config = {
       method: 'post',
@@ -279,7 +279,7 @@ app.put('/employee/update-employee', (req, res) => {
       .then((response) => {
           res.send({ msg: 'Employee Updated' });
           console.log('Employee Updated');
-          return res.redirect('http://localhost:5000/Employees');
+          return res.redirect('http://localhost:3000/Employees');
       })
       .catch((error) => {
           console.log(error);
@@ -288,19 +288,30 @@ app.put('/employee/update-employee', (req, res) => {
 
 
 // DELETE: Delete employee by employee_id from the database
-app.delete('/employee/delete-employee', (req, res) => {
-    const employeeID = req.body;
-    const employeeIdToDelete = String(employeeId.employee_id);
-    console.log(employeeIdToDelete);
-    db('employee')
-        .where('employee_id', '=', employeeIdToDelete)
-        .del()
-        .then(() => {
+app.delete('/online/harperdb/employee/delete-employee', (req, res) => {
+    const employee_id = req.body.employee_id;
+    console.log(employee_id);
+
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Employee WHERE employee_id = ${employee_id}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            res.send({ msg: 'Employee Deleted' });
             console.log('Employee Deleted');
-            return res.redirect('http://localhost:5000/Employees');
+            return res.redirect('http://localhost:5000/Employees');s
         })
-        .catch((err) => {
-            console.log(err);
+        .catch((error) => {
+            console.log(error);
         });
 });
 

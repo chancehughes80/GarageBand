@@ -6,7 +6,7 @@ function Employees() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/employee';
+            const API = 'http://127.0.0.1:5000/online/harperdb/employee';
 
             fetch(API)
                 .then((response) => {
@@ -29,28 +29,30 @@ function Employees() {
         <header>
                   <h1>Employees</h1>
         </header>
-        <form method="POST" action="http://127.0.0.1:5000/employee/add-employee">
-            <div>
-                <label>Employee ID</label>
-                <input type="text" name="employee_id" required />
-            </div>
-            <div>
-                <label>Employee Name</label>
-                <input type="text" name="employee_name" required />
-            </div>
-            <div>
-                <label>Employee Password</label>
-                <input type="text" name="employee_password" required />
-            </div>
-            <div>
-                <label>Job Title</label>
-                <input type="text" name="job_title" required />
-            </div>
-            <div>
-                <button type="submit">Add Employee</button>
-            </div>
-        </form>
-
+        <div className="form-container">
+                <h2>Add Employee</h2>
+                <form method="POST" action="http://127.0.0.1:5000/online/harperdb/employee/add-employee">
+                    <div>
+                        <label>Employee ID</label>
+                        <input type="text" name="employee_id" required />
+                    </div>
+                    <div>
+                        <label>Employee Name</label>
+                        <input type="text" name="employee_name" required />
+                    </div>
+                    <div>
+                        <label>Job</label>
+                        <input type="text" name="job_title" required />
+                    </div>
+                    <div>
+                        <label>Password</label>
+                        <input type="text" name="employee_password" required />
+                    </div>
+                    <div>
+                        <button type="submit">Add Employee</button>
+                    </div>
+                </form>
+              </div>
         <main>
             <section>
                 {apiData.map((Employee) => {
@@ -68,7 +70,7 @@ function Employees() {
                 })}
              </section>
          </main>
-         <form method="PUT" action="http://127.0.0.1:5000/update-employee">
+         <form method="PUT" action="http://127.0.0.1:5000/online/harperdb/employee/update-employee">
              <div>
                  <label>Employee ID</label>
                  <input type="text" name="employee_id" required />
@@ -89,10 +91,10 @@ function Employees() {
                  <button type="submit">Update Employee</button>
              </div>
          </form>
-         <form method="DELETE" action="http://127.0.0.1:5000/delete-employee">
+         <form method="DELETE" action="http://127.0.0.1:5000/online/harperdb/employee/delete-employee">
              <div>
                  <label>Employee ID</label>
-                 <input type="text" name="employee_id" required />
+                 <input type="number" name="employee_id" required />
              </div>
              <div>
                  <button type="submit">Delete Employee</button>

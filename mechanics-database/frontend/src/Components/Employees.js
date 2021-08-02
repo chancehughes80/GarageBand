@@ -1,7 +1,9 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import axios from 'axios';
 import './App.css';
 
 function Employees() {
+    const [status, setStatus] = useState(null);
     useEffect(() => {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
@@ -20,7 +22,14 @@ function Employees() {
                 });
         };
         getAPI();
+
     }, []);
+    const removeData = (id) =>{
+      const url = 'http://127.0.0.1:5000/online/harperdb/employee/delete-employee/' + id;
+      axios.delete(url)
+        .then(() => setStatus('Delete successful'));
+      window.location.reload(false);
+      }
     const [apiData, setApiData] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -36,6 +45,7 @@ function Employees() {
                         <div>
                             <label>Employee ID</label>
                             <input type="text" name="employee_id" required />
+
                         </div>
                         <div>
                             <label>Employee Name</label>
@@ -54,7 +64,6 @@ function Employees() {
                         </div>
                     </form>
 
-           
                     <form method="PUT" action="http://127.0.0.1:5000/online/harperdb/employee/update-employee">
                          <div>
                              <label>Employee ID</label>
@@ -76,16 +85,6 @@ function Employees() {
                              <button type="submit">Update Employee</button>
                          </div>
                      </form>
-
-                     <form method="DELETE" action="http://127.0.0.1:5000/online/harperdb/employee/delete-employee">
-                         <div>
-                             <label>Employee ID</label>
-                             <input type="text" name="employee_id" required />
-                         </div>
-                         <div>
-                             <button type="submit">Delete Employee</button>
-                         </div>
-                    </form>
                 </div>
 
                 <div class="col-lg-8">
@@ -100,6 +99,9 @@ function Employees() {
                                         </p>
                                         <p>
                                             <strong>Job:</strong> {Employee.job_title}
+                                        </p>
+                                        <p>
+                                            <button onClick={() => removeData(Employee.employee_id)}>Delete</button>
                                         </p>
                                     </div>
                                 );

@@ -288,12 +288,10 @@ app.put('/online/harperdb/employee/update-employee', (req, res) => {
 
 
 // DELETE: Delete employee by employee_id from the database
-app.delete('/online/harperdb/employee/delete-employee', (req, res) => {
-    const eid = req.body.eid;
-    console.log(eid);
-
-    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Employee WHERE employee_id = "${eid}"` };
-
+app.delete('/online/harperdb/employee/delete-employee/:employee_id', (req, res) => {
+    const employee_id = req.params.employee_id;
+    console.log(employee_id);
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Employee WHERE employee_id = "${employee_id}"` };
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,
@@ -306,9 +304,8 @@ app.delete('/online/harperdb/employee/delete-employee', (req, res) => {
 
     axios(config)
         .then((response) => {
-            res.send({ msg: 'Employee Deleted' });
             console.log('Employee Deleted');
-            return res.redirect('http://localhost:3000/Employees');s
+            return res.redirect('http://localhost:3000/Employees');
         })
         .catch((error) => {
             console.log(error);

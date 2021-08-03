@@ -11,10 +11,6 @@ function Employees() {
       { title: 'Employee Password', field: 'employee_password'}
     ]
     const [status, setStatus] = useState(null);
-    const[employee_id, setID] = useState('');
-    const[employee_name, setName] = useState('');
-    const[employee_password, setPassword] = useState('');
-    const[job_title, setJob] = useState('');
     const [apiData, setApiData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
@@ -42,28 +38,6 @@ function Employees() {
 
     }, []);
 
-    const handleSubmit = () => {
-      setLoading(true);
-      setIsError(false);
-      const data = {
-        employee_id: employee_id,
-        employee_name: employee_name,
-        job_title: job_title,
-        employee_password: employee_password
-      }
-      axios.put('http://127.0.0.1:5000/online/harperdb/employee/update-employee', data)
-        .then(res => {
-          setData(res.data);
-          setID('');
-          setName('');
-          setPassword('');
-          setJob('');
-          setLoading(false);
-        }).catch(err => {
-          setLoading(false);
-          setIsError(true);
-        });
-      }
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []
@@ -121,6 +95,7 @@ function Employees() {
            })
            window.location.reload(false);
       }
+      
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []

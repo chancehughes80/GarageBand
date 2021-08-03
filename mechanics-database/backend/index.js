@@ -350,9 +350,39 @@ app.get('/online/harperdb/parts', (req, res) => {
 });
 
 
+app.get('/online/harperdb/parts/:part_id', (req, res) => {
+  const part_id = req.params.part_id;
+  console.log(part_id);
+
+  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Parts WHERE part_id = "${part_id}"` };
+
+  const config = {
+      method: 'post',
+      url: process.env.HARPERDB_URL,
+      headers: {
+          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+          'Content-Type': 'application/json',
+      },
+      data: data,
+  };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+            return res.redirect('http://localhost:3000/Parts');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+
+
 // POST: Add new part to table
 app.post('/online/harperdb/parts/add-part', (req, res) => {
-    const { partid,count,pr,mod} = req.body;
+    const { part_id,part_count,price,model} = req.body;
     console.log(req.body);
     const data = {
         operation: 'insert',
@@ -360,10 +390,10 @@ app.post('/online/harperdb/parts/add-part', (req, res) => {
         table: 'Parts',
         records: [
             {
-                part_id: partid,
-                part_count: count,
-                price: pr,
-                model: mod,
+                part_id: part_id,
+                part_count: part_count,
+                price: price,
+                model: model,
             },
         ],
     };
@@ -379,23 +409,23 @@ app.post('/online/harperdb/parts/add-part', (req, res) => {
     };
 
     axios(config)
-        .then((response) => {
-            const data = response.data;
-            console.log(data);
-            res.json(data);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+      .then((response) => {
+          const data = response.data;
+          console.log('Part Added');
+          return res.redirect('http://localhost:3000/Parts')
+      })
+      .catch((error) => {
+          console.log(error);
+      });
 });
 
 
 //PUT: Update a part
 app.put('/online/harperdb/parts/update-part', (req, res) => {
-    const {partid,pr,cou,mod} = req.body;
+    const {part_id,price,part_count,model} = req.body;
     console.log(req.body);
 
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.Parts SET part_count = ${cou}, price = ${pr}, model = ${mod} WHERE part_id = ${partid}` };
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.Parts SET part_count = "${part_count}", price = "${price}", model = "${model}" WHERE part_id = "${part_id}"` };
 
     const config = {
         method: 'post',
@@ -411,6 +441,7 @@ app.put('/online/harperdb/parts/update-part', (req, res) => {
         .then((response) => {
             res.send({ msg: 'Part Updated' });
             console.log('Part Updated');
+            return res.redirect('http://localhost:3000/Parts');
         })
         .catch((error) => {
             console.log(error);
@@ -419,11 +450,11 @@ app.put('/online/harperdb/parts/update-part', (req, res) => {
 
 
 //DELETE
-app.delete('/online/harperdb/parts/delete-part', (req, res) => {
-    const partid = req.body.partid;
-    console.log(partid);
+app.delete('/online/harperdb/parts/delete-part/:part_id', (req, res) => {
+    const part_id = req.params.part_id;
+    console.log(part_id);
 
-    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Parts WHERE part_id = ${partid}` };
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Parts WHERE part_id = "${part_id}"` };
 
     const config = {
         method: 'post',
@@ -437,8 +468,8 @@ app.delete('/online/harperdb/parts/delete-part', (req, res) => {
 
     axios(config)
         .then((response) => {
-            res.send({ msg: 'Part Deleted' });
             console.log('Part Deleted');
+            return res.redirect('http://localhost:3000/Parts');
         })
         .catch((error) => {
             console.log(error);

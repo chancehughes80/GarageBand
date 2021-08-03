@@ -1,15 +1,26 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
 
 function Employees() {
+      var columns = [
+      { title: 'Employee ID', field: 'employee_id' },
+      { title: 'Name', field: 'employee_name' },
+      { title: 'Job Title', field: 'job_title' },
+      {title: 'Employee Password', field: 'employee_password'}
+    ]
     const [status, setStatus] = useState(null);
     const[employee_id, setID] = useState('');
     const[employee_name, setName] = useState('');
     const[employee_password, setPassword] = useState('');
     const[job_title, setJob] = useState('');
+    const [apiData, setApiData] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
     const [isError, setIsError] = useState(false);
+    const [errorMessages, setErrorMessages] = useState([])
+
     useEffect(() => {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
@@ -30,6 +41,7 @@ function Employees() {
         getAPI();
 
     }, []);
+
     const handleSubmit = () => {
       setLoading(true);
       setIsError(false);
@@ -52,17 +64,60 @@ function Employees() {
           setIsError(true);
         });
       }
-    const removeData = (id) =>{
-      const url = 'http://127.0.0.1:5000/online/harperdb/employee/delete-employee/' + id;
-      axios.delete(url)
-        .then(() => setStatus('Delete successful'));
-      window.location.reload(false);
+      const handleRowDelete = (oldData, resolve) =>{
+        const url = 'http://127.0.0.1:5000/online/harperdb/employee/delete-employee/' + oldData.employee_id;
+        axios.delete(url)
+          .then(res => {
+            const dataDelete = [...data];
+            const index = oldData.tableData.employee_id;
+            dataDelete.splice(index, 1);
+            setData([...dataDelete]);
+            resolve()
+          })
+          .catch(error => {
+             setErrorMessages(["Delete failed! Server error"])
+             setIsError(true)
+             resolve()
+           })
+           window.location.reload(false);
       }
-    const [apiData, setApiData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [iserror, setIserror] = useState(false)
-    const [errorMessages, setErrorMessages] = useState([])
-
+      // const handleRowUpdate = (newData, oldData, resolve) => {
+      //   //validation
+      //     let errorList = []
+      //     if(newData.employee_id == ""){
+      //       errorList.push("Please enter Employee ID:")
+      //     }
+      //     if(newData.employee_name == ""){
+      //       errorList.push("Please enter Employee Name")
+      //     }
+      //     if(newData.employee_password == ""){
+      //       errorList.push("Please enter Employee Password")
+      //     }
+      //     if(newData.job_title == ""){
+      //       errorList.push("Please enter Job Title")
+      //     }
+      //   if(errorList.length < 1){
+      //     axios.put("http://127.0.0.1:5000/online/harperdb/employee/update-employee", newData)
+      //       .then(res => {
+      //         const dataUpdate = [...data];
+      //         const index = oldData.tableData.employee_id;
+      //         dataUpdate[index] = newData;
+      //         setData([...dataUpdate]);
+      //         resolve()
+      //         setIserror(false)
+      //         setErrorMessages([])
+      //       })
+      //       .catch(error => {
+      //         setErrorMessages(["Update failed!"])
+      //         setIserror(true)
+      //         resolve()
+      //     })
+      //   }else{
+      //     setErrorMessages(errorList)
+      //     setIserror(true)
+      //     resolve()
+      //   }
+      // }
     return(
       <Fragment>
         <header>
@@ -119,28 +174,24 @@ function Employees() {
 
                 <div class="col-lg-8">
                     <main>
-                        <section>
-                            {apiData.map((Employee) => {
-                                return (
-                                    <div className="employee-container" key={String(Employee.employee_id)}>
-                                        <h1>{Employee.employee_name}</h1>
-                                        <p>
-                                            <strong>ID:</strong> {Employee.employee_id}
-                                        </p>
-                                        <p>
-                                            <strong>Job:</strong> {Employee.job_title}
-                                        </p>
-                                        <p>
-                                            <strong>Password:</strong> {Employee.employee_password}
-                                        </p>
-                                        <p>
-                                            <button onClick={() => removeData(Employee.employee_id)}>Delete</button>
-                                        </p>
-                                    </div>
-                                );
-                            })}
-                         </section>
-                     </main>
+
+                        <MaterialTable
+                            title="Employees"
+                            columns={columns}
+                            data={apiData}
+                            editable={{
+                                // onRowUpdate: (newData, oldData) =>
+                                //   new Promise((resolve) => {
+                                //     handleRowUpdate(newData, oldData, resolve);
+                                //   }),
+                                onRowDelete: oldData =>
+                                  new Promise((resolve) => {
+                                    handleRowDelete(oldData, resolve)
+                                  }),
+                            }}
+                        />
+                    </main>
+
                 </div>
             </div>
         </div>

@@ -95,6 +95,7 @@ function Employees() {
            })
            window.location.reload(false);
       }
+      
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []

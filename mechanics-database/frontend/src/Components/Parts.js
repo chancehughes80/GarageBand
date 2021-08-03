@@ -1,8 +1,22 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import MaterialTable from 'material-table';
+import axios from 'axios';
 import './App.css';
 
-
 function Parts() {
+    var columns = [
+        { title: 'Part ID', field: 'part_id', editable: 'onAdd'},
+        { title: 'Count', field: 'part_count'},
+        { title: 'Price', field: 'price'},
+        { title: 'Model', field: 'model'}
+    ]
+    const [status, setStatus] = useState(null);
+    const [apiData, setApiData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState(null);
+    const [isError, setIsError] = useState(false);
+    const [errorMessages, setErrorMessages] = useState([])
+
     useEffect(() => {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
@@ -22,99 +36,148 @@ function Parts() {
         };
         getAPI();
     }, []);
-    const [apiData, setApiData] = useState([]);
-    const [loading, setLoading] = useState(true);
+
+    const handleRowAdd = (newData, resolve) => {
+        //validation
+        let errorList = []
+        if(newData.part_id === undefined){
+          errorList.push("Please enter Part ID: ")
+        }
+        if(newData.part_count === undefined){
+          errorList.push("Please enter Part Count")
+        }
+        if(newData.price === undefined){
+          errorList.push("Please enter a Price")
+        }
+        if(newData.model === undefined){
+          errorList.push("Please enter a Model")
+        }
+        const url = 'http://127.0.0.1:5000/online/harperdb/parts/add-part';
+        if(errorList.length < 1){ //no error
+          axios.post(url, newData)
+          .then(res => {
+            let dataToAdd = [...data];
+            dataToAdd.push(newData);
+            setData(dataToAdd);
+            resolve()
+            setErrorMessages([])
+            setIsError(false)
+          })
+          .catch(error => {
+            setErrorMessages(["Cannot add data. Server error!"])
+            setIsError(true)
+            resolve()
+          })
+        }else{
+          setErrorMessages(errorList)
+          setIsError(true)
+          resolve()
+        }
+        window.location.reload(false);
+        
+    }
+
+    const handleRowDelete = (oldData, resolve) =>{
+        const url = 'http://127.0.0.1:5000/online/harperdb/parts/delete-part/' + oldData.part_id;
+        axios.delete(url)
+          .then(res => {
+            const dataDelete = [...data];
+            const index = oldData.tableData.part_id;
+            dataDelete.splice(index, 1);
+            setData([...dataDelete]);
+            resolve()
+          })
+          .catch(error => {
+             setErrorMessages(["Delete failed! Server error"])
+             setIsError(true)
+             resolve()
+           })
+           window.location.reload(false);
+      }
+
+    const handleRowUpdate = (newData, oldData, resolve) => {
+        //validation
+        let errorList = []
+        if(newData.part_id == ""){
+            errorList.push("Please enter Employee ID:")
+        }
+        if(newData.part_count == ""){
+            errorList.push("Please enter Employee Name")
+        }
+        if(newData.price == ""){
+            errorList.push("Please enter Employee Password")
+        }
+        if(newData.model == ""){
+            errorList.push("Please enter Job Title")
+        }
+        if(errorList.length < 1){
+            axios.put("http://127.0.0.1:5000/online/harperdb/parts/update-part", newData)
+            .then(res => {
+                const dataUpdate = [...data];
+                const index = oldData.tableData.part_id;
+                dataUpdate[index] = newData;
+                setData([...dataUpdate]);
+                resolve()
+                setIsError(false)
+                setErrorMessages([])
+            })
+            .catch(error => {
+                setErrorMessages(["Update failed!"])
+                setIsError(true)
+                resolve()
+            })
+        }else{
+            setErrorMessages(errorList)
+            setIsError(true)
+            resolve()
+        }
+        window.location.reload(false);
+    }
 
     return(
         <Fragment>
-        <header>
-                  <h1>Parts</h1>
-        </header>
-        <div class="container">
-            <div class="row justify-items-center">
-        <div class="col-lg-4 top" >
-                    <form method="POST" action="http://127.0.0.1:5000/online/harperdb/employee/add-employee">
-                        <div>
-                            <label>Part ID</label>
-                            <input type="text" name="employee_id" required />
-                        </div>
-                        <div>
-                            <label>Count</label>
-                            <input type="text" name="employee_name" required />
-                        </div>
-                        <div>
-                            <label>Price </label>
-                            <input type="text" name="employee_password" required />
-                        </div>
-                        <div>
-                            <label>Model </label>
-                            <input type="text" name="job_title" required />
-                        </div>
-                        <div>
-                            <button type="submit">Add Part</button>
-                        </div>
-                    </form>
-
-           
-                    <form method="PUT" action="http://127.0.0.1:5000/online/harperdb/employee/update-employee">
-                         <div>
-                            <label>Part ID</label>
-                            <input type="text" name="employee_id" required />
-                        </div>
-                        <div>
-                            <label>Count</label>
-                            <input type="text" name="employee_name" required />
-                        </div>
-                        <div>
-                            <label>Price </label>
-                            <input type="text" name="employee_password" required />
-                        </div>
-                        <div>
-                            <label>Model </label>
-                            <input type="text" name="job_title" required />
-                        </div>
-                         <div>
-                             <button type="submit">Update Employee</button>
-                         </div>
-                     </form>
-
-                     <form method="DELETE" action="http://127.0.0.1:5000/online/harperdb/employee/delete-employee">
-                         <div>
-                             <label>Employee ID</label>
-                             <input type="text" name="employee_id" required />
-                         </div>
-                         <div>
-                             <button type="submit">Delete Employee</button>
-                         </div>
-                    </form>
-                </div>
-                <div class="col-lg-8">
-        <main>
-            {loading === true ? (
-                <div>
-                    <h1>Loading...</h1>
-                </div>
-            ) : (
-                <section>
-                    {apiData.map((parts) => {
-                        return (
-                            <div className="employee-container" key={String(parts.part_id)}>
-                                <h1>{parts.model}</h1>
-                                <p>
-                                    <strong>Count:</strong> {parts.part_count}
-                                </p>
-                                <p>
-                                    <strong>Price:</strong> {parts.price}
-                                </p>
-                            </div>
-                        );
-                    })}
-                 </section>
-            )}
-         </main>
-         </div>
-         </div>
-         </div>
+            <header>
+                      <h1>Parts</h1>
+            </header>
+            <div class="container">
+                <main class="spacer">
+                    <MaterialTable
+                        title="Parts"
+                        columns={columns}
+                        data={apiData}
+                        style={{
+                            border: "3px solid #744F28",
+                            maxWidth: "1450px",
+                            overflow: "scroll",
+                            background: "#eaeaea",
+                            color: "#500000",
+                        }}
+                        options={{
+                            headerStyle: {
+                                background: "#d1d1d1",
+                                color: '#500000',
+                            },
+                            cellStyle: {
+                                color: '#500000',
+                            }
+                        }}
+                        editable={{
+                            onRowAdd: (newData) =>
+                                new Promise((resolve) => {
+                                    handleRowAdd(newData, resolve)
+                                }),
+                            onRowUpdate: (newData, oldData) =>
+                                new Promise((resolve) => {
+                                    handleRowUpdate(newData, oldData, resolve);
+                                }),
+                            onRowDelete: oldData =>
+                                new Promise((resolve) => {
+                                    handleRowDelete(oldData, resolve)
+                                }),
+                        }}
+                    />
+                </main>
+             </div>
          </Fragment>
     );
 }

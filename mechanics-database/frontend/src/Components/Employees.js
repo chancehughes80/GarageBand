@@ -11,10 +11,14 @@ function Employees() {
       {title: 'Employee Password', field: 'employee_password'}
     ]
     const [status, setStatus] = useState(null);
+    const[employee_id, setID] = useState('');
+    const[employee_name, setName] = useState('');
+    const[employee_password, setPassword] = useState('');
+    const[job_title, setJob] = useState('');
     const [apiData, setApiData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [data, setData] = useState([])
-    const [iserror, setIserror] = useState(false)
+    const [data, setData] = useState(null);
+    const [isError, setIsError] = useState(false);
     const [errorMessages, setErrorMessages] = useState([])
 
     useEffect(() => {
@@ -37,60 +41,83 @@ function Employees() {
         getAPI();
 
     }, []);
-    const handleRowDelete = (oldData, resolve) =>{
-      const url = 'http://127.0.0.1:5000/online/harperdb/employee/delete-employee/' + oldData.employee_id;
-      axios.delete(url)
+
+    const handleSubmit = () => {
+      setLoading(true);
+      setIsError(false);
+      const data = {
+        employee_id: employee_id,
+        employee_name: employee_name,
+        job_title: job_title,
+        employee_password: employee_password
+      }
+      axios.put('http://127.0.0.1:5000/online/harperdb/employee/update-employee', data)
         .then(res => {
-          const dataDelete = [...data];
-          const index = oldData.tableData.employee_id;
-          dataDelete.splice(index, 1);
-          setData([...dataDelete]);
-          resolve()
-        })
-        .catch(error => {
-           setErrorMessages(["Delete failed! Server error"])
-           setIserror(true)
-           resolve()
-         })
-         window.location.reload(false);
-    }
-    // const handleRowUpdate = (newData, oldData, resolve) => {
-    //   //validation
-    //     let errorList = []
-    //     if(newData.employee_id == ""){
-    //       errorList.push("Please enter Employee ID:")
-    //     }
-    //     if(newData.employee_name == ""){
-    //       errorList.push("Please enter Employee Name")
-    //     }
-    //     if(newData.employee_password == ""){
-    //       errorList.push("Please enter Employee Password")
-    //     }
-    //     if(newData.job_title == ""){
-    //       errorList.push("Please enter Job Title")
-    //     }
-    //   if(errorList.length < 1){
-    //     axios.put("http://127.0.0.1:5000/online/harperdb/employee/update-employee", newData)
-    //       .then(res => {
-    //         const dataUpdate = [...data];
-    //         const index = oldData.tableData.employee_id;
-    //         dataUpdate[index] = newData;
-    //         setData([...dataUpdate]);
-    //         resolve()
-    //         setIserror(false)
-    //         setErrorMessages([])
-    //       })
-    //       .catch(error => {
-    //         setErrorMessages(["Update failed!"])
-    //         setIserror(true)
-    //         resolve()
-    //     })
-    //   }else{
-    //     setErrorMessages(errorList)
-    //     setIserror(true)
-    //     resolve()
-    //   }
-    // }
+          setData(res.data);
+          setID('');
+          setName('');
+          setPassword('');
+          setJob('');
+          setLoading(false);
+        }).catch(err => {
+          setLoading(false);
+          setIsError(true);
+        });
+      }
+      const handleRowDelete = (oldData, resolve) =>{
+        const url = 'http://127.0.0.1:5000/online/harperdb/employee/delete-employee/' + oldData.employee_id;
+        axios.delete(url)
+          .then(res => {
+            const dataDelete = [...data];
+            const index = oldData.tableData.employee_id;
+            dataDelete.splice(index, 1);
+            setData([...dataDelete]);
+            resolve()
+          })
+          .catch(error => {
+             setErrorMessages(["Delete failed! Server error"])
+             setIsError(true)
+             resolve()
+           })
+           window.location.reload(false);
+      }
+      // const handleRowUpdate = (newData, oldData, resolve) => {
+      //   //validation
+      //     let errorList = []
+      //     if(newData.employee_id == ""){
+      //       errorList.push("Please enter Employee ID:")
+      //     }
+      //     if(newData.employee_name == ""){
+      //       errorList.push("Please enter Employee Name")
+      //     }
+      //     if(newData.employee_password == ""){
+      //       errorList.push("Please enter Employee Password")
+      //     }
+      //     if(newData.job_title == ""){
+      //       errorList.push("Please enter Job Title")
+      //     }
+      //   if(errorList.length < 1){
+      //     axios.put("http://127.0.0.1:5000/online/harperdb/employee/update-employee", newData)
+      //       .then(res => {
+      //         const dataUpdate = [...data];
+      //         const index = oldData.tableData.employee_id;
+      //         dataUpdate[index] = newData;
+      //         setData([...dataUpdate]);
+      //         resolve()
+      //         setIserror(false)
+      //         setErrorMessages([])
+      //       })
+      //       .catch(error => {
+      //         setErrorMessages(["Update failed!"])
+      //         setIserror(true)
+      //         resolve()
+      //     })
+      //   }else{
+      //     setErrorMessages(errorList)
+      //     setIserror(true)
+      //     resolve()
+      //   }
+      // }
     return(
       <Fragment>
         <header>
@@ -103,7 +130,6 @@ function Employees() {
                         <div>
                             <label>Employee ID</label>
                             <input type="text" name="employee_id" required />
-
                         </div>
                         <div>
                             <label>Employee Name</label>
@@ -122,31 +148,33 @@ function Employees() {
                         </div>
                     </form>
 
-                    <form method="PUT" action="http://127.0.0.1:5000/online/harperdb/employee/update-employee">
+
+                    <form>
                          <div>
                              <label>Employee ID</label>
-                             <input type="text" name="employee_id" required />
+                             <input type="text" value = {employee_id} onChange = {e => setID(e.target.value)} required />
                          </div>
                          <div>
                              <label>Employee Name</label>
-                             <input type="text" name="employee_name" required />
+                             <input type="text" name="employee_name" value = {employee_name} onChange = {e => setName(e.target.value)} required />
                          </div>
                          <div>
                              <label>Employee Password</label>
-                             <input type="text" name="employee_password" required />
+                             <input type="text" name="employee_password" value = {employee_password} onChange = {e => setPassword(e.target.value)} required />
                          </div>
                          <div>
                              <label>Job Title</label>
-                             <input type="text" name="job_title" required />
+                             <input type="text" name="job_title" value = {job_title} onChange = {e => setJob(e.target.value)} required />
                          </div>
                          <div>
-                             <button type="submit">Update Employee</button>
+                             <button type="submit" onClick = {handleSubmit}>Update Employee</button>
                          </div>
                      </form>
                 </div>
 
-                <div class="col-lg-8 top">
+                <div class="col-lg-8">
                     <main>
+
                         <MaterialTable
                             title="Employees"
                             columns={columns}
@@ -163,6 +191,7 @@ function Employees() {
                             }}
                         />
                     </main>
+
                 </div>
             </div>
         </div>

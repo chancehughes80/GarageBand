@@ -58,7 +58,7 @@ function Vehicles() {
                   <button type="submit">Add Vehicle</button>
               </div>
           </form>
-  
+
           <main>
               <section>
                   {apiData.map((Vehicle) => {
@@ -80,7 +80,7 @@ function Vehicles() {
                               <p>
                                 <strong>Customer ID:</strong> {Vehicle.customer_id}
                               </p>
-                            
+
                           </div>
                       );
                   })}

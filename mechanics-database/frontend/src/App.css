@@ -95,15 +95,3 @@ form div {
     margin: 1rem 0 1rem 0;
     font-size: 2rem;
 }
-
-.employee-container img {
-    width: 10rem;
-    height: 15rem;
-}
-
-@media screen and (max-width: 1094px) {
-    section {
-        justify-content: center;
-        /* margin: 0 auto; */
-    }
-}

@@ -260,7 +260,7 @@ app.post('/online/harperdb/employee/add-employee', (req, res) => {
 // PUT: Update employee by employee_id from the database
 app.put('/online/harperdb/employee/update-employee/:employee_id', (req, res) => {
 
-  const {employee_id, employee_name, employee_password, job_title} = req.body;
+  const {employee_id, employee_name, job_title, employee_password} = req.body;
   console.log(req.body);
 
   const data = { operation: 'sql', sql: `UPDATE Mechanics.Employee SET employee_name = "${employee_name}", employee_password = ${employee_password}, job_title = "${job_title}" WHERE employee_id = ${employee_id}` };
@@ -292,6 +292,7 @@ app.delete('/online/harperdb/employee/delete-employee/:employee_id', (req, res) 
     const employee_id = req.params.employee_id;
     console.log(employee_id);
     const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Employee WHERE employee_id = "${employee_id}"` };
+
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,

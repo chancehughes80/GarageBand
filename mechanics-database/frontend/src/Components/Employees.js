@@ -5,6 +5,12 @@ import './App.css';
 
 function Employees() {
     const [status, setStatus] = useState(null);
+    const[employee_id, setID] = useState('');
+    const[employee_name, setName] = useState('');
+    const[employee_password, setPassword] = useState('');
+    const[job_title, setJob] = useState('');
+    const [data, setData] = useState(null);
+    const [isError, setIsError] = useState(false);
     useEffect(() => {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
@@ -25,6 +31,28 @@ function Employees() {
         getAPI();
 
     }, []);
+    const handleSubmit = () => {
+      setLoading(true);
+      setIsError(false);
+      const data = {
+        employee_id: employee_id,
+        employee_name: employee_name,
+        job_title: job_title,
+        employee_password: employee_password
+      }
+      axios.put('http://127.0.0.1:5000/online/harperdb/employee/update-employee', data)
+        .then(res => {
+          setData(res.data);
+          setID('');
+          setName('');
+          setJob('');
+          setPassword('');
+          setLoading(false);
+        }).catch(err => {
+          setLoading(false);
+          setIsError(true);
+        });
+      }
     const removeData = (id) =>{
       const url = 'http://127.0.0.1:5000/online/harperdb/employee/delete-employee/' + id;
       axios.delete(url)
@@ -53,7 +81,6 @@ function Employees() {
                         <div>
                             <label>Employee ID</label>
                             <input type="text" name="employee_id" required />
-
                         </div>
                         <div>
                             <label>Employee Name</label>
@@ -72,69 +99,50 @@ function Employees() {
                         </div>
                     </form>
 
-                    <form method="PUT" action="http://127.0.0.1:5000/online/harperdb/employee/update-employee">
+                    <form>
                          <div>
                              <label>Employee ID</label>
-                             <input type="text" name="employee_id" required />
+                             <input type="text" value = {employee_id} onChange = {e => setID(e.target.value)} required />
                          </div>
                          <div>
                              <label>Employee Name</label>
-                             <input type="text" name="employee_name" required />
+                             <input type="text" name="employee_name" value = {employee_name} onChange = {e => setName(e.target.value)} required />
                          </div>
                          <div>
                              <label>Employee Password</label>
-                             <input type="text" name="employee_password" required />
+                             <input type="text" name="employee_password" value = {employee_password} onChange = {e => setPassword(e.target.value)} required />
                          </div>
                          <div>
                              <label>Job Title</label>
-                             <input type="text" name="job_title" required />
+                             <input type="text" name="job_title" value = {job_title} onChange = {e => setJob(e.target.value)} required />
                          </div>
                          <div>
-                             <button type="submit">Update Employee</button>
+                             <button type="submit" onClick = {handleSubmit}>Update Employee</button>
                          </div>
                      </form>
                 </div>
 
                 <div class="col-lg-8 top">
                     <main>
-                        <MaterialTable
-                            title="Employees"
-                            columns={columns}
-                            data={apiData}
-                            editable={{
-                                onRowAdd: newData =>
-                                  new Promise((resolve, reject) => {
-                                    setTimeout(() => {
-                                      setData([...data, newData]);
-                                      
-                                      resolve();
-                                    }, 1000)
-                                  }),
-                                onRowUpdate: (newData, oldData) =>
-                                  new Promise((resolve, reject) => {
-                                    setTimeout(() => {
-                                      const dataUpdate = [...data];
-                                      const index = oldData.tableData.id;
-                                      dataUpdate[index] = newData;
-                                      setData([...dataUpdate]);
-
-                                      resolve();
-                                    }, 1000)
-                                  }),
-                                onRowDelete: oldData =>
-                                  new Promise((resolve, reject) => {
-                                    setTimeout(() => {
-                                      const dataDelete = [...data];
-                                      const index = oldData.tableData.id;
-                                      dataDelete.splice(index, 1);
-                                      setData([...dataDelete]);
-                                      
-                                      resolve()
-                                    }, 1000)
-                                  }),
-                            }}
-                        />
-                    </main>
+                        <section>
+                            {apiData.map((Employee) => {
+                                return (
+                                    <div className="employee-container" key={String(Employee.employee_id)}>
+                                        <h1>{Employee.employee_name}</h1>
+                                        <p>
+                                            <strong>ID:</strong> {Employee.employee_id}
+                                        </p>
+                                        <p>
+                                            <strong>Job:</strong> {Employee.job_title}
+                                        </p>
+                                        <p>
+                                            <button onClick={() => removeData(Employee.employee_id)}>Delete</button>
+                                        </p>
+                                    </div>
+                                );
+                            })}
+                         </section>
+                     </main>
                 </div>
             </div>
         </div>

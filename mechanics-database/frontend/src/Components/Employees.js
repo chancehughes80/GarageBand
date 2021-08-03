@@ -33,6 +33,8 @@ function Employees() {
       }
     const [apiData, setApiData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [iserror, setIserror] = useState(false)
+    const [errorMessages, setErrorMessages] = useState([])
 
     const [columns, setColumns] = useState([
     { title: 'Employee ID', field: 'employee_id' },

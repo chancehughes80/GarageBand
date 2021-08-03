@@ -1,13 +1,21 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
 
 function Salary() {
+    var columns = [
+      { title: 'Job Title', field: 'job_title' },
+      {title: 'Wage', field: 'wage'}
+    ]
     const [status, setStatus] = useState(null);
     const[job_title, setJob] = useState('');
     const[wage, setWage] = useState('');
+    const [apiData, setApiData] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
     const [isError, setIsError] = useState(false);
+    const [errorMessages, setErrorMessages] = useState([])
     useEffect(() => {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
@@ -46,14 +54,24 @@ function Salary() {
           setIsError(true);
         });
       }
-    const removeData = (job_title) =>{
-      const url = 'http://127.0.0.1:5000/online/harperdb/salary/delete-salary/' + job_title;
-      axios.delete(url)
-        .then(() => setStatus('Delete successful'));
-      window.location.reload(false);
+      const handleRowDelete = (oldData, resolve) =>{
+        const url = 'http://127.0.0.1:5000/online/harperdb/salary/delete-salary/' + oldData.job_title;
+        axios.delete(url)
+          .then(res => {
+            const dataDelete = [...data];
+            const index = oldData.tableData.job_title;
+            dataDelete.splice(index, 1);
+            setData([...dataDelete]);
+            resolve()
+          })
+          .catch(error => {
+             setErrorMessages(["Delete failed! Server error"])
+             setIsError(true)
+             resolve()
+           })
+           window.location.reload(false);
       }
-    const [apiData, setApiData] = useState([]);
-    const [loading, setLoading] = useState(true);
+
 
     return(
       <Fragment>
@@ -95,22 +113,24 @@ function Salary() {
 
                 <div class="col-lg-8">
                     <main>
-                        <section>
-                            {apiData.map((Salary) => {
-                                return (
-                                    <div className="employee-container" key={String(Salary.job_title)}>
-                                        <h1>{Salary.job_title}</h1>
-                                        <p>
-                                            <strong>Wage:</strong> {Salary.wage}
-                                        </p>
-                                        <p>
-                                            <button onClick={() => removeData(Salary.job_title)}>Delete</button>
-                                        </p>
-                                    </div>
-                                );
-                            })}
-                         </section>
-                     </main>
+
+                        <MaterialTable
+                            title="Salary"
+                            columns={columns}
+                            data={apiData}
+                            editable={{
+                                // onRowUpdate: (newData, oldData) =>
+                                //   new Promise((resolve) => {
+                                //     handleRowUpdate(newData, oldData, resolve);
+                                //   }),
+                                onRowDelete: oldData =>
+                                  new Promise((resolve) => {
+                                    handleRowDelete(oldData, resolve)
+                                  }),
+                            }}
+                        />
+                    </main>
+
                 </div>
             </div>
         </div>

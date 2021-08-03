@@ -4,7 +4,19 @@ import axios from 'axios';
 import './App.css';
 
 function Employees() {
+      var columns = [
+      { title: 'Employee ID', field: 'employee_id' },
+      { title: 'Name', field: 'employee_name' },
+      { title: 'Job Title', field: 'job_title' },
+      {title: 'Employee Password', field: 'employee_password'}
+    ]
     const [status, setStatus] = useState(null);
+    const [apiData, setApiData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState([])
+    const [iserror, setIserror] = useState(false)
+    const [errorMessages, setErrorMessages] = useState([])
+
     useEffect(() => {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
@@ -25,22 +37,60 @@ function Employees() {
         getAPI();
 
     }, []);
-    const removeData = (id) =>{
-      const url = 'http://127.0.0.1:5000/online/harperdb/employee/delete-employee/' + id;
+    const handleRowDelete = (oldData, resolve) =>{
+      const url = 'http://127.0.0.1:5000/online/harperdb/employee/delete-employee/' + oldData.employee_id;
       axios.delete(url)
-        .then(() => setStatus('Delete successful'));
-      window.location.reload(false);
-      }
-    const [apiData, setApiData] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    const [columns, setColumns] = useState([
-    { title: 'Employee ID', field: 'employee_id' },
-    { title: 'Name', field: 'employee_name' },
-    { title: 'Job Title', field: 'job_title' },
-  ]);
-    const [data, setData] = useState([])
-
+        .then(res => {
+          const dataDelete = [...data];
+          const index = oldData.tableData.employee_id;
+          dataDelete.splice(index, 1);
+          setData([...dataDelete]);
+          resolve()
+        })
+        .catch(error => {
+           setErrorMessages(["Delete failed! Server error"])
+           setIserror(true)
+           resolve()
+         })
+         window.location.reload(false);
+    }
+    // const handleRowUpdate = (newData, oldData, resolve) => {
+    //   //validation
+    //     let errorList = []
+    //     if(newData.employee_id == ""){
+    //       errorList.push("Please enter Employee ID:")
+    //     }
+    //     if(newData.employee_name == ""){
+    //       errorList.push("Please enter Employee Name")
+    //     }
+    //     if(newData.employee_password == ""){
+    //       errorList.push("Please enter Employee Password")
+    //     }
+    //     if(newData.job_title == ""){
+    //       errorList.push("Please enter Job Title")
+    //     }
+    //   if(errorList.length < 1){
+    //     axios.put("http://127.0.0.1:5000/online/harperdb/employee/update-employee", newData)
+    //       .then(res => {
+    //         const dataUpdate = [...data];
+    //         const index = oldData.tableData.employee_id;
+    //         dataUpdate[index] = newData;
+    //         setData([...dataUpdate]);
+    //         resolve()
+    //         setIserror(false)
+    //         setErrorMessages([])
+    //       })
+    //       .catch(error => {
+    //         setErrorMessages(["Update failed!"])
+    //         setIserror(true)
+    //         resolve()
+    //     })
+    //   }else{
+    //     setErrorMessages(errorList)
+    //     setIserror(true)
+    //     resolve()
+    //   }
+    // }
     return(
       <Fragment>
         <header>
@@ -102,35 +152,13 @@ function Employees() {
                             columns={columns}
                             data={apiData}
                             editable={{
-                                onRowAdd: newData =>
-                                  new Promise((resolve, reject) => {
-                                    setTimeout(() => {
-                                      setData([...data, newData]);
-                                      
-                                      resolve();
-                                    }, 1000)
-                                  }),
-                                onRowUpdate: (newData, oldData) =>
-                                  new Promise((resolve, reject) => {
-                                    setTimeout(() => {
-                                      const dataUpdate = [...data];
-                                      const index = oldData.tableData.id;
-                                      dataUpdate[index] = newData;
-                                      setData([...dataUpdate]);
-
-                                      resolve();
-                                    }, 1000)
-                                  }),
+                                // onRowUpdate: (newData, oldData) =>
+                                //   new Promise((resolve) => {
+                                //     handleRowUpdate(newData, oldData, resolve);
+                                //   }),
                                 onRowDelete: oldData =>
-                                  new Promise((resolve, reject) => {
-                                    setTimeout(() => {
-                                      const dataDelete = [...data];
-                                      const index = oldData.tableData.id;
-                                      dataDelete.splice(index, 1);
-                                      setData([...dataDelete]);
-                                      
-                                      resolve()
-                                    }, 1000)
+                                  new Promise((resolve) => {
+                                    handleRowDelete(oldData, resolve)
                                   }),
                             }}
                         />

@@ -1284,7 +1284,7 @@ app.put('/online/harperdb/salary/update-salary', (req, res) => {
   const {job_title, wage} = req.body;
   console.log(req.body);
 
-  const data = { operation: 'sql', sql: `UPDATE Mechanics.Salary SET wage = ${wage} WHERE job_title = ${job_title}` };
+  const data = { operation: 'sql', sql: `UPDATE Mechanics.Salary SET wage = ${wage} WHERE job_title = "${job_title}"` };
 
   const config = {
       method: 'post',

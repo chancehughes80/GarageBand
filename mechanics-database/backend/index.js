@@ -448,7 +448,7 @@ app.put('/online/harperdb/parts/update-part', (req, res) => {
 
 //DELETE
 app.delete('/online/harperdb/parts/delete-part/:part_id', (req, res) => {
-    const part_id = req.body.part_id;
+    const part_id = req.params.part_id;
     console.log(part_id);
 
     const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Parts WHERE part_id = "${part_id}"` };

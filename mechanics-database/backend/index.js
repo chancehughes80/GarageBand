@@ -263,7 +263,7 @@ app.put('/online/harperdb/employee/update-employee', (req, res) => {
   const {employee_id, employee_name, job_title, employee_password} = req.body;
   console.log(req.body);
 
-  const data = { operation: 'sql', sql: `UPDATE Mechanics.Employee SET employee_name = "${employee_name}", employee_password = ${employee_password}, job_title = "${job_title}" WHERE employee_id = ${employee_id}` };
+  const data = { operation: 'sql', sql: `UPDATE Mechanics.Employee SET employee_name = "${employee_name}", job_title = "${job_title}", employee_password = "${employee_password}" WHERE employee_id = ${employee_id}` };
 
   const config = {
       method: 'post',
@@ -1184,8 +1184,8 @@ app.delete('/online/harperdb/delete-vehicle-repair', (req, res) => {
 //~~~~~~~~~~~~~~~~~~~~~Salary Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
 
-//GET get all salaries
-app.get('/online/harperdb/salary', (req, res) => {
+//GET: get all salaries
+app.get('/online/harperdb/salary/', (req, res) => {
     const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Salary' };
     const config = {
         method: 'post',
@@ -1202,6 +1202,7 @@ app.get('/online/harperdb/salary', (req, res) => {
             const data = response.data;
             console.log(data);
             res.json(data);
+            return res.redirect('http://localhost:5000/Salary');
         })
         .catch((error) => {
             console.log(error);
@@ -1209,11 +1210,11 @@ app.get('/online/harperdb/salary', (req, res) => {
 });
 
 //GET get an salary by job_title
-app.get('/online/harperdb/salary', (req, res) => {
+app.get('/online/harperdb/salary/:job_title', (req, res) => {
   const job_title = req.params.job_title;
   console.log(job_title);
 
-  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Salary WHERE id = ${job_title}` };
+  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Salary WHERE job_title = ${job_title}` };
 
   const config = {
       method: 'post',
@@ -1230,6 +1231,7 @@ app.get('/online/harperdb/salary', (req, res) => {
             const data = response.data;
             console.log(data);
             res.json(data);
+            return res.redirect('http://localhost:5000/Salary');
         })
         .catch((error) => {
             console.log(error);
@@ -1239,24 +1241,46 @@ app.get('/online/harperdb/salary', (req, res) => {
 
 //POST: Create salaries and add them to the database
 app.post('/online/harperdb/salary/add-salary', (req, res) => {
-    const { job_title, wage} = req.body;
-    db('salary')
-        .insert({
+  const { job_title, wage } = req.body;
+  console.log(req.body);
+
+  const data = {
+      operation: 'insert',
+      schema: 'Mechanics',
+      table: 'Salary',
+      records: [
+          {
             job_title: job_title,
-            wage: wage,
-        })
-        .then(() => {
-            console.log('Salary Added');
-            return res.json({ msg: 'Salary Added' });
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+            wage: wage
+          },
+      ],
+  };
+
+  const config = {
+      method: 'post',
+      url: process.env.HARPERDB_URL,
+      headers: {
+          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+          'Content-Type': 'application/json',
+      },
+      data: data,
+  };
+
+  axios(config)
+      .then((response) => {
+          const data = response.data;
+          console.log('Salary Added');
+          return res.redirect('http://localhost:3000/Salary')
+      })
+      .catch((error) => {
+          console.log(error);
+      });
 });
 
 
 // PUT: Update salary by job_title from the database
 app.put('/online/harperdb/salary/update-salary', (req, res) => {
+
   const {job_title, wage} = req.body;
   console.log(req.body);
 
@@ -1276,6 +1300,7 @@ app.put('/online/harperdb/salary/update-salary', (req, res) => {
       .then((response) => {
           res.send({ msg: 'Salary Updated' });
           console.log('Salary Updated');
+          return res.redirect('http://localhost:3000/Salary');
       })
       .catch((error) => {
           console.log(error);
@@ -1284,19 +1309,29 @@ app.put('/online/harperdb/salary/update-salary', (req, res) => {
 
 
 // DELETE: Delete salary by job_title from the database
-app.delete('/online/harperdb/salary/delete-salary', (req, res) => {
-    const job_title = req.body;
-    const jobTitleToDelete = String(job_title.job_title);
-    console.log(jobTitleToDelete);
-    db('salary')
-        .where('job_title', '=', jobTitleToDelete)
-        .del()
-        .then(() => {
+app.delete('/online/harperdb/salary/delete-salary/:job_title', (req, res) => {
+    const job_title = req.params.job_title;
+    console.log(job_title);
+
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Salary WHERE job_title = "${job_title}"` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
             console.log('Salary Deleted');
-            return res.json({ msg: 'Salary Deleted' });
+            return res.redirect('http://localhost:3000/Salary');
         })
-        .catch((err) => {
-            console.log(err);
+        .catch((error) => {
+            console.log(error);
         });
 });
 

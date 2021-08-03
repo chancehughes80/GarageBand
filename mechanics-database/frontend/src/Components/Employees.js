@@ -44,8 +44,8 @@ function Employees() {
           setData(res.data);
           setID('');
           setName('');
-          setJob('');
           setPassword('');
+          setJob('');
           setLoading(false);
         }).catch(err => {
           setLoading(false);
@@ -127,6 +127,9 @@ function Employees() {
                                         </p>
                                         <p>
                                             <strong>Job:</strong> {Employee.job_title}
+                                        </p>
+                                        <p>
+                                            <strong>Password:</strong> {Employee.employee_password}
                                         </p>
                                         <p>
                                             <button onClick={() => removeData(Employee.employee_id)}>Delete</button>

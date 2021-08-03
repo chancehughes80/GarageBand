@@ -101,7 +101,7 @@ function Employees() {
           resolve()
         }
         window.location.reload(false);
-        
+
     }
 
     const handleRowDelete = (oldData, resolve) =>{
@@ -165,7 +165,7 @@ function Employees() {
                   <h1>Employees</h1>
         </header>
         <div class="container">
-            
+
                     <main class="spacer">
 
                         <MaterialTable

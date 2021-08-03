@@ -31,7 +31,6 @@ app.use(cors());
 //get all the customers and read
 app.get('/online/harperdb/customer', (req, res) => {
     const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Customer' };
-
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,
@@ -47,6 +46,7 @@ app.get('/online/harperdb/customer', (req, res) => {
             const data = response.data;
             console.log(data);
             res.json(data);
+            return res.redirect('http://localhost:5000/Customers');
         })
         .catch((error) => {
             console.log(error);
@@ -56,7 +56,7 @@ app.get('/online/harperdb/customer', (req, res) => {
 
 //create and insert new customers
 app.post('/online/harperdb/customer/add-customer', (req, res) => {
-    const { c_id,c_name,c_password,b_addr,e_addr,phone_num} = req.body;
+    const { customer_id, customer_name, billing_address, email_address, phone_number, customer_password} = req.body;
     console.log(req.body);
     const data = {
         operation: 'insert',
@@ -64,12 +64,12 @@ app.post('/online/harperdb/customer/add-customer', (req, res) => {
         table: 'Customer',
         records: [
             {
-                customer_id: c_id,
-                customer_name: c_name,
-                customer_password: c_password,
-                billing_address: b_addr,
-                email_address: e_addr,
-                phone_number: phone_num
+                customer_id: customer_id,
+                customer_name: customer_name,
+                billing_address: billing_address,
+                email_address: email_address,
+                phone_number: phone_number,
+                customer_password: customer_password,
             },
         ],
     };
@@ -88,7 +88,8 @@ app.post('/online/harperdb/customer/add-customer', (req, res) => {
         .then((response) => {
             const data = response.data;
             console.log(data);
-            res.json(data);
+            console.log('Customer Added');
+            return res.redirect('http://localhost:3000/Customer')
         })
         .catch((error) => {
             console.log(error);
@@ -98,12 +99,12 @@ app.post('/online/harperdb/customer/add-customer', (req, res) => {
 
 //update customer
 app.put('/online/harperdb/customer/update-customer', (req, res) => {
-    const {c_id,c_name,c_password,b_addr,e_addr,phone_num} = req.body;
+    const { customer_id, customer_name, billing_address, email_address, phone_number, customer_password} = req.body;
     console.log(req.body);
 
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.Customer SET customer_id = ${c_id}, customer_name = ${c_name}, customer_password = ${c_password},
-    billing_address = ${b_addr}, email_address = ${e_addr}, phone_number = ${phone_num}
-    WHERE customer_id = ${c_id}` };
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.Customer SET customer_name = "${customer_name}", customer_password = "${customer_password}",
+    billing_address = "${billing_address}", email_address = "${email_address}", phone_number = "${phone_number}"
+    WHERE customer_id = ${customer_id}` };
 
     const config = {
         method: 'post',
@@ -117,8 +118,9 @@ app.put('/online/harperdb/customer/update-customer', (req, res) => {
 
     axios(config)
         .then((response) => {
-            res.send({ msg: 'Part Updated' });
-            console.log('Part Updated');
+            res.send({ msg: 'Customer Updated' });
+            console.log('Customer Updated');
+            return res.redirect('http://localhost:3000/Customers');
         })
         .catch((error) => {
             console.log(error);
@@ -127,11 +129,11 @@ app.put('/online/harperdb/customer/update-customer', (req, res) => {
 
 
 //delete customer
-app.delete('/online/harperdb/customer/delete-customer', (req, res) => {
-    const customerid = req.body.partid;
-    console.log(customerid);
+app.delete('/online/harperdb/customer/delete-customer/:customer_id', (req, res) => {
+    const customer_id = req.params.customer_id;
+    console.log(customer_id);
 
-    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Customer WHERE customer_id = ${customerid}` };
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Customer WHERE customer_id = "${customer_id}"` };
 
     const config = {
         method: 'post',
@@ -147,6 +149,7 @@ app.delete('/online/harperdb/customer/delete-customer', (req, res) => {
         .then((response) => {
             res.send({ msg: 'Customer Deleted' });
             console.log('Customer Deleted');
+            return res.redirect('http://localhost:3000/Customers');
         })
         .catch((error) => {
             console.log(error);

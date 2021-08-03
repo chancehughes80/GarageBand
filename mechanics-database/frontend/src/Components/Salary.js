@@ -6,7 +6,7 @@ import './App.css';
 function Salary() {
     var columns = [
       { title: 'Job Title', field: 'job_title' },
-      {title: 'Wage', field: 'wage'}
+      { title: 'Wage', field: 'wage' }
     ]
     const [status, setStatus] = useState(null);
     const[job_title, setJob] = useState('');

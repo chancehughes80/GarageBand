@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router,Link, Route, Switch } from "react-router-dom";
-import {Home, Employees, Salary, Vehicles, Parts, Repairs, Customers, AddEmployee, Navigation} from "./Components";
+import {Home, Employees, Salary, Vehicles, Parts, Repairs, Customers, Navigation} from "./Components";
 import './App.css';
 
 export default function App() {

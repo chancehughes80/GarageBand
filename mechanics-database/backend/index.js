@@ -25,6 +25,35 @@ app.use(cors());
   |                      Manipulating and pulling from Harper DB                       |
   |~~~~~~~~~~~~~~~~~~~~~~                                       ~~~~~~~~~~~~~~~~~~~~~~~|*/
 
+  app.use('/online/harperdb/employee/:employee_id', (req, res) => {
+    const employee_id = req.params.employee_id;
+    console.log(employee_id);
+
+    const data = { operation: 'sql', sql: `SELECT employee_password FROM Mechanics.Employee WHERE employee_id = ${employee_id}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data : data
+    };
+
+      axios(config)
+          .then((response) => {
+              const data = response.data;
+              console.log(data);
+              res.json(data);
+              res.send({
+                token: data
+              });
+          })
+          .catch((error) => {
+              console.log(error);
+          });
+  });
 
 //~~~~~~~~~~~~~~~~~~~~~~Customer Table CRUD~~~~~~~~~~~~~~~~~~~~~~
 
@@ -173,35 +202,6 @@ app.get('/online/harperdb/employee/', (req, res) => {
         },
         data: data,
     };
-
-    axios(config)
-        .then((response) => {
-            const data = response.data;
-            console.log(data);
-            res.json(data);
-            return res.redirect('http://localhost:5000/Employees');
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-});
-
-//GET get an employee by employee_id
-app.get('/online/harperdb/employee/:employee_id', (req, res) => {
-  const employee_id = req.params.employee_id;
-  console.log(employee_id);
-
-  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Employee WHERE employee_id = ${employee_id}` };
-
-  const config = {
-      method: 'post',
-      url: process.env.HARPERDB_URL,
-      headers: {
-          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
-          'Content-Type': 'application/json',
-      },
-      data: data,
-  };
 
     axios(config)
         .then((response) => {

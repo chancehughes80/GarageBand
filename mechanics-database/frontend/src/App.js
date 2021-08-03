@@ -1,9 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import { BrowserRouter as Router,Link, Route, Switch } from "react-router-dom";
-import {Home, Employees, Salary, Vehicles, Parts, Repairs, Customers, Navigation} from "./Components";
+import {Home, Login, Employees, Salary, Vehicles, Parts, Repairs, Customers, Navigation} from "./Components";
 import './App.css';
+import useToken from './useToken';
 
 export default function App() {
+  const { token, setToken } = useToken();
+  
+  if(!token) {
+    return <Login setToken={setToken} />
+  }
   return (
     <div className="App">
       <Router>

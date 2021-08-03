@@ -179,7 +179,7 @@ app.get('/online/harperdb/employee/', (req, res) => {
             const data = response.data;
             console.log(data);
             res.json(data);
-            return res.redirect('http://localhost:3000/Employees');
+            return res.redirect('http://localhost:5000/Employees');
         })
         .catch((error) => {
             console.log(error);
@@ -208,7 +208,7 @@ app.get('/online/harperdb/employee/:employee_id', (req, res) => {
             const data = response.data;
             console.log(data);
             res.json(data);
-            return res.redirect('http://localhost:3000/Employees');
+            return res.redirect('http://localhost:5000/Employees');
         })
         .catch((error) => {
             console.log(error);
@@ -258,7 +258,7 @@ app.post('/online/harperdb/employee/add-employee', (req, res) => {
 
 
 // PUT: Update employee by employee_id from the database
-app.put('/online/harperdb/employee/update-employee/:employee_id', (req, res) => {
+app.put('/online/harperdb/employee/update-employee', (req, res) => {
 
   const {employee_id, employee_name, job_title, employee_password} = req.body;
   console.log(req.body);
@@ -291,6 +291,7 @@ app.put('/online/harperdb/employee/update-employee/:employee_id', (req, res) => 
 app.delete('/online/harperdb/employee/delete-employee/:employee_id', (req, res) => {
     const employee_id = req.params.employee_id;
     console.log(employee_id);
+
     const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Employee WHERE employee_id = "${employee_id}"` };
 
     const config = {
@@ -1303,5 +1304,4 @@ app.delete('/online/harperdb/salary/delete-salary', (req, res) => {
 //~~~~~~~~~~~~~~~~~~~~~End of Salary Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
 const port = process.env.PORT || 5000;
-
 app.listen(port, () => console.log(`Server running on port ${port}, http://localhost:${port}`));

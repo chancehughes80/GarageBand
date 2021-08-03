@@ -1,5 +1,4 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
 
@@ -62,13 +61,6 @@ function Employees() {
     const [apiData, setApiData] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const [columns, setColumns] = useState([
-    { title: 'Employee ID', field: 'employee_id' },
-    { title: 'Name', field: 'employee_name' },
-    { title: 'Job Title', field: 'job_title' },
-  ]);
-    const [data, setData] = useState([])
-
     return(
       <Fragment>
         <header>
@@ -99,6 +91,7 @@ function Employees() {
                         </div>
                     </form>
 
+
                     <form>
                          <div>
                              <label>Employee ID</label>
@@ -122,7 +115,7 @@ function Employees() {
                      </form>
                 </div>
 
-                <div class="col-lg-8 top">
+                <div class="col-lg-8">
                     <main>
                         <section>
                             {apiData.map((Employee) => {

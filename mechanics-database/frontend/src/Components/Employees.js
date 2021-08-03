@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
 
@@ -32,6 +33,13 @@ function Employees() {
       }
     const [apiData, setApiData] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const [columns, setColumns] = useState([
+    { title: 'Employee ID', field: 'employee_id' },
+    { title: 'Name', field: 'employee_name' },
+    { title: 'Job Title', field: 'job_title' },
+  ]);
+    const [data, setData] = useState([])
 
     return(
       <Fragment>
@@ -87,27 +95,46 @@ function Employees() {
                      </form>
                 </div>
 
-                <div class="col-lg-8">
+                <div class="col-lg-8 top">
                     <main>
-                        <section>
-                            {apiData.map((Employee) => {
-                                return (
-                                    <div className="employee-container" key={String(Employee.employee_id)}>
-                                        <h1>{Employee.employee_name}</h1>
-                                        <p>
-                                            <strong>ID:</strong> {Employee.employee_id}
-                                        </p>
-                                        <p>
-                                            <strong>Job:</strong> {Employee.job_title}
-                                        </p>
-                                        <p>
-                                            <button onClick={() => removeData(Employee.employee_id)}>Delete</button>
-                                        </p>
-                                    </div>
-                                );
-                            })}
-                         </section>
-                     </main>
+                        <MaterialTable
+                            title="Employees"
+                            columns={columns}
+                            data={apiData}
+                            editable={{
+                                onRowAdd: newData =>
+                                  new Promise((resolve, reject) => {
+                                    setTimeout(() => {
+                                      setData([...data, newData]);
+                                      
+                                      resolve();
+                                    }, 1000)
+                                  }),
+                                onRowUpdate: (newData, oldData) =>
+                                  new Promise((resolve, reject) => {
+                                    setTimeout(() => {
+                                      const dataUpdate = [...data];
+                                      const index = oldData.tableData.id;
+                                      dataUpdate[index] = newData;
+                                      setData([...dataUpdate]);
+
+                                      resolve();
+                                    }, 1000)
+                                  }),
+                                onRowDelete: oldData =>
+                                  new Promise((resolve, reject) => {
+                                    setTimeout(() => {
+                                      const dataDelete = [...data];
+                                      const index = oldData.tableData.id;
+                                      dataDelete.splice(index, 1);
+                                      setData([...dataDelete]);
+                                      
+                                      resolve()
+                                    }, 1000)
+                                  }),
+                            }}
+                        />
+                    </main>
                 </div>
             </div>
         </div>

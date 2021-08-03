@@ -179,7 +179,7 @@ app.get('/online/harperdb/employee/', (req, res) => {
             const data = response.data;
             console.log(data);
             res.json(data);
-            return res.redirect('http://localhost:5000/Employees');
+            return res.redirect('http://localhost:3000/Employees');
         })
         .catch((error) => {
             console.log(error);
@@ -208,7 +208,7 @@ app.get('/online/harperdb/employee/:employee_id', (req, res) => {
             const data = response.data;
             console.log(data);
             res.json(data);
-            return res.redirect('http://localhost:5000/Employees');
+            return res.redirect('http://localhost:3000/Employees');
         })
         .catch((error) => {
             console.log(error);
@@ -258,7 +258,7 @@ app.post('/online/harperdb/employee/add-employee', (req, res) => {
 
 
 // PUT: Update employee by employee_id from the database
-app.put('/online/harperdb/employee/update-employee', (req, res) => {
+app.put('/online/harperdb/employee/update-employee/:employee_id', (req, res) => {
 
   const {employee_id, employee_name, employee_password, job_title} = req.body;
   console.log(req.body);

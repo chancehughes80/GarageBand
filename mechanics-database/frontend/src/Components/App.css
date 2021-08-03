@@ -42,8 +42,12 @@ section {
     max-width: 100%;
     padding: 0 2rem 0 2rem;
 }
-.top{
+.spacer{
     padding-top: 40px;
+    padding-bottom: 40px;
+}
+.navigation{
+    background: #3C0000;
 }
 
 form {

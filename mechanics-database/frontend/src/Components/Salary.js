@@ -96,7 +96,7 @@ function Salary() {
             errorList.push("Please enter wage")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/employee/update-salary", newData)
+            axios.put("http://127.0.0.1:5000/online/harperdb/salary/update-salary", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.job_title;

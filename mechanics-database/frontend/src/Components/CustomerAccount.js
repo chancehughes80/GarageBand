@@ -116,7 +116,7 @@ function CustomerAccount() {
                                 onRowUpdate: (newData, oldData) =>
                                     new Promise((resolve) => {
                                         handleRowUpdate(newData, oldData, resolve);
-                                    }),    
+                                    }),
                             }}
                         />
                     </main>

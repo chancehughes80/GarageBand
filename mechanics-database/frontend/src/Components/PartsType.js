@@ -3,10 +3,10 @@ import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
 
-function Salary() {
-      var columns = [
-      { title: 'Job Title', field: 'job_title', editable: 'onAdd'},
-      { title: 'Wage', field: 'wage'}
+function PartsType() {
+    var columns = [
+        { title: 'Model', field: 'model', editable: 'onAdd'},
+        { title: 'Make', field: 'make'}
     ]
     const [status, setStatus] = useState(null);
     const [apiData, setApiData] = useState([]);
@@ -19,7 +19,7 @@ function Salary() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/salary';
+            const API = 'http://127.0.0.1:5000/online/harperdb/partstype';
 
             fetch(API)
                 .then((response) => {
@@ -33,19 +33,18 @@ function Salary() {
                 });
         };
         getAPI();
-
     }, []);
 
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []
-        if(newData.job_title === undefined){
-          errorList.push("Please enter Job Title")
+        if(newData.model === undefined){
+          errorList.push("Please enter Part model ")
         }
-        if(newData.wage === undefined){
-          errorList.push("Please enter Wage")
+        if(newData.make === undefined){
+          errorList.push("Please enter Part make ")
         }
-        const url = 'http://127.0.0.1:5000/online/harperdb/salary/add-salary';
+        const url = 'http://127.0.0.1:5000/online/harperdb/partstype/add-type';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)
           .then(res => {
@@ -67,14 +66,15 @@ function Salary() {
           resolve()
         }
         window.location.reload(false);
-
+        
     }
+
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/salary/delete-salary/' + oldData.job_title;
+        const url = 'http://127.0.0.1:5000/online/harperdb/partstype/delete-type/' + oldData.model;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
-            const index = oldData.tableData.job_title;
+            const index = oldData.tableData.model;
             dataDelete.splice(index, 1);
             setData([...dataDelete]);
             resolve()
@@ -87,21 +87,20 @@ function Salary() {
            window.location.reload(false);
       }
 
-
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []
-        if(newData.job_title == ""){
-            errorList.push("Please enter job title")
+        if(newData.model == ""){
+            errorList.push("Please enter Part model ")
         }
-        if(newData.wage == ""){
-            errorList.push("Please enter wage")
+        if(newData.make == ""){
+            errorList.push("Please enter Part make ")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/salary/update-salary", newData)
+            axios.put("http://127.0.0.1:5000/online/harperdb/partstype/update-type", newData)
             .then(res => {
                 const dataUpdate = [...data];
-                const index = oldData.tableData.job_title;
+                const index = oldData.tableData.model;
                 dataUpdate[index] = newData;
                 setData([...dataUpdate]);
                 resolve()
@@ -122,51 +121,49 @@ function Salary() {
     }
 
     return(
-      <Fragment>
-        <div class="container">
-
-                    <main class="spacer">
-
-                        <MaterialTable
-                            title="Salary"
-                            columns={columns}
-                            data={apiData}
-                            style={{
-                                border: "3px solid #744F28",
-                                maxWidth: "1450px",
-                                overflow: "scroll",
-                                background: "#eaeaea",
-                                color: "#500000",
-                            }}
-                            options={{
-                               headerStyle: {
-                                    background: "#d1d1d1",
-                                    color: '#500000',
-                                },
-                                cellStyle: {
-                                    color: '#500000',
-                                }
-                            }}
-                            editable={{
-                                onRowAdd: (newData) =>
-                                    new Promise((resolve) => {
-                                        handleRowAdd(newData, resolve)
-                                    }),
-                                onRowUpdate: (newData, oldData) =>
-                                    new Promise((resolve) => {
-                                        handleRowUpdate(newData, oldData, resolve);
-                                    }),
-                                onRowDelete: oldData =>
-                                    new Promise((resolve) => {
-                                        handleRowDelete(oldData, resolve)
-                                  }),
-                            }}
-                        />
-                    </main>
-
-        </div>
-      </Fragment>
+        <Fragment>
+            <div class="container">
+                <main class="spacer">
+                    <MaterialTable
+                        title="Part Types"
+                        columns={columns}
+                        data={apiData}
+                        style={{
+                            border: "3px solid #744F28",
+                            maxWidth: "1450px",
+                            overflow: "scroll",
+                            background: "#eaeaea",
+                            color: "#500000",
+                        }}
+                        options={{
+                            headerStyle: {
+                                background: "#d1d1d1",
+                                color: '#500000',
+                            },
+                            cellStyle: {
+                                color: '#500000',
+                            }
+                        }}
+                        editable={{
+                            onRowAdd: (newData) =>
+                                new Promise((resolve) => {
+                                    handleRowAdd(newData, resolve)
+                                }),
+                            onRowUpdate: (newData, oldData) =>
+                                new Promise((resolve) => {
+                                    handleRowUpdate(newData, oldData, resolve);
+                                }),
+                            onRowDelete: oldData =>
+                                new Promise((resolve) => {
+                                    handleRowDelete(oldData, resolve)
+                                }),
+                        }}
+                    />
+                </main>
+             </div>
+         </Fragment>
     );
 }
 
-export default Salary;
+
+export default PartsType;

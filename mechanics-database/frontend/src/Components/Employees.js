@@ -1,20 +1,17 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, Suspense, lazy } from 'react';
 import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
+const Job = React.lazy(()=>import('./Salary'));
 
 function Employees() {
       var columns = [
-      { title: 'Employee ID', field: 'employee_id' },
-      { title: 'Name', field: 'employee_name' },
-      { title: 'Job Title', field: 'job_title' },
-      {title: 'Employee Password', field: 'employee_password'}
+      { title: 'Employee ID', field: 'employee_id', editable: 'onAdd'},
+      { title: 'Name', field: 'employee_name'},
+      { title: 'Job Title', field: 'job_title'},
+      { title: 'Employee Password', field: 'employee_password'}
     ]
     const [status, setStatus] = useState(null);
-    const[employee_id, setID] = useState('');
-    const[employee_name, setName] = useState('');
-    const[employee_password, setPassword] = useState('');
-    const[job_title, setJob] = useState('');
     const [apiData, setApiData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
@@ -42,29 +39,47 @@ function Employees() {
 
     }, []);
 
-    const handleSubmit = () => {
-      setLoading(true);
-      setIsError(false);
-      const data = {
-        employee_id: employee_id,
-        employee_name: employee_name,
-        job_title: job_title,
-        employee_password: employee_password
-      }
-      axios.put('http://127.0.0.1:5000/online/harperdb/employee/update-employee', data)
-        .then(res => {
-          setData(res.data);
-          setID('');
-          setName('');
-          setPassword('');
-          setJob('');
-          setLoading(false);
-        }).catch(err => {
-          setLoading(false);
-          setIsError(true);
-        });
-      }
-      const handleRowDelete = (oldData, resolve) =>{
+    const handleRowAdd = (newData, resolve) => {
+        //validation
+        let errorList = []
+        if(newData.employee_id === undefined){
+          errorList.push("Please enter Employee ID: ")
+        }
+        if(newData.employee_name === undefined){
+          errorList.push("Please enter Employee Name")
+        }
+        if(newData.job_title === undefined){
+          errorList.push("Please enter a Job Title")
+        }
+        if(newData.employee_password === undefined){
+          errorList.push("Please enter an Employee Password")
+        }
+        const url = 'http://127.0.0.1:5000/online/harperdb/employee/add-employee';
+        if(errorList.length < 1){ //no error
+          axios.post(url, newData)
+          .then(res => {
+            let dataToAdd = [...data];
+            dataToAdd.push(newData);
+            setData(dataToAdd);
+            resolve()
+            setErrorMessages([])
+            setIsError(false)
+          })
+          .catch(error => {
+            setErrorMessages(["Cannot add data. Server error!"])
+            setIsError(true)
+            resolve()
+          })
+        }else{
+          setErrorMessages(errorList)
+          setIsError(true)
+          resolve()
+        }
+        window.location.reload(false);
+
+    }
+
+    const handleRowDelete = (oldData, resolve) =>{
         const url = 'http://127.0.0.1:5000/online/harperdb/employee/delete-employee/' + oldData.employee_id;
         axios.delete(url)
           .then(res => {
@@ -81,119 +96,97 @@ function Employees() {
            })
            window.location.reload(false);
       }
-      // const handleRowUpdate = (newData, oldData, resolve) => {
-      //   //validation
-      //     let errorList = []
-      //     if(newData.employee_id == ""){
-      //       errorList.push("Please enter Employee ID:")
-      //     }
-      //     if(newData.employee_name == ""){
-      //       errorList.push("Please enter Employee Name")
-      //     }
-      //     if(newData.employee_password == ""){
-      //       errorList.push("Please enter Employee Password")
-      //     }
-      //     if(newData.job_title == ""){
-      //       errorList.push("Please enter Job Title")
-      //     }
-      //   if(errorList.length < 1){
-      //     axios.put("http://127.0.0.1:5000/online/harperdb/employee/update-employee", newData)
-      //       .then(res => {
-      //         const dataUpdate = [...data];
-      //         const index = oldData.tableData.employee_id;
-      //         dataUpdate[index] = newData;
-      //         setData([...dataUpdate]);
-      //         resolve()
-      //         setIserror(false)
-      //         setErrorMessages([])
-      //       })
-      //       .catch(error => {
-      //         setErrorMessages(["Update failed!"])
-      //         setIserror(true)
-      //         resolve()
-      //     })
-      //   }else{
-      //     setErrorMessages(errorList)
-      //     setIserror(true)
-      //     resolve()
-      //   }
-      // }
+
+    const handleRowUpdate = (newData, oldData, resolve) => {
+        //validation
+        let errorList = []
+        if(newData.employee_id == ""){
+            errorList.push("Please enter Employee ID:")
+        }
+        if(newData.employee_name == ""){
+            errorList.push("Please enter Employee Name")
+        }
+        if(newData.employee_password == ""){
+            errorList.push("Please enter Employee Password")
+        }
+        if(newData.job_title == ""){
+            errorList.push("Please enter Job Title")
+        }
+        if(errorList.length < 1){
+            axios.put("http://127.0.0.1:5000/online/harperdb/employee/update-employee", newData)
+            .then(res => {
+                const dataUpdate = [...data];
+                const index = oldData.tableData.employee_id;
+                dataUpdate[index] = newData;
+                setData([...dataUpdate]);
+                resolve()
+                setIsError(false)
+                setErrorMessages([])
+            })
+            .catch(error => {
+                setErrorMessages(["Update failed!"])
+                setIsError(true)
+                resolve()
+            })
+        }else{
+            setErrorMessages(errorList)
+            setIsError(true)
+            resolve()
+        }
+        window.location.reload(false);
+    }
     return(
       <Fragment>
         <header>
                   <h1>Employees</h1>
         </header>
         <div class="container">
-            <div class="row justify-items-center">
-                <div class="col-lg-4 top" >
-                    <form method="POST" action="http://127.0.0.1:5000/online/harperdb/employee/add-employee">
-                        <div>
-                            <label>Employee ID</label>
-                            <input type="text" name="employee_id" required />
-                        </div>
-                        <div>
-                            <label>Employee Name</label>
-                            <input type="text" name="employee_name" required />
-                        </div>
-                        <div>
-                            <label>Employee Password</label>
-                            <input type="text" name="employee_password" required />
-                        </div>
-                        <div>
-                            <label>Job Title</label>
-                            <input type="text" name="job_title" required />
-                        </div>
-                        <div>
-                            <button type="submit">Add Employee</button>
-                        </div>
-                    </form>
 
-
-                    <form>
-                         <div>
-                             <label>Employee ID</label>
-                             <input type="text" value = {employee_id} onChange = {e => setID(e.target.value)} required />
-                         </div>
-                         <div>
-                             <label>Employee Name</label>
-                             <input type="text" name="employee_name" value = {employee_name} onChange = {e => setName(e.target.value)} required />
-                         </div>
-                         <div>
-                             <label>Employee Password</label>
-                             <input type="text" name="employee_password" value = {employee_password} onChange = {e => setPassword(e.target.value)} required />
-                         </div>
-                         <div>
-                             <label>Job Title</label>
-                             <input type="text" name="job_title" value = {job_title} onChange = {e => setJob(e.target.value)} required />
-                         </div>
-                         <div>
-                             <button type="submit" onClick = {handleSubmit}>Update Employee</button>
-                         </div>
-                     </form>
-                </div>
-
-                <div class="col-lg-8">
-                    <main>
+                    <main class="spacer">
 
                         <MaterialTable
                             title="Employees"
                             columns={columns}
                             data={apiData}
+                            style={{
+                                border: "3px solid #744F28",
+                                maxWidth: "1450px",
+                                overflow: "scroll",
+                                background: "#eaeaea",
+                                color: "#500000",
+                            }}
+                            options={{
+                               headerStyle: {
+                                    background: "#d1d1d1",
+                                    color: '#500000',
+                                },
+                                cellStyle: {
+                                    color: '#500000',
+                                }
+                            }}
                             editable={{
-                                // onRowUpdate: (newData, oldData) =>
-                                //   new Promise((resolve) => {
-                                //     handleRowUpdate(newData, oldData, resolve);
-                                //   }),
+                                onRowAdd: (newData) =>
+                                    new Promise((resolve) => {
+                                        handleRowAdd(newData, resolve)
+                                    }),
+                                onRowUpdate: (newData, oldData) =>
+                                    new Promise((resolve) => {
+                                        handleRowUpdate(newData, oldData, resolve);
+                                    }),
                                 onRowDelete: oldData =>
-                                  new Promise((resolve) => {
-                                    handleRowDelete(oldData, resolve)
+                                    new Promise((resolve) => {
+                                        handleRowDelete(oldData, resolve)
                                   }),
                             }}
                         />
                     </main>
+                    <section>
 
-                </div>
-            </div>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Job />
+                      </Suspense>
+                    </section>
+
         </div>
       </Fragment>
     );

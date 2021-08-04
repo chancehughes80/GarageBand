@@ -1,8 +1,24 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import MaterialTable from 'material-table';
+import axios from 'axios';
 import './App.css';
 
-
 function Customers() {
+    var columns = [
+    { title: 'Customer ID', field: 'customer_id', editable: 'onAdd'},
+    { title: 'Name', field: 'customer_name'},
+    { title: 'Billing Address', field: 'billing_address'},
+    { title: 'Email Address', field: 'email_address'},
+    { title: 'Phone Number', field: 'phone_number'},
+    { title: 'Customer Password', field: 'customer_password'}
+  ]
+  const [status, setStatus] = useState(null);
+  const [apiData, setApiData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+  const [isError, setIsError] = useState(false);
+  const [errorMessages, setErrorMessages] = useState([])
+
     useEffect(() => {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
@@ -22,116 +38,164 @@ function Customers() {
         };
         getAPI();
     }, []);
-    const [apiData, setApiData] = useState([]);
-    const [loading, setLoading] = useState(true);
+    
+    const handleRowAdd = (newData, resolve) => {
+        //validation
+        let errorList = []
+        if(newData.customer_id === undefined){
+          errorList.push("Please enter Customer ID: ")
+        }
+        if(newData.customer_name === undefined){
+          errorList.push("Please enter Customer Name")
+        }
+        if(newData.billing_address === undefined){
+          errorList.push("Please enter a billing_address")
+        }
+        if(newData.email_address === undefined){
+          errorList.push("Please enter a Email Address")
+        }
+        if(newData.phone_number === undefined){
+          errorList.push("Please enter a Phone Number")
+        }
+        if(newData.customer_password === undefined){
+          errorList.push("Please enter an Customer Password")
+        }
+        const url = 'http://127.0.0.1:5000/online/harperdb/customer/add-customer';
+        if(errorList.length < 1){ //no error
+          axios.post(url, newData)
+          .then(res => {
+            let dataToAdd = [...data];
+            dataToAdd.push(newData);
+            setData(dataToAdd);
+            resolve()
+            setErrorMessages([])
+            setIsError(false)
+          })
+          .catch(error => {
+            setErrorMessages(["Cannot add data. Server error!"])
+            setIsError(true)
+            resolve()
+          })
+        }else{
+          setErrorMessages(errorList)
+          setIsError(true)
+          resolve()
+        }
+        window.location.reload(false);
+
+    }
+
+    const handleRowDelete = (oldData, resolve) =>{
+        const url = 'http://127.0.0.1:5000/online/harperdb/customer/delete-customer/' + oldData.customer_id;
+        axios.delete(url)
+          .then(res => {
+            const dataDelete = [...data];
+            const index = oldData.tableData.customer_id;
+            dataDelete.splice(index, 1);
+            setData([...dataDelete]);
+            resolve()
+          })
+          .catch(error => {
+             setErrorMessages(["Delete failed! Server error"])
+             setIsError(true)
+             resolve()
+           })
+           window.location.reload(false);
+      }
+    const handleRowUpdate = (newData, oldData, resolve) => {
+        //validation
+        let errorList = []
+        if(newData.customer_id === undefined){
+          errorList.push("Please enter Customer ID: ")
+        }
+        if(newData.customer_name === undefined){
+          errorList.push("Please enter Customer Name")
+        }
+        if(newData.billing_address === undefined){
+          errorList.push("Please enter a billing_address")
+        }
+        if(newData.email_address === undefined){
+          errorList.push("Please enter a Email Address")
+        }
+        if(newData.phone_number === undefined){
+          errorList.push("Please enter a Phone Number")
+        }
+        if(newData.customer_password === undefined){
+          errorList.push("Please enter an Customer Password")
+        }
+        if(errorList.length < 1){
+            axios.put("http://127.0.0.1:5000/online/harperdb/customer/update-customer", newData)
+            .then(res => {
+                const dataUpdate = [...data];
+                const index = oldData.tableData.customer_id;
+                dataUpdate[index] = newData;
+                setData([...dataUpdate]);
+                resolve()
+                setIsError(false)
+                setErrorMessages([])
+            })
+            .catch(error => {
+                setErrorMessages(["Update failed!"])
+                setIsError(true)
+                resolve()
+            })
+        }else{
+            setErrorMessages(errorList)
+            setIsError(true)
+            resolve()
+        }
+        window.location.reload(false);
+    }
 
     return(
-        <Fragment>
+      <Fragment>
         <header>
                   <h1>Customers</h1>
         </header>
         <div class="container">
-            <div class="row justify-items-center">
-        <div class="col-lg-4 top" >
-                    <form method="POST" action="http://127.0.0.1:5000/online/harperdb/employee/add-employee">
-                        <div>
-                            <label>Customer ID</label>
-                            <input type="text" name="employee_id" required />
-                        </div>
-                        <div>
-                            <label>Billing Address</label>
-                            <input type="text" name="employee_name" required />
-                        </div>
-                        <div>
-                            <label>Customer Name </label>
-                            <input type="text" name="employee_password" required />
-                        </div>
-                        <div>
-                            <label>Phone Number </label>
-                            <input type="text" name="job_title" required />
-                        </div>
-                        <div>
-                            <label>Email Address </label>
-                            <input type="text" name="job_title" required />
-                        </div>
-                        <div>
-                            <label>Password </label>
-                            <input type="text" name="job_title" required />
-                        </div>
-                        <div>
-                            <button type="submit">Add Customer</button>
-                        </div>
-                    </form>
 
-           
-                    <form method="PUT" action="http://127.0.0.1:5000/online/harperdb/employee/update-employee">
-                         <div>
-                            <label>Customer ID</label>
-                            <input type="text" name="employee_id" required />
-                        </div>
-                        <div>
-                            <label>Billing Address</label>
-                            <input type="text" name="employee_name" required />
-                        </div>
-                        <div>
-                            <label>Customer Name </label>
-                            <input type="text" name="employee_password" required />
-                        </div>
-                        <div>
-                            <label>Model </label>
-                            <input type="text" name="job_title" required />
-                        </div>
-                         <div>
-                             <button type="submit">Update Employee</button>
-                         </div>
-                     </form>
+                    <main class="spacer">
 
-                     <form method="DELETE" action="http://127.0.0.1:5000/online/harperdb/employee/delete-employee">
-                         <div>
-                             <label>Employee ID</label>
-                             <input type="text" name="employee_id" required />
-                         </div>
-                         <div>
-                             <button type="submit">Delete Employee</button>
-                         </div>
-                    </form>
-                </div>
-                <div class="col-lg-8">
-        <main>
-            {loading === true ? (
-                <div>
-                    <h1>Loading...</h1>
-                </div>
-            ) : (
-                <section>
-                    {apiData.map((Customers) => {
-                        return (
-                            <div className="employee-container" key={String(Customers.part_id)}>
-                                <h1>{Customers.customer_name}</h1>
-                                <p>
-                                    <strong>ID:</strong> {Customers.customer_id}
-                                </p>
-                                <p>
-                                    <strong>Phone number:</strong> {Customers.phone_number}
-                                </p>
-                                <p>
-                                    <strong>Email address:</strong> {Customers.email_address}
-                                </p>
-                                <p>
-                                    <strong>Billing address:</strong> {Customers.billing_address}
-                                </p>
-                            </div>
-                        );
-                    })}
-                 </section>
-            )}
-         </main>
-         </div>
-         </div>
-         </div>
-         </Fragment>
+                        <MaterialTable
+                            title="Customers"
+                            columns={columns}
+                            data={apiData}
+                            style={{
+                                border: "3px solid #744F28",
+                                maxWidth: "1450px",
+                                overflow: "scroll",
+                                background: "#eaeaea",
+                                color: "#500000",
+                            }}
+                            options={{
+                               headerStyle: {
+                                    background: "#d1d1d1",
+                                    color: '#500000',
+                                },
+                                cellStyle: {
+                                    color: '#500000',
+                                }
+                            }}
+                            editable={{
+                                onRowAdd: (newData) =>
+                                    new Promise((resolve) => {
+                                        handleRowAdd(newData, resolve)
+                                    }),
+                                onRowUpdate: (newData, oldData) =>
+                                    new Promise((resolve) => {
+                                        handleRowUpdate(newData, oldData, resolve);
+                                    }),
+                                onRowDelete: oldData =>
+                                    new Promise((resolve) => {
+                                        handleRowDelete(oldData, resolve)
+                                  }),
+                            }}
+                        />
+                    </main>
+
+
+        </div>
+      </Fragment>
     );
 }
-
-
 export default Customers;

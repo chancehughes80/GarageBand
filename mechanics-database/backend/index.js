@@ -760,7 +760,7 @@ app.get('/online/harperdb/repairparts', (req, res) => {
 
 // POST: Add new PartsRepair
 app.post('/online/harperdb/repairparts/add-repairparts', (req, res) => {
-    const { repair_id, part_id} = req.body;
+    const { serial_id, repair_id, part_id} = req.body;
     console.log(req.body);
     const data = {
         operation: 'insert',
@@ -768,6 +768,7 @@ app.post('/online/harperdb/repairparts/add-repairparts', (req, res) => {
         table: 'RepairParts',
         records: [
             {
+                serial_id: serial_id,
                 repair_id: repair_id,
                 part_id: part_id,
             },
@@ -798,10 +799,10 @@ app.post('/online/harperdb/repairparts/add-repairparts', (req, res) => {
 
 //PUT: Update PartsRepair
 app.put('/online/harperdb/repairparts/update-repairparts', (req, res) => {
-    const {part_id, repair_id} = req.body;
+    const {serial_id, part_id, repair_id} = req.body;
     console.log(req.body);
     console.log('To be Updated');
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.RepairParts SET part_id=${part_id}, repair_id = ${repair_id} WHERE repair_id = ${repair_id}` };
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.RepairParts SET part_id="${part_id}", repair_id = "${repair_id}" WHERE serial_id = ${serial_id}` };
 
     const config = {
         method: 'post',
@@ -825,11 +826,11 @@ app.put('/online/harperdb/repairparts/update-repairparts', (req, res) => {
 
 
 //DELETE PartsRepair
-app.delete('/online/harperdb/repairparts/delete-repairparts/:repair_id', (req, res) => {
-    const repair_id = req.params.repair_id;
-    console.log('Delete Repair');
+app.delete('/online/harperdb/repairparts/delete-repairparts/:serial_id', (req, res) => {
+    const serial_id = req.params.serial_id;
+    console.log('Delete PartsRepair');
 
-    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.RepairParts WHERE repair_id = ${repair_id}` };
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.RepairParts WHERE serial_id = "${serial_id}"` };
 
     const config = {
         method: 'post',

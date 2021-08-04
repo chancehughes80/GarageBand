@@ -5,12 +5,11 @@ import './App.css';
 
 function RepairParts() {
       var columns = [
+      { title: 'Serial ID', field: 'serial_id', editable: 'onAdd'},
       { title: 'Part ID', field: 'part_id'},
-      { title: 'Repair ID', field: 'repair_id', editable: 'onAdd' },
+      { title: 'Repair ID', field: 'repair_id'},
     ]
     const [status, setStatus] = useState(null);
-    const[part_id, setPID] = useState('');
-    const[repair_id, setRID] = useState('');
     const [apiData, setApiData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
@@ -37,24 +36,6 @@ function RepairParts() {
         getAPI();
 
     }, []);
-
-    const handleSubmit = () => {
-      setLoading(true);
-      setIsError(false);
-      const data = {
-        part_id: part_id,
-        repair_id:  repair_id
-      }
-      axios.put('http://127.0.0.1:5000/online/harperdb/repairparts/update-repairparts', data)
-        .then(res => {
-          setData(res.data);
-          setPID('');
-          setRID('');
-          }).catch(err => {
-          setLoading(false);
-          setIsError(true);
-        });
-      }
 
     const handleRowAdd = (newData, resolve) => {
         //validation
@@ -92,7 +73,7 @@ function RepairParts() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/repairparts/delete-repairparts/' + oldData.repair_id;
+        const url = 'http://127.0.0.1:5000/online/harperdb/repairparts/delete-repairparts/' + oldData.serial_id;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];

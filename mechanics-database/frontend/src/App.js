@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router,Link, Route, Switch } from "react-router-dom";
-import {Home, Employees,Vehicles, Parts, Repairs, Customers, AddEmployee, Navigation} from "./Components";
+import {Home, Employees, Salary, Vehicles, Parts, Repairs, Customers, Navigation} from "./Components";
 import './App.css';
 
 export default function App() {
@@ -11,6 +11,7 @@ export default function App() {
         <Switch>
           <Route path="/" exact component={() => <Home />} />
           <Route path="/Employees" exact component={() => <Employees />} />
+          <Route path="/Salary" exact component={() => <Salary />} />
           <Route path="/Vehicles" exact component={() => <Vehicles />} />
           <Route path="/Parts" exact component={() => <Parts />} />
           <Route path="/Repairs" exact component={() => <Repairs />} />

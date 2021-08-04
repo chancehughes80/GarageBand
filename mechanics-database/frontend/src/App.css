@@ -77,7 +77,9 @@ form div {
     margin-bottom: 1.3rem;
 }
 
-
+.App{
+    background: #500000;
+}
 .employee-container {
     background: #fcee0b;
     padding: 4rem;
@@ -94,16 +96,4 @@ form div {
 .employee-container p {
     margin: 1rem 0 1rem 0;
     font-size: 2rem;
-}
-
-.employee-container img {
-    width: 10rem;
-    height: 15rem;
-}
-
-@media screen and (max-width: 1094px) {
-    section {
-        justify-content: center;
-        /* margin: 0 auto; */
-    }
 }

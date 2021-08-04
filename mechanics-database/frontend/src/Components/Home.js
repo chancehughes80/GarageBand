@@ -2,6 +2,8 @@ import React from "react";
 import Car from "./Car1.png";
 import Workers from "./Employees.png";
 import cParts from "./Parts.png";
+import Repair from "./Repairs.png";
+import Customer from "./Customer.png";
 function Home() {
   return (
     <div className="home">
@@ -33,13 +35,13 @@ function Home() {
               <img src={Workers} width="100%" height="100%"   />
             </a>
             <p></p>
-            <p>Click on the image above to see a list of all the vehicles in the database.</p>
+            <p>Click on the image above to see a list of all the employees in the database.</p>
           </div>
           <div class="col-lg-4">
             <a href='/Parts'>
               <img src={cParts} width="75%" height="50%"   />
             </a>
-            <p>Click on the image above to see a list of all the vehicles in the database.</p>
+            <p>Click on the image above to see a list of all the parts in the database.</p>
           </div>
         </div>
 
@@ -54,17 +56,17 @@ function Home() {
           <div class="row align-items-center  my-5">
         <div class="col-lg-4">
             <a href='/Customers'>
-              <img src={Car} width="100%" height="100%"   />
+              <img src={Customer} width="100%" height="100%"   />
             </a>
             <p></p>
-            <p>Click on the image above to see a list of all the vehicles in the database.</p>
+            <p>Click on the image above to see a list of all the customers in the database.</p>
           </div>
           <div class="col-lg-4">
             <a href='/Repairs'>
-              <img src={Workers} width="100%" height="100%"   />
+              <img src={Repair} width="100%" height="100%"   />
             </a>
             <p></p>
-            <p>Click on the image above to see a list of all the vehicles in the database.</p>
+            <p>Click on the image above to see a list of all the repairs in the database.</p>
           </div>
           </div>
 

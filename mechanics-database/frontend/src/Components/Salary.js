@@ -3,12 +3,10 @@ import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
 
-function Employees() {
+function Salary() {
       var columns = [
-      { title: 'Employee ID', field: 'employee_id', editable: 'onAdd'},
-      { title: 'Name', field: 'employee_name'},
-      { title: 'Job Title', field: 'job_title'},
-      { title: 'Employee Password', field: 'employee_password'}
+      { title: 'Job Title', field: 'job_title', editable: 'onAdd'},
+      { title: 'Wage', field: 'wage'}
     ]
     const [status, setStatus] = useState(null);
     const [apiData, setApiData] = useState([]);
@@ -21,7 +19,7 @@ function Employees() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/employee';
+            const API = 'http://127.0.0.1:5000/online/harperdb/salary';
 
             fetch(API)
                 .then((response) => {
@@ -37,23 +35,16 @@ function Employees() {
         getAPI();
 
     }, []);
-
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []
-        if(newData.employee_id === undefined){
-          errorList.push("Please enter Employee ID: ")
-        }
-        if(newData.employee_name === undefined){
-          errorList.push("Please enter Employee Name")
-        }
         if(newData.job_title === undefined){
-          errorList.push("Please enter a Job Title")
+          errorList.push("Please enter Job Title")
         }
-        if(newData.employee_password === undefined){
-          errorList.push("Please enter an Employee Password")
+        if(newData.wage === undefined){
+          errorList.push("Please enter Wage")
         }
-        const url = 'http://127.0.0.1:5000/online/harperdb/employee/add-employee';
+        const url = 'http://127.0.0.1:5000/online/harperdb/salary/add-salary';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)
           .then(res => {
@@ -77,13 +68,12 @@ function Employees() {
         window.location.reload(false);
 
     }
-
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/employee/delete-employee/' + oldData.employee_id;
+        const url = 'http://127.0.0.1:5000/online/harperdb/salary/delete-salary/' + oldData.job_title;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
-            const index = oldData.tableData.employee_id;
+            const index = oldData.tableData.job_title;
             dataDelete.splice(index, 1);
             setData([...dataDelete]);
             resolve()
@@ -95,27 +85,21 @@ function Employees() {
            })
            window.location.reload(false);
       }
-      
+
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []
-        if(newData.employee_id == ""){
-            errorList.push("Please enter Employee ID:")
-        }
-        if(newData.employee_name == ""){
-            errorList.push("Please enter Employee Name")
-        }
-        if(newData.employee_password == ""){
-            errorList.push("Please enter Employee Password")
-        }
         if(newData.job_title == ""){
-            errorList.push("Please enter Job Title")
+            errorList.push("Please enter job title")
+        }
+        if(newData.wage == ""){
+            errorList.push("Please enter wage")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/employee/update-employee", newData)
+            axios.put("http://127.0.0.1:5000/online/harperdb/employee/update-salary", newData)
             .then(res => {
                 const dataUpdate = [...data];
-                const index = oldData.tableData.employee_id;
+                const index = oldData.tableData.job_title;
                 dataUpdate[index] = newData;
                 setData([...dataUpdate]);
                 resolve()
@@ -134,17 +118,18 @@ function Employees() {
         }
         window.location.reload(false);
     }
+
     return(
       <Fragment>
         <header>
-                  <h1>Employees</h1>
+                  <h1>Salary</h1>
         </header>
         <div class="container">
 
                     <main class="spacer">
 
                         <MaterialTable
-                            title="Employees"
+                            title="Salary"
                             columns={columns}
                             data={apiData}
                             style={{
@@ -186,4 +171,4 @@ function Employees() {
     );
 }
 
-export default Employees;
+export default Salary;

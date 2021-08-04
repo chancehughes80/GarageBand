@@ -1,13 +1,28 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import MaterialTable from 'material-table';
+import axios from 'axios';
 import './App.css';
 
 
 function Repair() {
+      var columns = [
+      { title: 'Repair ID', field: 'repair_id', editable: 'onAdd'},
+      { title: 'Description', field: 'repair_description'},
+      { title: 'Time', field: 'estimated_time_for_repair'},
+      { title: 'Cost', field: 'repair_cost'}
+    ]
+    const [status, setStatus] = useState(null);
+    const [apiData, setApiData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState(null);
+    const [isError, setIsError] = useState(false);
+    const [errorMessages, setErrorMessages] = useState([])
+
     useEffect(() => {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/repairs';
+            const API = 'http://127.0.0.1:5000/online/harperdb/repair';
 
             fetch(API)
                 .then((response) => {
@@ -21,101 +36,154 @@ function Repair() {
                 });
         };
         getAPI();
-    }, []);
-    const [apiData, setApiData] = useState([]);
-    const [loading, setLoading] = useState(true);
 
+    }, []);
+    const handleRowAdd = (newData, resolve) => {
+        //validation
+        let errorList = []
+        if(newData.repair_id === undefined){
+          errorList.push("Please enter Repair ID: ")
+        }
+        if(newData.repair_description === undefined){
+          errorList.push("Please enter Repair description")
+        }
+        if(newData.estimated_time_for_repair === undefined){
+          errorList.push("Please enter a time")
+        }
+        if(newData.repair_cost === undefined){
+          errorList.push("Please enter an cost")
+        }
+        const url = 'http://127.0.0.1:5000/online/harperdb/repair/add-repair';
+        if(errorList.length < 1){ //no error
+          axios.post(url, newData)
+          .then(res => {
+            let dataToAdd = [...data];
+            dataToAdd.push(newData);
+            setData(dataToAdd);
+            resolve()
+            setErrorMessages([])
+            setIsError(false)
+          })
+          .catch(error => {
+            setErrorMessages(["Cannot add data. Server error!"])
+            setIsError(true)
+            resolve()
+          })
+        }else{
+          setErrorMessages(errorList)
+          setIsError(true)
+          resolve()
+        }
+        window.location.reload(false);
+
+    }
+
+    const handleRowDelete = (oldData, resolve) =>{
+        const url = 'http://127.0.0.1:5000/online/harperdb/repair/delete-repair/' + oldData.repair_id;
+        axios.delete(url)
+          .then(res => {
+            const dataDelete = [...data];
+            const index = oldData.tableData.repair_id;
+            dataDelete.splice(index, 1);
+            setData([...dataDelete]);
+            resolve()
+          })
+          .catch(error => {
+             setErrorMessages(["Delete failed! Server error"])
+             setIsError(true)
+             resolve()
+           })
+           window.location.reload(false);
+      }
+
+    const handleRowUpdate = (newData, oldData, resolve) => {
+        //validation
+        let errorList = []
+        if(newData.repair_id === undefined){
+          errorList.push("Please enter Repair ID: ")
+        }
+        if(newData.repair_description === undefined){
+          errorList.push("Please enter Repair description")
+        }
+        if(newData.estimated_time_for_repair === undefined){
+          errorList.push("Please enter a time")
+        }
+        if(newData.repair_cost === undefined){
+          errorList.push("Please enter an cost")
+        }
+        if(errorList.length < 1){
+            axios.put("http://127.0.0.1:5000/online/harperdb/repair/update-repair", newData)
+            .then(res => {
+                const dataUpdate = [...data];
+                const index = oldData.tableData.employee_id;
+                dataUpdate[index] = newData;
+                setData([...dataUpdate]);
+                resolve()
+                setIsError(false)
+                setErrorMessages([])
+            })
+            .catch(error => {
+                setErrorMessages(["Update failed!"])
+                setIsError(true)
+                resolve()
+            })
+        }else{
+            setErrorMessages(errorList)
+            setIsError(true)
+            resolve()
+        }
+        window.location.reload(false);
+    }
     return(
       <Fragment>
         <header>
                   <h1>Repairs</h1>
         </header>
         <div class="container">
-            <div class="row justify-items-center">
-                <div class="col-lg-4 top" >
-                    <form method="POST" action="http://127.0.0.1:5000/online/harperdb/employee/add-employee">
-                        <div>
-                            <label>Repair ID</label>
-                            <input type="text" name="employee_id" required />
-                        </div>
-                        <div>
-                            <label>Repair Description</label>
-                            <input type="text" name="employee_name" required />
-                        </div>
-                        <div>
-                            <label>Repair Time</label>
-                            <input type="text" name="employee_password" required />
-                        </div>
-                        <div>
-                            <label>Cost</label>
-                            <input type="text" name="job_title" required />
-                        </div>
-                        <div>
-                            <button type="submit">Add Repair</button>
-                        </div>
-                    </form>
 
-           
-                    <form method="PUT" action="http://127.0.0.1:5000/online/harperdb/employee/update-employee">
-                         <div>
-                             <label>Repair ID</label>
-                             <input type="text" name="employee_id" required />
-                         </div>
-                         <div>
-                             <label>Repair Description</label>
-                             <input type="text" name="employee_name" required />
-                         </div>
-                         <div>
-                             <label>Repair Time</label>
-                             <input type="text" name="employee_password" required />
-                         </div>
-                         <div>
-                             <label>Cost </label>
-                             <input type="text" name="job_title" required />
-                         </div>
-                         <div>
-                             <button type="submit">Update Repair</button>
-                         </div>
-                     </form>
+                    <main class="spacer">
 
-                     <form method="DELETE" action="http://127.0.0.1:5000/online/harperdb/employee/delete-employee">
-                         <div>
-                             <label>Employee ID</label>
-                             <input type="text" name="employee_id" required />
-                         </div>
-                         <div>
-                             <button type="submit">Delete Employee</button>
-                         </div>
-                    </form>
-                </div>
+                        <MaterialTable
+                            title="Repair"
+                            columns={columns}
+                            data={apiData}
+                            style={{
+                                border: "3px solid #744F28",
+                                maxWidth: "1450px",
+                                overflow: "scroll",
+                                background: "#eaeaea",
+                                color: "#500000",
+                            }}
+                            options={{
+                               headerStyle: {
+                                    background: "#d1d1d1",
+                                    color: '#500000',
+                                },
+                                cellStyle: {
+                                    color: '#500000',
+                                }
+                            }}
+                            editable={{
+                                onRowAdd: (newData) =>
+                                    new Promise((resolve) => {
+                                        handleRowAdd(newData, resolve)
+                                    }),
+                                onRowUpdate: (newData, oldData) =>
+                                    new Promise((resolve) => {
+                                        handleRowUpdate(newData, oldData, resolve);
+                                    }),
+                                onRowDelete: oldData =>
+                                    new Promise((resolve) => {
+                                        handleRowDelete(oldData, resolve)
+                                  }),
+                            }}
+                        />
+                    </main>
 
-                <div class="col-lg-8">
-                    <main>
-                        <section>
-                            {apiData.map((Repairs) => {
-                                return (
-                                    <div className="employee-container" key={String(Repairs.employee_id)}>
-                                        <h1>{Repairs.repair_description}</h1>
-                                        <p>
-                                            <strong>ID:</strong> {Repairs.repair_id}
-                                        </p>
-                                        <p>
-                                            <strong>Cost:</strong> {Repairs.repair_cost}
-                                        </p>
-                                        <p>
-                                            <strong>Total Time:</strong> {Repairs.estimated_time_for_repair} min
-                                        </p>
-                                    </div>
-                                );
-                            })}
-                         </section>
-                     </main>
-                </div>
-            </div>
+
         </div>
       </Fragment>
     );
 }
-
 
 export default Repair;

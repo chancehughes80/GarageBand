@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, Suspense, lazy  } from 'react';
 import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
@@ -7,23 +7,18 @@ import './App.css';
 function VehicleRepair() {
 
     var columns = [
-        { title: 'VIN', field: 'VIN', editable: 'onAdd'},
-        { title: 'Repair ID', field: 'repair_id'},
+        { title: 'Repair ID', field: 'repair_id', editable: 'onAdd'},
+        { title: 'VIN', field: 'VIN'},
         { title: 'Status', field: 'repair_status'},
         { title: 'Actual Time for Repair', field: 'actual_time'}
       ]
 
-    const [status, setStatus] = useState(null);
-    const[VIN, setVIN] = useState('');
-    const[repair_id, setID] = useState('');
-    const[repair_status, setRepairStatus] = useState('');
-    const[actual_time, setTime] = useState('');
-
-    const [apiData, setApiData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [data, setData] = useState(null);
-    const [isError, setIsError] = useState(false);
-    const [errorMessages, setErrorMessages] = useState([])
+      const [status, setStatus] = useState(null);
+      const [apiData, setApiData] = useState([]);
+      const [loading, setLoading] = useState(true);
+      const [data, setData] = useState(null);
+      const [isError, setIsError] = useState(false);
+      const [errorMessages, setErrorMessages] = useState([])
 
     useEffect(() => {
         const getAPI = () => {
@@ -44,29 +39,6 @@ function VehicleRepair() {
         };
         getAPI();
     }, []);
-
-    const handleSubmit = () => {
-        setLoading(true);
-        setIsError(false);
-        const data = {
-          VIN: VIN,
-          repair_id: repair_id,
-          repair_status: repair_status,
-          actual_time: actual_time,
-        }
-        axios.put('http://127.0.0.1:5000/online/harperdb/repair-vehicle/update-repair-vehicle', data)
-          .then(res => {
-            setData(res.data);
-            setVIN('');
-            setID('');
-            setRepairStatus('');
-            setTime('');
-            setLoading(false);
-          }).catch(err => {
-            setLoading(false);
-            setIsError(true);
-          });
-        }
 
     const handleRowAdd = (newData, resolve) => {
         //validation
@@ -109,7 +81,7 @@ function VehicleRepair() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/repair-vehicle/delete-repair-vehicle/' + oldData.VIN;
+        const url = 'http://127.0.0.1:5000/online/harperdb/repair-vehicle/delete-repair-vehicle/' + oldData.repair_id;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
@@ -125,7 +97,7 @@ function VehicleRepair() {
            })
            window.location.reload(false);
       }
-    
+
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []
@@ -207,13 +179,12 @@ function VehicleRepair() {
                               }}
                           />
                       </main>
-  
-  
+                      
           </div>
         </Fragment>
       );
 
-    
+
 }
 
 export default VehicleRepair;

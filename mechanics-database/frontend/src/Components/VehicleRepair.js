@@ -9,14 +9,14 @@ function VehicleRepair() {
     var columns = [
         { title: 'VIN', field: 'VIN', editable: 'onAdd'},
         { title: 'Repair ID', field: 'repair_id'},
-        { title: 'Status', field: 'status'},
+        { title: 'Status', field: 'repair_status'},
         { title: 'Actual Time for Repair', field: 'actual_time'}
       ]
 
     const [status, setStatus] = useState(null);
     const[VIN, setVIN] = useState('');
     const[repair_id, setID] = useState('');
-    const[status, setStatus] = useState('');
+    const[repair_status, setRepairStatus] = useState('');
     const[actual_time, setTime] = useState('');
 
     const [apiData, setApiData] = useState([]);
@@ -59,7 +59,7 @@ function VehicleRepair() {
             setData(res.data);
             setVIN('');
             setID('');
-            setStatus('');
+            setRepairStatus('');
             setTime('');
             setLoading(false);
           }).catch(err => {
@@ -77,7 +77,7 @@ function VehicleRepair() {
         if(newData.repair_id === undefined){
             errorList.push("Please enter Repair ID")
         }
-        if(newData.status === undefined){
+        if(newData.repair_status === undefined){
             errorList.push("Please enter a Status")
         }
         if(newData.actual_time === undefined){
@@ -135,7 +135,7 @@ function VehicleRepair() {
         if(newData.repair_id === undefined){
             errorList.push("Please enter Repair ID")
         }
-        if(newData.status === undefined){
+        if(newData.repair_status === undefined){
             errorList.push("Please enter a Status")
         }
         if(newData.actual_time === undefined){

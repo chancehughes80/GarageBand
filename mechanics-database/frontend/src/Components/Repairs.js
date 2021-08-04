@@ -1,8 +1,10 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, Suspense, lazy } from 'react';
 import MaterialTable from 'material-table';
 import axios from 'axios';
+import ReactDOM from 'react-dom'
 import './App.css';
-
+const Type = React.lazy(()=>import('./EmployeeRepair'));
+const Type2 = React.lazy(()=>import('./RepairParts'));
 
 function Repair() {
       var columns = [
@@ -179,7 +181,16 @@ function Repair() {
                             }}
                         />
                     </main>
-
+                    <section>
+                      <Suspense id="load" fallback={<div>Loading...</div>}>
+                        <Type />
+                      </Suspense>
+                    </section>
+                    <section>
+                      <Suspense id="load" fallback={<div>Loading...</div>}>
+                        <Type2 />
+                      </Suspense>
+                    </section>
 
         </div>
       </Fragment>

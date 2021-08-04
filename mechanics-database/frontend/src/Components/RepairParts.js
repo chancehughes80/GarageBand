@@ -2,16 +2,15 @@ import React, { Fragment, useState, useEffect, Suspense, lazy } from 'react';
 import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
-const Job = React.lazy(()=>import('./Salary'));
 
-function Employees() {
+function RepairParts() {
       var columns = [
-      { title: 'Employee ID', field: 'employee_id', editable: 'onAdd'},
-      { title: 'Name', field: 'employee_name'},
-      { title: 'Job Title', field: 'job_title'},
-      { title: 'Employee Password', field: 'employee_password'}
+      { title: 'Part ID', field: 'part_id'},
+      { title: 'Repair ID', field: 'repair_id', editable: 'onAdd' },
     ]
     const [status, setStatus] = useState(null);
+    const[part_id, setPID] = useState('');
+    const[repair_id, setRID] = useState('');
     const [apiData, setApiData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
@@ -22,7 +21,7 @@ function Employees() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/employee';
+            const API = 'http://127.0.0.1:5000/online/harperdb/repairparts';
 
             fetch(API)
                 .then((response) => {
@@ -39,22 +38,35 @@ function Employees() {
 
     }, []);
 
+    const handleSubmit = () => {
+      setLoading(true);
+      setIsError(false);
+      const data = {
+        part_id: part_id,
+        repair_id:  repair_id
+      }
+      axios.put('http://127.0.0.1:5000/online/harperdb/repairparts/update-repairparts', data)
+        .then(res => {
+          setData(res.data);
+          setPID('');
+          setRID('');
+          }).catch(err => {
+          setLoading(false);
+          setIsError(true);
+        });
+      }
+
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []
-        if(newData.employee_id === undefined){
-          errorList.push("Please enter Employee ID: ")
+        if(newData.part_id === undefined){
+          errorList.push("Please enter Part ID: ")
         }
-        if(newData.employee_name === undefined){
-          errorList.push("Please enter Employee Name")
+        if(newData.repair_id === undefined){
+          errorList.push("Please enter Repair ID")
         }
-        if(newData.job_title === undefined){
-          errorList.push("Please enter a Job Title")
-        }
-        if(newData.employee_password === undefined){
-          errorList.push("Please enter an Employee Password")
-        }
-        const url = 'http://127.0.0.1:5000/online/harperdb/employee/add-employee';
+
+        const url = 'http://127.0.0.1:5000/online/harperdb/repairparts/add-repairparts';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)
           .then(res => {
@@ -80,11 +92,11 @@ function Employees() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/employee/delete-employee/' + oldData.employee_id;
+        const url = 'http://127.0.0.1:5000/online/harperdb/repairparts/delete-repairparts/' + oldData.repair_id;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
-            const index = oldData.tableData.employee_id;
+            const index = oldData.tableData.repair_id;
             dataDelete.splice(index, 1);
             setData([...dataDelete]);
             resolve()
@@ -96,27 +108,21 @@ function Employees() {
            })
            window.location.reload(false);
       }
-
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []
-        if(newData.employee_id == ""){
-            errorList.push("Please enter Employee ID:")
+        if(newData.part_id == ""){
+            errorList.push("Please enter Part ID:")
         }
-        if(newData.employee_name == ""){
-            errorList.push("Please enter Employee Name")
+        if(newData.repair_id == ""){
+            errorList.push("Please enter Repair ID")
         }
-        if(newData.employee_password == ""){
-            errorList.push("Please enter Employee Password")
-        }
-        if(newData.job_title == ""){
-            errorList.push("Please enter Job Title")
-        }
+
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/employee/update-employee", newData)
+            axios.put("http://127.0.0.1:5000/online/harperdb/repairparts/update-repairparts", newData)
             .then(res => {
                 const dataUpdate = [...data];
-                const index = oldData.tableData.employee_id;
+                const index = oldData.tableData.repair_id;
                 dataUpdate[index] = newData;
                 setData([...dataUpdate]);
                 resolve()
@@ -138,14 +144,14 @@ function Employees() {
     return(
       <Fragment>
         <header>
-                  <h1>Employees</h1>
+                  <h1>Repair Parts</h1>
         </header>
         <div class="container">
 
                     <main class="spacer">
 
                         <MaterialTable
-                            title="Employees"
+                            title="Repair Parts"
                             columns={columns}
                             data={apiData}
                             style={{
@@ -180,15 +186,11 @@ function Employees() {
                             }}
                         />
                     </main>
-                    <section>
-                        <Suspense fallback={<div>Loading...</div>}>
-                            <Job />
-                        </Suspense>
-                    </section>
+
 
         </div>
       </Fragment>
     );
 }
 
-export default Employees;
+export default RepairParts;

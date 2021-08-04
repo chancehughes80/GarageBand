@@ -4,7 +4,7 @@ import axios from 'axios';
 import ReactDOM from 'react-dom'
 import './App.css';
 //import Employee from './Employees';
-//const Type = React.lazy(()=>import('./PartsType'));
+const Type = React.lazy(()=>import('./PartsType'));
 
 function Parts() {
     var columns = [
@@ -180,6 +180,11 @@ function Parts() {
                         }}
                     />
                 </main>
+                <section>
+                <Suspense id="load" fallback={<div>Loading...</div>}>
+                    <Type />
+                  </Suspense>
+                </section>
              </div>
          </Fragment>
     );

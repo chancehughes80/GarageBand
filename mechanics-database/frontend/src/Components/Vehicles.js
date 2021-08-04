@@ -9,7 +9,7 @@ function Vehicles() {
     var columns = [
         { title: 'VIN', field: 'VIN', editable: 'onAdd'},
         { title: 'Model', field: 'model'},
-        { title: 'Year', field: 'year'},
+        { title: 'Year', field: 'vehicle_year'},
         { title: 'Color', field: 'color'},
         { title: 'Plate', field: 'plate'},
         { title: 'Customer ID', field: 'customer_id'}
@@ -18,7 +18,7 @@ function Vehicles() {
     const [status, setStatus] = useState(null);
     const[VIN, setVIN] = useState('');
     const[model, setModel] = useState('');
-    const[year, setYear] = useState('');
+    const[vehicle_year, setYear] = useState('');
     const[color, setColor] = useState('');
     const[plate, setPlate] = useState('');
     const[customer_id, setID] = useState('');
@@ -55,7 +55,7 @@ function Vehicles() {
         const data = {
           VIN: VIN,
           model: model,
-          year: year,
+          vehicle_year: vehicle_year,
           color: color,
           plate: plate,
           customer_id: customer_id
@@ -149,7 +149,7 @@ function Vehicles() {
         if(newData.model === undefined){
             errorList.push("Please enter Model")
         }
-        if(newData.year === undefined){
+        if(newData.vehicle_year === undefined){
             errorList.push("Please enter a Year")
         }
         if(newData.color === undefined){

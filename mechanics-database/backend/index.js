@@ -858,7 +858,6 @@ app.put('/online/harperdb/repairparts/update-repairparts', (req, res) => {
 app.delete('/online/harperdb/repairparts/delete-repairparts/:serial_id', (req, res) => {
     const serial_id = req.params.serial_id;
     console.log('Delete PartsRepair');
-
     const data = { operation: 'sql', sql: `DELETE FROM Mechanics.RepairParts WHERE serial_id = "${serial_id}"` };
 
     const config = {

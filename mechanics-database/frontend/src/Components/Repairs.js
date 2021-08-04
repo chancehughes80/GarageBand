@@ -181,16 +181,18 @@ function Repair() {
                             }}
                         />
                     </main>
-                    <section>
+            <div class="row justify-items-center">
+                <div class="col-lg-6" >
                       <Suspense id="load" fallback={<div>Loading...</div>}>
                         <Type />
                       </Suspense>
-                    </section>
-                    <section>
+                    </div>
+                <div class="col-lg-6" >
                       <Suspense id="load" fallback={<div>Loading...</div>}>
                         <Type2 />
                       </Suspense>
-                    </section>
+                    </div>
+                    </div>
 
         </div>
       </Fragment>

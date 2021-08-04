@@ -181,10 +181,9 @@ function Employees() {
                         />
                     </main>
                     <section>
-
-                    <Suspense fallback={<div>Loading...</div>}>
-                        <Job />
-                      </Suspense>
+                        <Suspense fallback={<div>Loading...</div>}>
+                            <Job />
+                        </Suspense>
                     </section>
 
         </div>

@@ -11,7 +11,6 @@ export default function App() {
         <Switch>
           <Route path="/" exact component={() => <Home />} />
           <Route path="/Employees" exact component={() => <Employees />} />
-          <Route path="/Salary" exact component={() => <Salary />} />
           <Route path="/Vehicles" exact component={() => <Vehicles />} />
           <Route path="/Parts" exact component={() => <Parts />} />
           <Route path="/Repairs" exact component={() => <Repairs />} />

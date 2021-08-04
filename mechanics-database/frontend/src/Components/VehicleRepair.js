@@ -9,7 +9,7 @@ function VehicleRepair() {
     var columns = [
         { title: 'VIN', field: 'VIN', editable: 'onAdd'},
         { title: 'Repair ID', field: 'repair_id'},
-        { title: 'Status', field: 'status'},
+        { title: 'Status', field: 'repair_status'},
         { title: 'Actual Time for Repair', field: 'actual_time'}
       ]
 
@@ -51,11 +51,7 @@ function VehicleRepair() {
         const data = {
           VIN: VIN,
           repair_id: repair_id,
-<<<<<<< HEAD
-          status: repair_status,
-=======
           repair_status: repair_status,
->>>>>>> 76503128de283127d8c455f6a8e543f7eb1d065e
           actual_time: actual_time,
         }
         axios.put('http://127.0.0.1:5000/online/harperdb/repair-vehicle/update-repair-vehicle', data)

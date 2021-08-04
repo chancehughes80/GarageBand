@@ -3,6 +3,7 @@ import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
 const CarType = React.lazy(()=>import('./VehicleType'));
+const CarRepair = React.lazy(()=>import('./VehicleRepair'));
 
 function Vehicles() {
 
@@ -234,6 +235,13 @@ function Vehicles() {
 
                         <Suspense fallback={<div>Loading...</div>}>
                           <CarType />
+                        </Suspense>
+                      </section>
+                      
+                      <section>
+
+                        <Suspense fallback={<div>Loading...</div>}>
+                          <CarRepair />
                         </Suspense>
                       </section>
   

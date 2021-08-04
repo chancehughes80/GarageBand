@@ -484,6 +484,7 @@ app.delete('/online/harperdb/parts/delete-part/:part_id', (req, res) => {
 // GET
 app.get('/online/harperdb/partstype', (req, res) => {
     const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.PartsType' };
+
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,
@@ -532,23 +533,23 @@ app.post('/online/harperdb/partstype/add-type', (req, res) => {
     };
 
     axios(config)
-      .then((response) => {
-          const data = response.data;
-          console.log('Part Type Added');
-          return res.redirect('http://localhost:3000/PartsType')
-      })
-      .catch((error) => {
-          console.log(error);
-      });
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 });
 
 
 //PUT
 app.put('/online/harperdb/partstype/update-type', (req, res) => {
-    const {model,make} = req.body;
+    const {model, make} = req.body;
     console.log(req.body);
 
-    const data = {operation: 'sql', sql: `UPDATE Mechanics.PartsType SET make = "${make}" WHERE model = "${model}"`};
+    const data = {operation: 'sql', sql: `UPDATE Mechanics.PartsType SET make = ${make} WHERE model = ${model}`};
 
     const config = {
         method: 'post',
@@ -571,11 +572,11 @@ app.put('/online/harperdb/partstype/update-type', (req, res) => {
 });
 
 //DELETE
-app.delete('/online/harperdb/partstype/delete-type/:model', (req, res) => {
-    const model = req.params.model;
+app.delete('/online/harperdb/partstype/delete-type', (req, res) => {
+    const model = req.body.model;
     console.log(model);
 
-    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.PartsType WHERE model = "${model}"` };
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.PartsType WHERE model = ${model}` };
 
     const config = {
         method: 'post',
@@ -589,8 +590,8 @@ app.delete('/online/harperdb/partstype/delete-type/:model', (req, res) => {
 
     axios(config)
         .then((response) => {
-            console.log('Part Deleted');
-            return res.redirect('http://localhost:3000/PartsType');
+            res.send({ msg: 'Part type Deleted' });
+            console.log('Part type Deleted');
         })
         .catch((error) => {
             console.log(error);
@@ -1400,7 +1401,7 @@ app.get('/online/harperdb/employeerepair/', (req, res) => {
             const data = response.data;
             console.log(data);
             res.json(data);
-            return res.redirect('http://localhost:5000/EmployeeRepair');
+            return res.redirect('http://localhost:5000/Repairs');
         })
         .catch((error) => {
             console.log(error);
@@ -1429,7 +1430,7 @@ app.get('/online/harperdb/employeerepair/:serial_id', (req, res) => {
             const data = response.data;
             console.log(data);
             res.json(data);
-            return res.redirect('http://localhost:5000/EmployeeRepair');
+            return res.redirect('http://localhost:5000/Repairs');
         })
         .catch((error) => {
             console.log(error);
@@ -1469,7 +1470,7 @@ app.post('/online/harperdb/employeerepair/add-employeerepair', (req, res) => {
       .then((response) => {
           const data = response.data;
           console.log('EmployeeRepair Added');
-          return res.redirect('http://localhost:3000/EmployeeRepair')
+          return res.redirect('http://localhost:3000/Repairs')
       })
       .catch((error) => {
           console.log(error);
@@ -1499,7 +1500,7 @@ app.put('/online/harperdb/employeerepair/update-employeerepair', (req, res) => {
       .then((response) => {
           res.send({ msg: 'EmployeeRepair Updated' });
           console.log('EmployeeRepair Updated');
-          return res.redirect('http://localhost:3000/EmployeesRepair');
+          return res.redirect('http://localhost:3000/Repairs');
       })
       .catch((error) => {
           console.log(error);
@@ -1527,7 +1528,7 @@ app.delete('/online/harperdb/employeerepair/delete-employeerepair/:serial_id', (
     axios(config)
         .then((response) => {
             console.log('EmployeeRepair Deleted');
-            return res.redirect('http://localhost:3000/EmployeeRepair');
+            return res.redirect('http://localhost:3000/Repairs');
         })
         .catch((error) => {
             console.log(error);

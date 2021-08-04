@@ -124,9 +124,6 @@ function RepairParts() {
     }
     return(
       <Fragment>
-        <header>
-                  <h1>Repair Parts</h1>
-        </header>
         <div class="container">
 
                     <main class="spacer">

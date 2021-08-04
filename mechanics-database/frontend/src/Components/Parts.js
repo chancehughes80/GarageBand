@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useEffect, Suspense, lazy } from 'react';
 import MaterialTable from 'material-table';
 import axios from 'axios';
-import ReactDOM from 'react-dom'
 import './App.css';
 //import Employee from './Employees';
 const Type = React.lazy(()=>import('./PartsType'));

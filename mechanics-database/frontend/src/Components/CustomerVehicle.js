@@ -106,7 +106,7 @@ function CustomerVehicle() {
       errorList.push("Please enter a year:")
     }
     if(errorList.length < 1){
-        axios.put("http://127.0.0.1:5000/online/harperdb/vehicle/update-vehicle", newData)
+        axios.put("http://127.0.0.1:5000/online/harperdb/customer/update-customer", newData)
         .then(res => {
             const dataUpdate = [...data];
             const index = oldData.tableData.customer_id;
@@ -141,7 +141,7 @@ function CustomerVehicle() {
 <main class="spacer">
 
     <MaterialTable
-        title="Vehicles"
+        title="Your Vehicles"
         columns={columns}
         data={apiData}
         style={{

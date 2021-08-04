@@ -85,7 +85,7 @@ function Vehicles() {
         if(newData.model === undefined){
             errorList.push("Please enter Model")
         }
-        if(newData.year === undefined){
+        if(newData.vehicle_year === undefined){
             errorList.push("Please enter a Year")
         }
         if(newData.color === undefined){
@@ -149,7 +149,7 @@ function Vehicles() {
         if(newData.model === undefined){
             errorList.push("Please enter Model")
         }
-        if(newData.year === undefined){
+        if(newData.vehicle_year === undefined){
             errorList.push("Please enter a Year")
         }
         if(newData.color === undefined){

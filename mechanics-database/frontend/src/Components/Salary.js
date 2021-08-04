@@ -121,9 +121,6 @@ function Salary() {
 
     return(
       <Fragment>
-        <header>
-                  <h1>Salary</h1>
-        </header>
         <div class="container">
 
                     <main class="spacer">

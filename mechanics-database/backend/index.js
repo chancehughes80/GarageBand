@@ -82,6 +82,34 @@ app.get('/online/harperdb/customer', (req, res) => {
         });
 });
 
+//GET get a customer by customer_id
+app.get('/online/harperdb/customer/:customer_id', (req, res) => {
+  const customer_id = req.params.customer_id;
+  console.log(customer_id);
+
+  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Customer WHERE customer_id = ${customer_id}` };
+
+  const config = {
+      method: 'post',
+      url: process.env.HARPERDB_URL,
+      headers: {
+          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+          'Content-Type': 'application/json',
+      },
+      data: data,
+  };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+            return res.redirect('http://localhost:5000/Customers');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
 
 //create and insert new customers
 app.post('/online/harperdb/customer/add-customer', (req, res) => {
@@ -878,7 +906,7 @@ app.delete('/online/harperdb/repairparts/delete-repairparts/:serial_id', (req, r
         .catch((error) => {
             console.log(error);
         });
-}); 
+});
 
 
 
@@ -912,6 +940,31 @@ app.get('/online/harperdb/vehicle', (req, res) => {
         });
 });
 
+// GET: Fetch all vehicles from the database
+app.get('/online/harperdb/vehicle/:customer_id', (req, res) => {
+  const customer_id = req.params.customer_id;
+  console.log(customer_id);
+  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Vehicle WHERE customer_id = ${customer_id}` };
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
 
 // POST: Create vehicles and add them to the database
 app.post('/online/harperdb/vehicle/add-vehicle', (req, res) => {

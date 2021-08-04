@@ -86,7 +86,7 @@ function CustomerAccount() {
     return(
       <Fragment>
         <header>
-                  <h1>Customers</h1>
+                  <h1>Your Account Information</h1>
         </header>
         <div class="container">
 

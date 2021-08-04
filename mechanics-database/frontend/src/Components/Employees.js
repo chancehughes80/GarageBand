@@ -1,7 +1,8 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, Suspense, lazy  } from 'react';
 import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
+const Type = React.lazy(()=>import('./Salary'));
 
 function Employees() {
       var columns = [
@@ -95,7 +96,7 @@ function Employees() {
            })
            window.location.reload(false);
       }
-      
+
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []
@@ -179,7 +180,11 @@ function Employees() {
                             }}
                         />
                     </main>
-
+                    <section>
+                      <Suspense id="load" fallback={<div>Loading...</div>}>
+                        <Type />
+                      </Suspense>
+                    </section>
 
         </div>
       </Fragment>

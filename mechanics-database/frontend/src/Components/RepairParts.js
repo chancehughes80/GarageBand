@@ -1,17 +1,13 @@
 import React, { Fragment, useState, useEffect, Suspense, lazy } from 'react';
 import MaterialTable from 'material-table';
 import axios from 'axios';
-import ReactDOM from 'react-dom'
 import './App.css';
-const Type = React.lazy(()=>import('./EmployeeRepair'));
-const Type2 = React.lazy(()=>import('./RepairParts'));
 
-function Repair() {
+function RepairParts() {
       var columns = [
-      { title: 'Repair ID', field: 'repair_id', editable: 'onAdd'},
-      { title: 'Description', field: 'repair_description'},
-      { title: 'Time', field: 'estimated_time_for_repair'},
-      { title: 'Cost', field: 'repair_cost'}
+      { title: 'Serial ID', field: 'serial_id', editable: 'onAdd'},
+      { title: 'Part ID', field: 'part_id'},
+      { title: 'Repair ID', field: 'repair_id'},
     ]
     const [status, setStatus] = useState(null);
     const [apiData, setApiData] = useState([]);
@@ -24,7 +20,7 @@ function Repair() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/repair';
+            const API = 'http://127.0.0.1:5000/online/harperdb/repairparts';
 
             fetch(API)
                 .then((response) => {
@@ -40,22 +36,18 @@ function Repair() {
         getAPI();
 
     }, []);
+
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []
+        if(newData.part_id === undefined){
+          errorList.push("Please enter Part ID: ")
+        }
         if(newData.repair_id === undefined){
-          errorList.push("Please enter Repair ID: ")
+          errorList.push("Please enter Repair ID")
         }
-        if(newData.repair_description === undefined){
-          errorList.push("Please enter Repair description")
-        }
-        if(newData.estimated_time_for_repair === undefined){
-          errorList.push("Please enter a time")
-        }
-        if(newData.repair_cost === undefined){
-          errorList.push("Please enter an cost")
-        }
-        const url = 'http://127.0.0.1:5000/online/harperdb/repair/add-repair';
+
+        const url = 'http://127.0.0.1:5000/online/harperdb/repairparts/add-repairparts';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)
           .then(res => {
@@ -81,7 +73,7 @@ function Repair() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/repair/delete-repair/' + oldData.repair_id;
+        const url = 'http://127.0.0.1:5000/online/harperdb/repairparts/delete-repairparts/' + oldData.serial_id;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
@@ -97,27 +89,21 @@ function Repair() {
            })
            window.location.reload(false);
       }
-
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []
-        if(newData.repair_id === undefined){
-          errorList.push("Please enter Repair ID: ")
+        if(newData.part_id == ""){
+            errorList.push("Please enter Part ID:")
         }
-        if(newData.repair_description === undefined){
-          errorList.push("Please enter Repair description")
+        if(newData.repair_id == ""){
+            errorList.push("Please enter Repair ID")
         }
-        if(newData.estimated_time_for_repair === undefined){
-          errorList.push("Please enter a time")
-        }
-        if(newData.repair_cost === undefined){
-          errorList.push("Please enter an cost")
-        }
+
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/repair/update-repair", newData)
+            axios.put("http://127.0.0.1:5000/online/harperdb/repairparts/update-repairparts", newData)
             .then(res => {
                 const dataUpdate = [...data];
-                const index = oldData.tableData.employee_id;
+                const index = oldData.tableData.repair_id;
                 dataUpdate[index] = newData;
                 setData([...dataUpdate]);
                 resolve()
@@ -139,14 +125,14 @@ function Repair() {
     return(
       <Fragment>
         <header>
-                  <h1>Repairs</h1>
+                  <h1>Repair Parts</h1>
         </header>
         <div class="container">
 
                     <main class="spacer">
 
                         <MaterialTable
-                            title="Repair"
+                            title="Repair Parts"
                             columns={columns}
                             data={apiData}
                             style={{
@@ -181,20 +167,11 @@ function Repair() {
                             }}
                         />
                     </main>
-                    <section>
-                      <Suspense id="load" fallback={<div>Loading...</div>}>
-                        <Type />
-                      </Suspense>
-                    </section>
-                    <section>
-                      <Suspense id="load" fallback={<div>Loading...</div>}>
-                        <Type2 />
-                      </Suspense>
-                    </section>
+
 
         </div>
       </Fragment>
     );
 }
 
-export default Repair;
+export default RepairParts;

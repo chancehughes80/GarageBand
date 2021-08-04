@@ -1,17 +1,12 @@
 import React, { Fragment, useState, useEffect, Suspense, lazy } from 'react';
 import MaterialTable from 'material-table';
 import axios from 'axios';
-import ReactDOM from 'react-dom'
 import './App.css';
-//import Employee from './Employees';
-const Type = React.lazy(()=>import('./PartsType'));
 
-function Parts() {
+function PartsType() {
     var columns = [
-        { title: 'Part ID', field: 'part_id', editable: 'onAdd'},
-        { title: 'Count', field: 'part_count'},
-        { title: 'Price', field: 'price'},
-        { title: 'Model', field: 'model'}
+        { title: 'Model', field: 'model', editable: 'onAdd'},
+        { title: 'Make', field: 'make'}
     ]
     const [status, setStatus] = useState(null);
     const [apiData, setApiData] = useState([]);
@@ -24,7 +19,7 @@ function Parts() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/parts';
+            const API = 'http://127.0.0.1:5000/online/harperdb/partstype';
 
             fetch(API)
                 .then((response) => {
@@ -43,19 +38,13 @@ function Parts() {
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []
-        if(newData.part_id === undefined){
-          errorList.push("Please enter Part ID: ")
-        }
-        if(newData.part_count === undefined){
-          errorList.push("Please enter Part Count")
-        }
-        if(newData.price === undefined){
-          errorList.push("Please enter a Price")
-        }
         if(newData.model === undefined){
-          errorList.push("Please enter a Model")
+          errorList.push("Please enter Part model ")
         }
-        const url = 'http://127.0.0.1:5000/online/harperdb/parts/add-part';
+        if(newData.make === undefined){
+          errorList.push("Please enter Part make ")
+        }
+        const url = 'http://127.0.0.1:5000/online/harperdb/partstype/add-type';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)
           .then(res => {
@@ -81,11 +70,11 @@ function Parts() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/parts/delete-part/' + oldData.part_id;
+        const url = 'http://127.0.0.1:5000/online/harperdb/partstype/delete-type/' + oldData.model;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
-            const index = oldData.tableData.part_id;
+            const index = oldData.tableData.model;
             dataDelete.splice(index, 1);
             setData([...dataDelete]);
             resolve()
@@ -101,23 +90,17 @@ function Parts() {
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []
-        if(newData.part_id == ""){
-            errorList.push("Please enter Employee ID:")
-        }
-        if(newData.part_count == ""){
-            errorList.push("Please enter Employee Name")
-        }
-        if(newData.price == ""){
-            errorList.push("Please enter Employee Password")
-        }
         if(newData.model == ""){
-            errorList.push("Please enter Job Title")
+            errorList.push("Please enter Part model ")
+        }
+        if(newData.make == ""){
+            errorList.push("Please enter Part make ")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/parts/update-part", newData)
+            axios.put("http://127.0.0.1:5000/online/harperdb/partstype/update-type", newData)
             .then(res => {
                 const dataUpdate = [...data];
-                const index = oldData.tableData.part_id;
+                const index = oldData.tableData.model;
                 dataUpdate[index] = newData;
                 setData([...dataUpdate]);
                 resolve()
@@ -139,13 +122,10 @@ function Parts() {
 
     return(
         <Fragment>
-            <header>
-                      <h1>Parts</h1>
-            </header>
             <div class="container">
                 <main class="spacer">
                     <MaterialTable
-                        title="Parts"
+                        title="Part Types"
                         columns={columns}
                         data={apiData}
                         style={{
@@ -180,14 +160,10 @@ function Parts() {
                         }}
                     />
                 </main>
-                <section>
-                <Suspense id="load" fallback={<div>Loading...</div>}>
-                    <Type />
-                  </Suspense>
-                </section>
              </div>
          </Fragment>
     );
 }
 
-export default Parts;
+
+export default PartsType;

@@ -1161,7 +1161,7 @@ app.get('/online/harperdb/vehicle-repair', (req, res) => {
 
 // POST: Create vehicle repairs and add them to the database
 app.post('/online/harperdb/vehicle-repair/add-vehicle-repair', (req, res) => {
-    const { VIN, repair_id, status, actual_time } = req.body;
+    const { VIN, repair_id, repair_status, actual_time } = req.body;
     console.log(req.body);
 
     const data = {
@@ -1172,7 +1172,7 @@ app.post('/online/harperdb/vehicle-repair/add-vehicle-repair', (req, res) => {
             {
             VIN: VIN,
             repair_id: repair_id,
-            status: status,
+            repair_status: repair_status,
             actual_time,   
             },
         ],
@@ -1205,7 +1205,7 @@ app.put('/online/harperdb/vehicle-repair/update-vehicle-repair', (req, res) => {
     const {VIN, rep_id} = req.body;
     console.log(req.body);
 
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.VehicleRepair SET repair_id = ${repair_id}, status = ${status}, actual_time = ${actual_time} WHERE VIN = ${VIN}` };
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.VehicleRepair SET repair_id = ${repair_id}, status = ${erpair_status}, actual_time = ${actual_time} WHERE VIN = ${VIN}` };
 
     const config = {
         method: 'post',

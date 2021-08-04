@@ -1,28 +1,19 @@
-import React, { Fragment, useState, useEffect, Suspense, lazy } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
-const CarType = React.lazy(()=>import('./VehicleType'));
-const CarRepair = React.lazy(()=>import('./VehicleRepair'));
 
-function Vehicles() {
+
+function VehicleType() {
 
     var columns = [
-        { title: 'VIN', field: 'VIN', editable: 'onAdd'},
-        { title: 'Model', field: 'model'},
-        { title: 'Year', field: 'vehicle_year'},
-        { title: 'Color', field: 'color'},
-        { title: 'Plate', field: 'plate'},
-        { title: 'Customer ID', field: 'customer_id'}
+        { title: 'Model', field: 'model', editable: 'onAdd'},
+        { title: 'Make', field: 'make'},
       ]
 
     const [status, setStatus] = useState(null);
-    const[VIN, setVIN] = useState('');
     const[model, setModel] = useState('');
-    const[vehicle_year, setYear] = useState('');
-    const[color, setColor] = useState('');
-    const[plate, setPlate] = useState('');
-    const[customer_id, setID] = useState('');
+    const[make, setMake] = useState('');
 
     const [apiData, setApiData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -34,7 +25,7 @@ function Vehicles() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/vehicle';
+            const API = 'http://127.0.0.1:5000/online/harperdb/vehicle-type';
 
             fetch(API)
                 .then((response) => {
@@ -54,22 +45,14 @@ function Vehicles() {
         setLoading(true);
         setIsError(false);
         const data = {
-          VIN: VIN,
           model: model,
-          vehicle_year: vehicle_year,
-          color: color,
-          plate: plate,
-          customer_id: customer_id
+          make: make,
         }
-        axios.put('http://127.0.0.1:5000/online/harperdb/vehicle/update-vehicle', data)
+        axios.put('http://127.0.0.1:5000/online/harperdb/vehicle-type/update-vehicle-type', data)
           .then(res => {
             setData(res.data);
-            setVIN('');
             setModel('');
-            setYear('');
-            setColor('');
-            setPlate('');
-            setID('');
+            setMake('');
             setLoading(false);
           }).catch(err => {
             setLoading(false);
@@ -80,25 +63,13 @@ function Vehicles() {
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []
-        if(newData.VIN === undefined){
-            errorList.push("Please enter VIN: ")
-        }
         if(newData.model === undefined){
-            errorList.push("Please enter Model")
+            errorList.push("Please enter Model: ")
         }
-        if(newData.vehicle_year === undefined){
-            errorList.push("Please enter a Year")
+        if(newData.make === undefined){
+            errorList.push("Please enter Make")
         }
-        if(newData.color === undefined){
-            errorList.push("Please enter a Color")
-        }
-        if(newData.plate === undefined){
-            errorList.push("Please enter a Plate ID")
-        }
-        if(newData.customer_id === undefined){
-            errorList.push("Please enter an Customer ID")
-        }
-        const url = 'http://127.0.0.1:5000/online/harperdb/vehicle/add-vehicle';
+        const url = 'http://127.0.0.1:5000/online/harperdb/vehicle-type/add-vehicle-type';
         if(errorList.length < 1){ //no error
             axios.post(url, newData)
             .then(res => {
@@ -124,11 +95,11 @@ function Vehicles() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/vehicle/delete-vehicle/' + oldData.VIN;
+        const url = 'http://127.0.0.1:5000/online/harperdb/vehicle-type/delete-vehicle-type/' + oldData.model;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
-            const index = oldData.tableData.VIN;
+            const index = oldData.tableData.model;
             dataDelete.splice(index, 1);
             setData([...dataDelete]);
             resolve()
@@ -145,25 +116,13 @@ function Vehicles() {
         //validation
         let errorList = []
         if(newData.VIN === undefined){
-            errorList.push("Please enter a VIN: ")
+            errorList.push("Please enter Model: ")
         }
-        if(newData.model === undefined){
-            errorList.push("Please enter Model")
-        }
-        if(newData.vehicle_year === undefined){
-            errorList.push("Please enter a Year")
-        }
-        if(newData.color === undefined){
-            errorList.push("Please enter a Color")
-        }
-        if(newData.plate === undefined){
-            errorList.push("Please enter a Plate ID")
-        }
-        if(newData.customer_id === undefined){
-            errorList.push("Please enter a Customer ID")
+        if(newData.repair_id === undefined){
+            errorList.push("Please enter Make")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/vehicle/update-vehicle", newData)
+            axios.put("http://127.0.0.1:5000/online/harperdb/vehicle-type/update-vehicle-type", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.VIN;
@@ -189,14 +148,14 @@ function Vehicles() {
     return(
         <Fragment>
           <header>
-                    <h1>Vehicles</h1>
+                    <h1>Vehicle Type</h1>
           </header>
           <div class="container">
   
                       <main class="spacer">
   
                           <MaterialTable
-                              title="Vehicles"
+                              title="VehicleType"
                               columns={columns}
                               data={apiData}
                               style={{
@@ -231,19 +190,7 @@ function Vehicles() {
                               }}
                           />
                       </main>
-                      <section>
-
-                        <Suspense fallback={<div>Loading...</div>}>
-                          <CarType />
-                        </Suspense>
-                      </section>
-                      
-                      <section>
-
-                        <Suspense fallback={<div>Loading...</div>}>
-                          <CarRepair />
-                        </Suspense>
-                      </section>
+  
   
           </div>
         </Fragment>
@@ -252,4 +199,4 @@ function Vehicles() {
     
 }
 
-export default Vehicles;
+export default VehicleType;

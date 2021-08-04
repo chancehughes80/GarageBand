@@ -507,7 +507,7 @@ app.get('/online/harperdb/partstype', (req, res) => {
 
 // POST
 app.post('/online/harperdb/partstype/add-type', (req, res) => {
-    const {mod,mk} = req.body;
+    const {model,make} = req.body;
     console.log(req.body);
     const data = {
         operation: 'insert',
@@ -515,8 +515,8 @@ app.post('/online/harperdb/partstype/add-type', (req, res) => {
         table: 'PartsType',
         records: [
             {
-                model:mod,
-                make:mk
+                model:model,
+                make:make
             },
         ],
     };
@@ -532,23 +532,23 @@ app.post('/online/harperdb/partstype/add-type', (req, res) => {
     };
 
     axios(config)
-        .then((response) => {
-            const data = response.data;
-            console.log(data);
-            res.json(data);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+      .then((response) => {
+          const data = response.data;
+          console.log('Part Type Added');
+          return res.redirect('http://localhost:3000/PartsType')
+      })
+      .catch((error) => {
+          console.log(error);
+      });
 });
 
 
 //PUT
 app.put('/online/harperdb/partstype/update-type', (req, res) => {
-    const {mod,mk} = req.body;
+    const {model,make} = req.body;
     console.log(req.body);
 
-    const data = {operation: 'sql', sql: `UPDATE Mechanics.PartsType SET make = ${mk} WHERE model = ${mod}`};
+    const data = {operation: 'sql', sql: `UPDATE Mechanics.PartsType SET make = "${make}" WHERE model = "${model}"`};
 
     const config = {
         method: 'post',
@@ -571,11 +571,11 @@ app.put('/online/harperdb/partstype/update-type', (req, res) => {
 });
 
 //DELETE
-app.delete('/online/harperdb/partstype/delete-type', (req, res) => {
-    const mod = req.body.mod;
-    console.log(mod);
+app.delete('/online/harperdb/partstype/delete-type/:model', (req, res) => {
+    const model = req.params.model;
+    console.log(model);
 
-    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.PartsType WHERE model = ${mod}` };
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.PartsType WHERE model = "${model}"` };
 
     const config = {
         method: 'post',
@@ -589,8 +589,8 @@ app.delete('/online/harperdb/partstype/delete-type', (req, res) => {
 
     axios(config)
         .then((response) => {
-            res.send({ msg: 'Part type Deleted' });
-            console.log('Part type Deleted');
+            console.log('Part Deleted');
+            return res.redirect('http://localhost:3000/PartsType');
         })
         .catch((error) => {
             console.log(error);

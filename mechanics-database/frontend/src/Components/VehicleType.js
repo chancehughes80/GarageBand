@@ -147,9 +147,6 @@ function VehicleType() {
 
     return(
         <Fragment>
-          <header>
-                    <h1>Vehicle Type</h1>
-          </header>
           <div class="container">
   
                       <main class="spacer">

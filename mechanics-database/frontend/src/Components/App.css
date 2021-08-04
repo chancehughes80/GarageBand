@@ -52,7 +52,10 @@ section {
 .navigation{
     background: black;
 }
-
+.bigrow{
+    padding: none;
+    margin: none;
+}
 form {
     display: flex;
     flex-flow: column;

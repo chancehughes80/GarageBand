@@ -96,7 +96,7 @@ function Employees() {
            })
            window.location.reload(false);
       }
-      
+
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []
@@ -181,11 +181,11 @@ function Employees() {
                         />
                     </main>
                     <section>
+
                     <Suspense fallback={<div>Loading...</div>}>
                         <Job />
                       </Suspense>
                     </section>
-
 
         </div>
       </Fragment>

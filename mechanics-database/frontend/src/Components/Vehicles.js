@@ -5,6 +5,7 @@ import './App.css';
 const CarType = React.lazy(()=>import('./VehicleType'));
 const CarRepair = React.lazy(()=>import('./VehicleRepair'));
 
+
 function Vehicles() {
 
     var columns = [
@@ -237,7 +238,7 @@ function Vehicles() {
                           <CarType />
                         </Suspense>
                       </section>
-                      
+
                       <section>
 
                         <Suspense fallback={<div>Loading...</div>}>

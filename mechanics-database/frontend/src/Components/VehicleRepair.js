@@ -29,7 +29,7 @@ function VehicleRepair() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/vehicle-repair';
+            const API = 'http://127.0.0.1:5000/online/harperdb/repair-vehicle';
 
             fetch(API)
                 .then((response) => {
@@ -51,10 +51,14 @@ function VehicleRepair() {
         const data = {
           VIN: VIN,
           repair_id: repair_id,
+<<<<<<< HEAD
           status: repair_status,
+=======
+          repair_status: repair_status,
+>>>>>>> 76503128de283127d8c455f6a8e543f7eb1d065e
           actual_time: actual_time,
         }
-        axios.put('http://127.0.0.1:5000/online/harperdb/vehicle-repair/update-vehicle-repair', data)
+        axios.put('http://127.0.0.1:5000/online/harperdb/repair-vehicle/update-repair-vehicle', data)
           .then(res => {
             setData(res.data);
             setVIN('');
@@ -83,7 +87,7 @@ function VehicleRepair() {
         if(newData.actual_time === undefined){
             errorList.push("Please enter an Actual Repair Time")
         }
-        const url = 'http://127.0.0.1:5000/online/harperdb/vehicle-repair/add-vehicle-repair';
+        const url = 'http://127.0.0.1:5000/online/harperdb/repair-vehicle/add-repair-vehicle';
         if(errorList.length < 1){ //no error
             axios.post(url, newData)
             .then(res => {
@@ -109,7 +113,7 @@ function VehicleRepair() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/vehicle-repair/delete-vehicle-repair/' + oldData.VIN;
+        const url = 'http://127.0.0.1:5000/online/harperdb/repair-vehicle/delete-repair-vehicle/' + oldData.VIN;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
@@ -142,7 +146,7 @@ function VehicleRepair() {
             errorList.push("Please enter an Actual Repair Time")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/vehicle-repair/update-vehicle-repair", newData)
+            axios.put("http://127.0.0.1:5000/online/harperdb/repair-vehicle/update-repair-vehicle", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.VIN;

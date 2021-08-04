@@ -3,10 +3,16 @@ import PropTypes from 'prop-types';
 import './App.css';
 
 async function loginUser(credentials) {
- return fetch('http://127.0.0.1:5000/online/harperdb/employee/' + credentials.username, {
-})
+ return fetch('http://localhost:8080/Login', {
+   method: 'POST',
+   headers: {
+     'Content-Type': 'application/json'
+   },
+   body: JSON.stringify(credentials)
+ })
    .then(data => data.json())
 }
+
 function Login({setToken}) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();

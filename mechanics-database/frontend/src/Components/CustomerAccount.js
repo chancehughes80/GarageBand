@@ -23,7 +23,7 @@ function CustomerAccount() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/customer/399';
+            const API = 'http://127.0.0.1:5000/online/harperdb/customer/451';
 
             fetch(API)
                 .then((response) => {
@@ -38,6 +38,7 @@ function CustomerAccount() {
         };
         getAPI();
     }, []);
+    
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []

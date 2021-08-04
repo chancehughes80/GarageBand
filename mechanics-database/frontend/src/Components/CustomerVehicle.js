@@ -10,7 +10,8 @@ function CustomerVehicle() {
     { title: 'Model', field: 'model'},
     { title: 'Color', field: 'color'},
     { title: 'Plate', field: 'plate'},
-    { title: 'Year', field: 'vehicle_year'}
+    { title: 'Year', field: 'vehicle_year'},
+    { title: 'Customer ID', field: 'customer_id'}
 
   ]
   const [status, setStatus] = useState(null);
@@ -19,12 +20,12 @@ function CustomerVehicle() {
   const [data, setData] = useState(null);
   const [isError, setIsError] = useState(false);
   const [errorMessages, setErrorMessages] = useState([])
-
+  
   useEffect(() => {
       const getAPI = () => {
           // Change this endpoint to whatever local or online address you have
           // Local PostgreSQL Database
-          const API = 'http://127.0.0.1:5000/online/harperdb/vehicle/455';
+          const API = 'http://127.0.0.1:5000/online/harperdb/vehicle/451';
 
           fetch(API)
               .then((response) => {
@@ -39,6 +40,52 @@ function CustomerVehicle() {
       };
       getAPI();
   }, []);
+
+  const handleRowAdd = (newData, resolve) => {
+    //validation
+    let errorList = []
+    if(newData.VIN === undefined){
+        errorList.push("Please enter VIN: ")
+    }
+    if(newData.model === undefined){
+        errorList.push("Please enter Model")
+    }
+    if(newData.year === undefined){
+        errorList.push("Please enter a Year")
+    }
+    if(newData.color === undefined){
+        errorList.push("Please enter a Color")
+    }
+    if(newData.plate === undefined){
+        errorList.push("Please enter a Plate ID")
+    }
+    if(newData.customer_id === undefined){
+        errorList.push("Please enter an Customer ID")
+    }
+    const url = 'http://127.0.0.1:5000/online/harperdb/vehicle/add-vehicle';
+    if(errorList.length < 1){ //no error
+        axios.post(url, newData)
+        .then(res => {
+        let dataToAdd = [...data];
+        dataToAdd.push(newData);
+        setData(dataToAdd);
+        resolve()
+        setErrorMessages([])
+        setIsError(false)
+        })
+        .catch(error => {
+        setErrorMessages(["Cannot add data. Server error!"])
+        setIsError(true)
+        resolve()
+        })
+    }else{
+        setErrorMessages(errorList)
+        setIsError(true)
+        resolve()
+    }
+    window.location.reload(false);
+
+}
 
   const handleRowUpdate = (newData, oldData, resolve) => {
     //validation
@@ -88,7 +135,7 @@ function CustomerVehicle() {
       <header>
                 <h1>Manage Your Vehicle Information</h1>
       </header>
-
+     
       <div class="container">
 
 <main class="spacer">
@@ -114,12 +161,15 @@ function CustomerVehicle() {
             }
         }}
         editable={{
-
+          onRowAdd: (newData) =>
+          new Promise((resolve) => {
+              handleRowAdd(newData, resolve)
+          }),
             onRowUpdate: (newData, oldData) =>
                 new Promise((resolve) => {
                     handleRowUpdate(newData, oldData, resolve);
                 })
-
+                                
         }}
     />
 </main>

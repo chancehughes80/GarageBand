@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
-
+const CarType = React.lazy(()=>import('./VehicleType'));
 
 function Vehicles() {
 
@@ -230,7 +230,12 @@ function Vehicles() {
                               }}
                           />
                       </main>
-  
+                      <section>
+
+                        <Suspense fallback={<div>Loading...</div>}>
+                          <CarType />
+                        </Suspense>
+                      </section>
   
           </div>
         </Fragment>

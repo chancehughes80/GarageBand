@@ -802,7 +802,7 @@ app.put('/online/harperdb/repairparts/update-repairparts', (req, res) => {
     const {serial_id, part_id, repair_id} = req.body;
     console.log(req.body);
     console.log('To be Updated');
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.RepairParts SET part_id="${part_id}", repair_id = "${repair_id}" WHERE serial_id = ${serial_id}` };
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.RepairParts SET part_id="${part_id}", repair_id = "${repair_id}" WHERE serial_id = "${serial_id}"` };
 
     const config = {
         method: 'post',
@@ -829,7 +829,6 @@ app.put('/online/harperdb/repairparts/update-repairparts', (req, res) => {
 app.delete('/online/harperdb/repairparts/delete-repairparts/:serial_id', (req, res) => {
     const serial_id = req.params.serial_id;
     console.log('Delete PartsRepair');
-
     const data = { operation: 'sql', sql: `DELETE FROM Mechanics.RepairParts WHERE serial_id = "${serial_id}"` };
 
     const config = {
@@ -851,6 +850,7 @@ app.delete('/online/harperdb/repairparts/delete-repairparts/:serial_id', (req, r
             console.log(error);
         });
 });
+
 
 
 //~~~~~~~~~~~~~~~~~~~~~End of PartsRepair Table CRUD~~~~~~~~~~~~~~~~~~~~~
@@ -928,10 +928,10 @@ app.post('/online/harperdb/vehicle/add-vehicle', (req, res) => {
 
 
 // PUT: Update vehicle by VIN from the database
-app.put('/online/harperdb/update-vehicle', (req, res) => {
-    const {VIN, yr, plt, colr, cust_id, md} = req.body;
+app.put('/online/harperdb/vehicle/update-vehicle', (req, res) => {
+    const {VIN, vehicle_year, plate, color, customer_id, model} = req.body;
     console.log(req.body);
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.Vehicle SET year = ${yr}, plate = ${plt}, color = ${colr}, customer_id = ${cust_id}, model = ${md} WHERE VIN = ${VIN}` };
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.Vehicle SET vehicle_year = "${vehicle_year}", plate = "${plate}", color = "${color}", customer_id = "${customer_id}", model = "${model}" WHERE VIN = "${VIN}"` };
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,
@@ -954,10 +954,10 @@ app.put('/online/harperdb/update-vehicle', (req, res) => {
 
 
 // DELETE: Delete vehicle by VIN from the database
-app.delete('/online/harperdb/delete-vehicle', (req, res) => {
-    const VIN = req.body.VIN;
+app.delete('/online/harperdb/vehicle/delete-vehicle/:VIN', (req, res) => {
+    const VIN = req.params.VIN;
     console.log(VIN);
-    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Vehicle WHERE VIN = ${VIN}` };
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Vehicle WHERE VIN = "${VIN}"` };
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,
@@ -977,6 +977,7 @@ app.delete('/online/harperdb/delete-vehicle', (req, res) => {
             console.log(error);
         });
 });
+
 
 
 // CRUD for VehicleType Table -----------------------------------------------------------------------------------------------------------
@@ -1105,8 +1106,8 @@ app.delete('/online/harperdb/delete-vehicle-type', (req, res) => {
 // CRUD for Vehicle Repair --------------------------------------------------------------------------------------------------------------
 
 // GET: Fetch all vehicle repairs from the database
-app.get('/online/harperdb/vehicle-repair', (req, res) => {
-    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.VehicleRepair' };
+app.get('/online/harperdb/repair-vehicle', (req, res) => {
+    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.RepairVehicle' };
 
     const config = {
         method: 'post',
@@ -1130,18 +1131,20 @@ app.get('/online/harperdb/vehicle-repair', (req, res) => {
 });
 
 // POST: Create vehicle repairs and add them to the database
-app.post('/online/harperdb/add-vehicle-repair', (req, res) => {
-    const { VIN, repair_id } = req.body;
+app.post('/online/harperdb/repair-vehicle/add-repair-vehicle', (req, res) => {
+    const { VIN, repair_id, repair_status, actual_time } = req.body;
     console.log(req.body);
 
     const data = {
         operation: 'insert',
         schema: 'Mechanics',
-        table: 'VehicleRepair',
+        table: 'RepairVehicle',
         records: [
             {
             VIN: VIN,
             repair_id: repair_id,
+            repair_status: repair_status,
+            actual_time,
             },
         ],
     };
@@ -1169,11 +1172,11 @@ app.post('/online/harperdb/add-vehicle-repair', (req, res) => {
 
 
 // PUT: Update vehicle repair by VIN from the database
-app.put('/online/harperdb/update-vehicle-repair', (req, res) => {
-    const {VIN, rep_id} = req.body;
+app.put('/online/harperdb/repair-vehicle/update-repair-vehicle', (req, res) => {
+    const {repair_id, VIN, repair_status, actual_time} = req.body;
     console.log(req.body);
 
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.VehicleRepair SET repair_id = ${rep_id} WHERE VIN = ${VIN}` };
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.RepairVehicle SET VIN = "${VIN}", status = "${repair_status}", actual_time = "${actual_time}" WHERE repair_id = ${repair_id}` };
 
     const config = {
         method: 'post',
@@ -1197,11 +1200,11 @@ app.put('/online/harperdb/update-vehicle-repair', (req, res) => {
 
 
 // DELETE: Delete vehicle repair by VIN from the database
-app.delete('/online/harperdb/delete-vehicle-repair', (req, res) => {
-    const VIN = req.body.VIN;
-    console.log(VIN);
+app.delete('/online/harperdb/repair-vehicle/delete-repair-vehicle/:repair_id', (req, res) => {
+    const repair_id = req.params.repair_id;
+    console.log(repair_id);
 
-    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.VehicleRepair WHERE VIN = ${VIN}` };
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.RepairVehicle WHERE repair_id = ${repair_id}` };
 
     const config = {
         method: 'post',

@@ -4,6 +4,7 @@ import Workers from "./Employees.png";
 import cParts from "./Parts.png";
 import Repair from "./Repairs.png";
 import Customer from "./Customer.png";
+import './App.css';
 function Home() {
   return (
     <div className="home">

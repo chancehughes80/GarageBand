@@ -1183,6 +1183,33 @@ app.get('/online/harperdb/repair-vehicle', (req, res) => {
         });
 });
 
+// GET: Fetch all vehicle repairs by customer_id from the database
+app.get('/online/harperdb/repair-vehicle/:customer_id', (req, res) => {
+    const customer_id = req.params.customer_id;
+    console.log(customer_id);
+    const data = { operation: 'sql', sql: `SELECT rv.VIN, rv.repair_status, rv.repair_id, rv.actual_time FROM Mechanics.RepairVehicle AS rv INNER JOIN Mechanics.Vehicle AS v ON rv.VIN = v.VIN WHERE v.customer_id = ${customer_id} ` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
 // POST: Create vehicle repairs and add them to the database
 app.post('/online/harperdb/repair-vehicle/add-repair-vehicle', (req, res) => {
     const { VIN, repair_id, repair_status, actual_time } = req.body;

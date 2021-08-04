@@ -13,12 +13,6 @@ function Customers() {
     { title: 'Customer Password', field: 'customer_password'}
   ]
   const [status, setStatus] = useState(null);
-  const[customer_id, setID] = useState('');
-  const[customer_name, setName] = useState('');
-  const[billing_address, setAddress] = useState('');
-  const[email_address, setEmail] = useState('');
-  const[phone_number, setPhone] = useState('');
-  const[customer_password, setPassword] = useState('');
   const [apiData, setApiData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
@@ -44,32 +38,7 @@ function Customers() {
         };
         getAPI();
     }, []);
-    const handleSubmit = () => {
-      setLoading(true);
-      setIsError(false);
-      const data = {
-        customer_id: customer_id,
-        customer_name: customer_name,
-        billing_address: billing_address,
-        email_address: email_address,
-        phone_number: phone_number,
-        customer_password: customer_password
-      }
-      axios.put('http://127.0.0.1:5000/online/harperdb/customer/update-customer', data)
-        .then(res => {
-          setData(res.data);
-          setID('');
-          setName('');
-          setAddress('');
-          setEmail('');
-          setPhone('');
-          setPassword('');
-          setLoading(false);
-        }).catch(err => {
-          setLoading(false);
-          setIsError(true);
-        });
-      }
+    
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []

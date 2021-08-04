@@ -1,13 +1,20 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
 
 function Salary() {
+      var columns = [
+      { title: 'Job Title', field: 'job_title', editable: 'onAdd'},
+      { title: 'Wage', field: 'wage'}
+    ]
     const [status, setStatus] = useState(null);
-    const[job_title, setJob] = useState('');
-    const[wage, setWage] = useState('');
+    const [apiData, setApiData] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
     const [isError, setIsError] = useState(false);
+    const [errorMessages, setErrorMessages] = useState([])
+
     useEffect(() => {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
@@ -28,32 +35,89 @@ function Salary() {
         getAPI();
 
     }, []);
-    const handleSubmit = () => {
-      setLoading(true);
-      setIsError(false);
-      const data = {
-        job_title: job_title,
-        wage: wage,
+    const handleRowAdd = (newData, resolve) => {
+        //validation
+        let errorList = []
+        if(newData.job_title === undefined){
+          errorList.push("Please enter Job Title")
+        }
+        if(newData.wage === undefined){
+          errorList.push("Please enter Wage")
+        }
+        const url = 'http://127.0.0.1:5000/online/harperdb/salary/add-salary';
+        if(errorList.length < 1){ //no error
+          axios.post(url, newData)
+          .then(res => {
+            let dataToAdd = [...data];
+            dataToAdd.push(newData);
+            setData(dataToAdd);
+            resolve()
+            setErrorMessages([])
+            setIsError(false)
+          })
+          .catch(error => {
+            setErrorMessages(["Cannot add data. Server error!"])
+            setIsError(true)
+            resolve()
+          })
+        }else{
+          setErrorMessages(errorList)
+          setIsError(true)
+          resolve()
+        }
+        window.location.reload(false);
+
+    }
+    const handleRowDelete = (oldData, resolve) =>{
+        const url = 'http://127.0.0.1:5000/online/harperdb/salary/delete-salary/' + oldData.job_title;
+        axios.delete(url)
+          .then(res => {
+            const dataDelete = [...data];
+            const index = oldData.tableData.job_title;
+            dataDelete.splice(index, 1);
+            setData([...dataDelete]);
+            resolve()
+          })
+          .catch(error => {
+             setErrorMessages(["Delete failed! Server error"])
+             setIsError(true)
+             resolve()
+           })
+           window.location.reload(false);
       }
-      axios.put('http://127.0.0.1:5000/online/harperdb/salary/update-salary', data)
-        .then(res => {
-          setData(res.data);
-          setJob('');
-          setWage('');
-          setLoading(false);
-        }).catch(err => {
-          setLoading(false);
-          setIsError(true);
-        });
-      }
-    const removeData = (job_title) =>{
-      const url = 'http://127.0.0.1:5000/online/harperdb/salary/delete-salary/' + job_title;
-      axios.delete(url)
-        .then(() => setStatus('Delete successful'));
-      window.location.reload(false);
-      }
-    const [apiData, setApiData] = useState([]);
-    const [loading, setLoading] = useState(true);
+
+    const handleRowUpdate = (newData, oldData, resolve) => {
+        //validation
+        let errorList = []
+        if(newData.job_title == ""){
+            errorList.push("Please enter job title")
+        }
+        if(newData.wage == ""){
+            errorList.push("Please enter wage")
+        }
+        if(errorList.length < 1){
+            axios.put("http://127.0.0.1:5000/online/harperdb/employee/update-salary", newData)
+            .then(res => {
+                const dataUpdate = [...data];
+                const index = oldData.tableData.job_title;
+                dataUpdate[index] = newData;
+                setData([...dataUpdate]);
+                resolve()
+                setIsError(false)
+                setErrorMessages([])
+            })
+            .catch(error => {
+                setErrorMessages(["Update failed!"])
+                setIsError(true)
+                resolve()
+            })
+        }else{
+            setErrorMessages(errorList)
+            setIsError(true)
+            resolve()
+        }
+        window.location.reload(false);
+    }
 
     return(
       <Fragment>
@@ -61,58 +125,47 @@ function Salary() {
                   <h1>Salary</h1>
         </header>
         <div class="container">
-            <div class="row justify-items-center">
-                <div class="col-lg-4 top" >
-                    <form method="POST" action="http://127.0.0.1:5000/online/harperdb/salary/add-salary">
-                        <div>
-                            <label>Job Title</label>
-                            <input type="text" name="job_title" required />
-                        </div>
-                        <div>
-                            <label>Wage</label>
-                            <input type="text" name="wage" required />
-                        </div>
-                        <div>
-                            <button type="submit">Add Salary</button>
-                        </div>
-                    </form>
+
+                    <main class="spacer">
+
+                        <MaterialTable
+                            title="Salary"
+                            columns={columns}
+                            data={apiData}
+                            style={{
+                                border: "3px solid #744F28",
+                                maxWidth: "1450px",
+                                overflow: "scroll",
+                                background: "#eaeaea",
+                                color: "#500000",
+                            }}
+                            options={{
+                               headerStyle: {
+                                    background: "#d1d1d1",
+                                    color: '#500000',
+                                },
+                                cellStyle: {
+                                    color: '#500000',
+                                }
+                            }}
+                            editable={{
+                                onRowAdd: (newData) =>
+                                    new Promise((resolve) => {
+                                        handleRowAdd(newData, resolve)
+                                    }),
+                                onRowUpdate: (newData, oldData) =>
+                                    new Promise((resolve) => {
+                                        handleRowUpdate(newData, oldData, resolve);
+                                    }),
+                                onRowDelete: oldData =>
+                                    new Promise((resolve) => {
+                                        handleRowDelete(oldData, resolve)
+                                  }),
+                            }}
+                        />
+                    </main>
 
 
-                    <form>
-                         <div>
-                             <label>Job Title</label>
-                             <input type="text" name="job_title" value = {job_title} onChange = {e => setJob(e.target.value)} required />
-                         </div>
-                         <div>
-                             <label>Wage</label>
-                             <input type="text" name = "wage" value = {wage} onChange = {e => setWage(e.target.value)} required />
-                         </div>
-                         <div>
-                             <button type="submit" onClick = {handleSubmit}>Update Wage</button>
-                         </div>
-                     </form>
-                </div>
-
-                <div class="col-lg-8">
-                    <main>
-                        <section>
-                            {apiData.map((Salary) => {
-                                return (
-                                    <div className="employee-container" key={String(Salary.job_title)}>
-                                        <h1>{Salary.job_title}</h1>
-                                        <p>
-                                            <strong>Wage:</strong> {Salary.wage}
-                                        </p>
-                                        <p>
-                                            <button onClick={() => removeData(Salary.job_title)}>Delete</button>
-                                        </p>
-                                    </div>
-                                );
-                            })}
-                         </section>
-                     </main>
-                </div>
-            </div>
         </div>
       </Fragment>
     );

@@ -1379,5 +1379,162 @@ app.delete('/online/harperdb/salary/delete-salary/:job_title', (req, res) => {
 
 //~~~~~~~~~~~~~~~~~~~~~End of Salary Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
+//~~~~~~~~~~~~~~~~~~~~~EmployeeRepair Table CRUD~~~~~~~~~~~~~~~~~~~~~
+
+
+//GET: get all employees
+app.get('/online/harperdb/employeerepair/', (req, res) => {
+    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.EmployeeRepair' };
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+            return res.redirect('http://localhost:5000/EmployeeRepair');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+//GET get an employee by employee_id
+app.get('/online/harperdb/employeerepair/:serial_id', (req, res) => {
+  const serial_id = req.params.serial_id;
+  console.log(serial_id);
+
+  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.EmployeeRepair WHERE serial_id = ${serial_id}` };
+
+  const config = {
+      method: 'post',
+      url: process.env.HARPERDB_URL,
+      headers: {
+          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+          'Content-Type': 'application/json',
+      },
+      data: data,
+  };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+            return res.redirect('http://localhost:5000/EmployeeRepair');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+
+//POST: Create employees and add them to the database
+app.post('/online/harperdb/employeerepair/add-employeerepair', (req, res) => {
+  const { serial_id, employee_id, repair_id } = req.body;
+  console.log(req.body);
+
+  const data = {
+      operation: 'insert',
+      schema: 'Mechanics',
+      table: 'EmployeeRepair',
+      records: [
+          {
+            serial_id: serial_id,
+            employee_id: employee_id,
+            repair_id: repair_id
+          },
+      ],
+  };
+
+  const config = {
+      method: 'post',
+      url: process.env.HARPERDB_URL,
+      headers: {
+          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+          'Content-Type': 'application/json',
+      },
+      data: data,
+  };
+
+  axios(config)
+      .then((response) => {
+          const data = response.data;
+          console.log('EmployeeRepair Added');
+          return res.redirect('http://localhost:3000/EmployeeRepair')
+      })
+      .catch((error) => {
+          console.log(error);
+      });
+});
+
+
+// PUT: Update EmployeeRepair by serial_id from the database
+app.put('/online/harperdb/employeerepair/update-employeerepair', (req, res) => {
+
+  const {serial_id, employee_id, repair_id} = req.body;
+  console.log(req.body);
+
+  const data = { operation: 'sql', sql: `UPDATE Mechanics.EmployeeRepair SET employee_id = "${employee_id}", repair_id = "${repair_id}" WHERE serial_id = ${serial_id}` };
+
+  const config = {
+      method: 'post',
+      url: process.env.HARPERDB_URL,
+      headers: {
+          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+          'Content-Type': 'application/json',
+      },
+      data: data,
+  };
+
+  axios(config)
+      .then((response) => {
+          res.send({ msg: 'EmployeeRepair Updated' });
+          console.log('EmployeeRepair Updated');
+          return res.redirect('http://localhost:3000/EmployeesRepair');
+      })
+      .catch((error) => {
+          console.log(error);
+      });
+});
+
+
+// DELETE: Delete employeerepair by serial_id from the database
+app.delete('/online/harperdb/employeerepair/delete-employeerepair/:serial_id', (req, res) => {
+    const serial_id = req.params.serial_id;
+    console.log(serial_id);
+
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.EmployeeRepair WHERE serial_id = ${serial_id}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            console.log('EmployeeRepair Deleted');
+            return res.redirect('http://localhost:3000/EmployeeRepair');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+
+//~~~~~~~~~~~~~~~~~~~~~End of Employee Table CRUD~~~~~~~~~~~~~~~~~~~~~
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server running on port ${port}, http://localhost:${port}`));

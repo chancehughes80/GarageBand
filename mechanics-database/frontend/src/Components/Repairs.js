@@ -186,13 +186,13 @@ function Repair() {
                       <Suspense id="load" fallback={<div>Loading...</div>}>
                         <Type />
                       </Suspense>
-                    </div>
+                </div>
                 <div class="col-lg-6" >
                       <Suspense id="load" fallback={<div>Loading...</div>}>
                         <Type2 />
                       </Suspense>
-                    </div>
-                    </div>
+                </div>
+            </div>
 
         </div>
       </Fragment>

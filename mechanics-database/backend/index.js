@@ -29,7 +29,7 @@ app.use(cors());
     const employee_id = req.params.employee_id;
     console.log(employee_id);
 
-    const data = { operation: 'sql', sql: `SELECT employee_password FROM Mechanics.Employee WHERE employee_id = ${employee_id}` };
+    const data = { operation: 'sql', sql: `SELECT employee_password FROM Mechanics.Employee WHERE employee_id = "${employee_id}"` };
 
     const config = {
         method: 'post',

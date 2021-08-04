@@ -506,7 +506,7 @@ app.get('/online/harperdb/partstype', (req, res) => {
 
 // POST
 app.post('/online/harperdb/partstype/add-type', (req, res) => {
-    const {mod,mk} = req.body;
+    const {model,make} = req.body;
     console.log(req.body);
     const data = {
         operation: 'insert',
@@ -514,8 +514,8 @@ app.post('/online/harperdb/partstype/add-type', (req, res) => {
         table: 'PartsType',
         records: [
             {
-                model:mod,
-                make:mk
+                model:model,
+                make:make
             },
         ],
     };
@@ -531,23 +531,23 @@ app.post('/online/harperdb/partstype/add-type', (req, res) => {
     };
 
     axios(config)
-        .then((response) => {
-            const data = response.data;
-            console.log(data);
-            res.json(data);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+      .then((response) => {
+          const data = response.data;
+          console.log('Part Type Added');
+          return res.redirect('http://localhost:3000/PartsType')
+      })
+      .catch((error) => {
+          console.log(error);
+      });
 });
 
 
 //PUT
 app.put('/online/harperdb/partstype/update-type', (req, res) => {
-    const {mod,mk} = req.body;
+    const {model,make} = req.body;
     console.log(req.body);
 
-    const data = {operation: 'sql', sql: `UPDATE Mechanics.PartsType SET make = ${mk} WHERE model = ${mod}`};
+    const data = {operation: 'sql', sql: `UPDATE Mechanics.PartsType SET make = "${make}" WHERE model = "${model}"`};
 
     const config = {
         method: 'post',
@@ -570,11 +570,11 @@ app.put('/online/harperdb/partstype/update-type', (req, res) => {
 });
 
 //DELETE
-app.delete('/online/harperdb/partstype/delete-type', (req, res) => {
-    const mod = req.body.mod;
-    console.log(mod);
+app.delete('/online/harperdb/partstype/delete-type/:model', (req, res) => {
+    const model = req.params.model;
+    console.log(model);
 
-    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.PartsType WHERE model = ${mod}` };
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.PartsType WHERE model = "${model}"` };
 
     const config = {
         method: 'post',
@@ -588,8 +588,8 @@ app.delete('/online/harperdb/partstype/delete-type', (req, res) => {
 
     axios(config)
         .then((response) => {
-            res.send({ msg: 'Part type Deleted' });
-            console.log('Part type Deleted');
+            console.log('Part Deleted');
+            return res.redirect('http://localhost:3000/PartsType');
         })
         .catch((error) => {
             console.log(error);
@@ -730,11 +730,11 @@ app.delete('/online/harperdb/repair/delete-repair/:repair_id', (req, res) => {
 
 
 
-//~~~~~~~~~~~~~~~~~~~~~PartsRepair Table CRUD~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~RepairParts Table CRUD~~~~~~~~~~~~~~~~~~~~~
+ // GET All values from RepairParts table
+app.get('/online/harperdb/repairparts', (req, res) => {
+    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.RepairParts' };
 
-// GET All values from PartsRepair table
-app.get('/', (req, res) => {
-    const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.PartsRepair' };
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,
@@ -757,17 +757,17 @@ app.get('/', (req, res) => {
 });
 
 // POST: Add new PartsRepair
-app.post('/AddPartsRepair', (req, res) => {
-    const { r_id, p_id} = req.body;
+app.post('/online/harperdb/repairparts/add-repairparts', (req, res) => {
+    const { repair_id, part_id} = req.body;
     console.log(req.body);
     const data = {
         operation: 'insert',
         schema: 'Mechanics',
-        table: 'PartsRepair',
+        table: 'RepairParts',
         records: [
             {
-                repair_id: r_id,
-                part_id: p_id,
+                repair_id: repair_id,
+                part_id: part_id,
             },
         ],
     };
@@ -795,11 +795,11 @@ app.post('/AddPartsRepair', (req, res) => {
 
 
 //PUT: Update PartsRepair
-app.put('/UpdatePartsRepair', (req, res) => {
-    const {r_id, p_id} = req.body;
+app.put('/online/harperdb/repairparts/update-repairparts', (req, res) => {
+    const {part_id, repair_id} = req.body;
     console.log(req.body);
-
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.PartsRepair SET repair_id= ${r_id}, part_id=${p_id} WHERE repair_id = ${r_id} AND part_id = ${p_id}` };
+    console.log('To be Updated');
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.RepairParts SET part_id = "${part_id}" WHERE repair_id = "${repair_id}"` };
 
     const config = {
         method: 'post',
@@ -813,22 +813,22 @@ app.put('/UpdatePartsRepair', (req, res) => {
 
     axios(config)
         .then((response) => {
-            res.send({ msg: 'Repair Updated' });
-            console.log('Repair Updated');
+            res.send({ msg: 'RepairParts Updated' });
+            console.log('RepairParts log Updated');
         })
         .catch((error) => {
             console.log(error);
         });
 });
-
 
 
 //DELETE PartsRepair
-app.delete('/DeleteRepair', (req, res) => {
-    const r_id = req.body.r_id;
-    const p_id = req.body.p_id;
-    console.log(r_id, p_id);
-    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Repair WHERE repair_id = ${r_id} AND part_id = ${p_id}` };
+app.delete('/online/harperdb/repairparts/delete-repairparts/:repair_id', (req, res) => {
+    const repair_id = req.params.repair_id;
+    console.log('Delete Repair');
+
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.RepairParts WHERE repair_id = "${repair_id}"` };
+
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,
@@ -841,13 +841,14 @@ app.delete('/DeleteRepair', (req, res) => {
 
     axios(config)
         .then((response) => {
-            res.send({ msg: 'PartsRepair Deleted' });
-            console.log('PartsRepair Deleted');
+            res.send({ msg: 'RepairParts Deleted' });
+            console.log('RepairParts Deleted');
         })
         .catch((error) => {
             console.log(error);
         });
-});
+}); 
+
 
 //~~~~~~~~~~~~~~~~~~~~~End of PartsRepair Table CRUD~~~~~~~~~~~~~~~~~~~~~
 
@@ -924,10 +925,10 @@ app.post('/online/harperdb/vehicle/add-vehicle', (req, res) => {
 
 
 // PUT: Update vehicle by VIN from the database
-app.put('/online/harperdb/update-vehicle', (req, res) => {
-    const {VIN, yr, plt, colr, cust_id, md} = req.body;
+app.put('/online/harperdb/vehicle/update-vehicle', (req, res) => {
+    const {VIN, vehicle_year, plate, color, customer_id, model} = req.body;
     console.log(req.body);
-    const data = { operation: 'sql', sql: `UPDATE Mechanics.Vehicle SET year = ${yr}, plate = ${plt}, color = ${colr}, customer_id = ${cust_id}, model = ${md} WHERE VIN = ${VIN}` };
+    const data = { operation: 'sql', sql: `UPDATE Mechanics.Vehicle SET vehicle_year = "${vehicle_year}", plate = "${plate}", color = "${color}", customer_id = "${customer_id}", model = "${model}" WHERE VIN = "${VIN}"` };
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,
@@ -950,10 +951,10 @@ app.put('/online/harperdb/update-vehicle', (req, res) => {
 
 
 // DELETE: Delete vehicle by VIN from the database
-app.delete('/online/harperdb/delete-vehicle', (req, res) => {
-    const VIN = req.body.VIN;
+app.delete('/online/harperdb/vehicle/delete-vehicle/:VIN', (req, res) => {
+    const VIN = req.params.VIN;
     console.log(VIN);
-    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Vehicle WHERE VIN = ${VIN}` };
+    const data = { operation: 'sql', sql: `DELETE FROM Mechanics.Vehicle WHERE VIN = "${VIN}"` };
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,
@@ -973,6 +974,7 @@ app.delete('/online/harperdb/delete-vehicle', (req, res) => {
             console.log(error);
         });
 });
+
 
 
 // CRUD for VehicleType Table -----------------------------------------------------------------------------------------------------------
@@ -1324,7 +1326,7 @@ app.put('/online/harperdb/salary/update-salary', (req, res) => {
   const {job_title, wage} = req.body;
   console.log(req.body);
 
-  const data = { operation: 'sql', sql: `UPDATE Mechanics.Salary SET wage = ${wage} WHERE job_title = "${job_title}"` };
+  const data = { operation: 'sql', sql: `UPDATE Mechanics.Salary SET wage = "${wage}" WHERE job_title = "${job_title}"` };
 
   const config = {
       method: 'post',

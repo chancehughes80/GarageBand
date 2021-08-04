@@ -1,7 +1,9 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, Suspense, lazy } from 'react';
 import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
+//import Employee from './Employees';
+const Type = React.lazy(()=>import('./PartsType'));
 
 function Parts() {
     var columns = [
@@ -177,10 +179,14 @@ function Parts() {
                         }}
                     />
                 </main>
+                <section>
+                <Suspense id="load" fallback={<div>Loading...</div>}>
+                    <Type />
+                  </Suspense>
+                </section>
              </div>
          </Fragment>
     );
 }
-
 
 export default Parts;

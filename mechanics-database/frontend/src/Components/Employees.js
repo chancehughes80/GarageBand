@@ -1,7 +1,8 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, Suspense, lazy } from 'react';
 import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
+const Job = React.lazy(()=>import('./Salary'));
 
 function Employees() {
       var columns = [
@@ -179,6 +180,11 @@ function Employees() {
                             }}
                         />
                     </main>
+                    <section>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Job />
+                      </Suspense>
+                    </section>
 
 
         </div>

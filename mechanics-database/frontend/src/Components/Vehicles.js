@@ -7,7 +7,7 @@ import './App.css';
 function Vehicles() {
 
     var columns = [
-        { title: 'VIN', field: 'vin', editable: 'onAdd'},
+        { title: 'VIN', field: 'VIN', editable: 'onAdd'},
         { title: 'Model', field: 'model'},
         { title: 'Year', field: 'vehicle_year'},
         { title: 'Color', field: 'color'},

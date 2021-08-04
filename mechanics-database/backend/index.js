@@ -911,6 +911,34 @@ app.get('/online/harperdb/vehicle', (req, res) => {
         });
 });
 
+//GET get vehicle(s) by customer_id
+app.get('/online/harperdb/Vehicle/:customer_id', (req, res) => {
+    const customer_id = req.params.customer_id;
+    console.log(customer_id);
+  
+    const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Vehicle WHERE customer_id = ${customer_id}` };
+  
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+  
+      axios(config)
+          .then((response) => {
+              const data = response.data;
+              console.log(data);
+              res.json(data);
+              return res.redirect('http://localhost:5000/Vehicle');
+          })
+          .catch((error) => {
+              console.log(error);
+          });
+  });
 
 // POST: Create vehicles and add them to the database
 app.post('/online/harperdb/vehicle/add-vehicle', (req, res) => {

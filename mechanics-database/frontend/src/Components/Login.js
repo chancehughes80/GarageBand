@@ -21,24 +21,21 @@ async function checkEmployee(credentials){
    body: JSON.stringify(credentials)
  })
    .then(data => data.json())
-}
-async function checkUser(customer){
-  return fetch('http://127.0.0.1:5000/online/harperdb/customer/' + customer.cusername, {
+};
+async function checkUser(credentials){
+  return fetch('http://127.0.0.1:5000/online/harperdb/customer/' + credentials.username, {
     method: 'POST',
     headers: {
      'Content-Type': 'application/json'
    },
-   body: JSON.stringify(customer)
+   body: JSON.stringify(credentials)
  })
    .then(data => data.json())
-}
+};
 
 function Login({setToken}) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
-  const [cusername, csetUserName] = useState();
-  const [cpassword, csetPassword] = useState();
-  const [checker, setChecker] = useState();
 
   const handleEmployeeSubmit = async e => {
       e.preventDefault();
@@ -51,31 +48,26 @@ function Login({setToken}) {
       );
         setToken(token);
       }
-      else{
-
-      }
-    }
+    };
 
   const handleCustomerSubmit = async e => {
       e.preventDefault();
-      const test = await checkUser({cusername,cpassword});
+      const test = await checkUser({username,password});
       console.log(test);
-      if (cpassword == test[0].customer_password){
+      if (password == test[0].customer_password){
         const token = await loginUser(
-        {cusername,
-        cpassword}
+        {username,
+        password}
       );
         setToken(token);
       }
-      else{
-
-      }
-    }
+    };
 
 
   return(
     
       <div class="row align-items-center bigrow">
+
         <div class="col-lg-6">
           <h1>Log in As Employee</h1>
           <form onSubmit={handleEmployeeSubmit}>
@@ -98,17 +90,18 @@ function Login({setToken}) {
           <form onSubmit={handleCustomerSubmit}>
             <label>
               <p>Username</p>
-              <input type="text" onChange={e => csetUserName(e.target.value)}/>
+              <input type="text" onChange={e => setUserName(e.target.value)}/>
             </label>
             <label>
               <p>Password</p>
-              <input type="password" onChange={e => csetPassword(e.target.value)}/>
+              <input type="password" onChange={e => setPassword(e.target.value)}/>
             </label>
             <div>
               <button type="submit">Submit</button>
             </div>
           </form>
         </div>
+
       </div>
     
   )

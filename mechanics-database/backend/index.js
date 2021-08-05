@@ -80,7 +80,7 @@ app.get('/online/harperdb/customer', (req, res) => {
 });
 
 //GET get a customer by customer_id
-app.get('/online/harperdb/customer/:customer_id', (req, res) => {
+app.use('/online/harperdb/customer/:customer_id', (req, res) => {
   const customer_id = req.params.customer_id;
   console.log(customer_id);
 
@@ -290,7 +290,7 @@ app.put('/online/harperdb/employee/update-employee', (req, res) => {
   const {employee_id, employee_name, job_title, employee_password} = req.body;
   console.log(req.body);
 
-  const data = { operation: 'sql', sql: `UPDATE Mechanics.Employee SET employee_name = "${employee_name}", job_title = "${job_title}", employee_password = "${employee_password}" WHERE employee_id = ${employee_id}` };
+  const data = { operation: 'sql', sql: `UPDATE Mechanics.Employee SET employee_name = "${employee_name}", job_title = "${job_title}", employee_password = "${employee_password}" WHERE employee_id = "${employee_id}"` };
 
   const config = {
       method: 'post',

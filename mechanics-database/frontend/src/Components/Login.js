@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './App.css';
 
@@ -12,37 +12,105 @@ async function loginUser(credentials) {
  })
    .then(data => data.json())
 }
+async function checkEmployee(credentials){
+  return fetch('http://127.0.0.1:5000/online/harperdb/employee/' + credentials.username, {
+    method: 'POST',
+    headers: {
+     'Content-Type': 'application/json'
+   },
+   body: JSON.stringify(credentials)
+ })
+   .then(data => data.json())
+}
+async function checkUser(customer){
+  return fetch('http://127.0.0.1:5000/online/harperdb/customer/' + customer.cusername, {
+    method: 'POST',
+    headers: {
+     'Content-Type': 'application/json'
+   },
+   body: JSON.stringify(customer)
+ })
+   .then(data => data.json())
+}
 
 function Login({setToken}) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
+  const [cusername, csetUserName] = useState();
+  const [cpassword, csetPassword] = useState();
+  const [checker, setChecker] = useState();
 
-  const handleSubmit = async e => {
+  const handleEmployeeSubmit = async e => {
       e.preventDefault();
-      const token = await loginUser(
+      const test = await checkEmployee({username,password});
+      console.log(test);
+      if (password == test[0].employee_password){
+        const token = await loginUser(
         {username,
         password}
       );
-      setToken(token);
+        setToken(token);
+      }
+      else{
+
+      }
     }
 
+  const handleCustomerSubmit = async e => {
+      e.preventDefault();
+      const test = await checkUser({cusername,cpassword});
+      console.log(test);
+      if (cpassword == test[0].customer_password){
+        const token = await loginUser(
+        {cusername,
+        cpassword}
+      );
+        setToken(token);
+      }
+      else{
+
+      }
+    }
+
+
   return(
-    <div className="login-wrapper">
-      <h1>Please Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <p>Username</p>
-          <input type="text" onChange={e => setUserName(e.target.value)}/>
-        </label>
-        <label>
-          <p>Password</p>
-          <input type="password" onChange={e => setPassword(e.target.value)}/>
-        </label>
-        <div>
-          <button type="submit">Submit</button>
+    
+      <div class="row align-items-center bigrow">
+        <div class="col-lg-6">
+          <h1>Log in As Employee</h1>
+          <form onSubmit={handleEmployeeSubmit}>
+            <label>
+              <p>Username</p>
+              <input type="text" onChange={e => setUserName(e.target.value)}/>
+            </label>
+            <label>
+              <p>Password</p>
+              <input type="password" onChange={e => setPassword(e.target.value)}/>
+            </label>
+            <div>
+              <button type="submit">Submit</button>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
+
+        <div class="col-lg-6">
+          <h1>Log in As Customer</h1>
+          <form onSubmit={handleCustomerSubmit}>
+            <label>
+              <p>Username</p>
+              <input type="text" onChange={e => csetUserName(e.target.value)}/>
+            </label>
+            <label>
+              <p>Password</p>
+              <input type="password" onChange={e => csetPassword(e.target.value)}/>
+            </label>
+            <div>
+              <button type="submit">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    
   )
 }
 Login.propTypes = {

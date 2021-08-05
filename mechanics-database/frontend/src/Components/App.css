@@ -53,8 +53,7 @@ section {
     background: black;
 }
 .bigrow{
-    padding: none;
-    margin: none;
+    margin: auto;
 }
 form {
     display: flex;

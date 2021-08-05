@@ -46,9 +46,6 @@ app.use(cors());
               const data = response.data;
               console.log(data);
               res.json(data);
-              res.send({
-                token: data
-              });
           })
           .catch((error) => {
               console.log(error);
@@ -87,7 +84,7 @@ app.get('/online/harperdb/customer/:customer_id', (req, res) => {
   const customer_id = req.params.customer_id;
   console.log(customer_id);
 
-  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Customer WHERE customer_id = ${customer_id}` };
+  const data = { operation: 'sql', sql: `SELECT customer_password FROM Mechanics.Customer WHERE customer_id = "${customer_id}"` };
 
   const config = {
       method: 'post',
@@ -104,7 +101,6 @@ app.get('/online/harperdb/customer/:customer_id', (req, res) => {
             const data = response.data;
             console.log(data);
             res.json(data);
-            return res.redirect('http://localhost:5000/Customers');
         })
         .catch((error) => {
             console.log(error);
@@ -246,35 +242,6 @@ app.get('/online/harperdb/employee/', (req, res) => {
         });
 });
 
-
-//GET get an employee by employee_id
-app.get('/online/harperdb/employee/:employee_id', (req, res) => {
-  const employee_id = req.params.employee_id;
-  console.log(employee_id);
-
-  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Employee WHERE employee_id = "${employee_id}"` };
-
-  const config = {
-      method: 'post',
-      url: process.env.HARPERDB_URL,
-      headers: {
-          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
-          'Content-Type': 'application/json',
-      },
-      data: data,
-  };
-
-    axios(config)
-        .then((response) => {
-            const data = response.data;
-            console.log(data);
-            res.json(data);
-            return res.redirect('http://localhost:3000/Employees');
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-});
 
 
 //POST: Create employees and add them to the database

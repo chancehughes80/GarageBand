@@ -25,6 +25,62 @@ app.use(cors());
   |                      Manipulating and pulling from Harper DB                       |
   |~~~~~~~~~~~~~~~~~~~~~~                                       ~~~~~~~~~~~~~~~~~~~~~~~|*/
 
+//~~~~~~~~~~~~~~~~~~~~~~Login Calls~~~~~~~~~~~~~~~~~~~~~~
+
+  //GET get an employee by employee_id
+  app.use('/online/harperdb/employee/:employee_id', (req, res) => {
+    const employee_id = req.params.employee_id;
+    console.log(employee_id);
+
+    const data = { operation: 'sql', sql: `SELECT employee_password FROM Mechanics.Employee WHERE employee_id = ${employee_id}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+      axios(config)
+          .then((response) => {
+              const data = response.data;
+              console.log(data);
+              res.json(data);
+          })
+          .catch((error) => {
+              console.log(error);
+          });
+  });
+
+  app.use('/online/harperdb/customer/:customer_id', (req, res) => {
+    const customer_id = req.params.customer_id;
+    console.log(customer_id);
+
+    const data = { operation: 'sql', sql: `SELECT customer_password FROM Mechanics.Customer WHERE customer_id = ${customer_id}` };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+      axios(config)
+          .then((response) => {
+              const data = response.data;
+              console.log(data);
+              res.json(data);
+          })
+          .catch((error) => {
+              console.log(error);
+          });
+  });
 
 //~~~~~~~~~~~~~~~~~~~~~~Customer Table CRUD~~~~~~~~~~~~~~~~~~~~~~
 
@@ -98,7 +154,7 @@ app.post('/online/harperdb/customer/add-customer', (req, res) => {
 
 
 //update customer
-app.put('/online/harperdb/customer/update-customer', (req, res) => {
+app.put('/online/harperdb/update-customer', (req, res) => {
     const { customer_id, customer_name, billing_address, email_address, phone_number, customer_password} = req.body;
     console.log(req.body);
 
@@ -176,35 +232,6 @@ app.get('/online/harperdb/employee/', (req, res) => {
         },
         data: data,
     };
-
-    axios(config)
-        .then((response) => {
-            const data = response.data;
-            console.log(data);
-            res.json(data);
-            return res.redirect('http://localhost:5000/Employees');
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-});
-
-//GET get an employee by employee_id
-app.get('/online/harperdb/employee/:employee_id', (req, res) => {
-  const employee_id = req.params.employee_id;
-  console.log(employee_id);
-
-  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Employee WHERE employee_id = ${employee_id}` };
-
-  const config = {
-      method: 'post',
-      url: process.env.HARPERDB_URL,
-      headers: {
-          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
-          'Content-Type': 'application/json',
-      },
-      data: data,
-  };
 
     axios(config)
         .then((response) => {
@@ -883,6 +910,31 @@ app.get('/online/harperdb/vehicle', (req, res) => {
         });
 });
 
+//GET: Fetch all vehicles by customer_id
+app.get('/online/harperdb/vehicle/:customer_id', (req, res) => {
+  const customer_id = req.params.customer_id;
+  console.log(customer_id);
+  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Vehicle WHERE customer_id = ${customer_id}` };
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
 
 // POST: Create vehicles and add them to the database
 app.post('/online/harperdb/vehicle/add-vehicle', (req, res) => {
@@ -1108,6 +1160,33 @@ app.delete('/online/harperdb/delete-vehicle-type', (req, res) => {
 // GET: Fetch all vehicle repairs from the database
 app.get('/online/harperdb/repair-vehicle', (req, res) => {
     const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.RepairVehicle' };
+
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+// GET: Fetch all vehicle repairs by customer_id from the database
+app.get('/online/harperdb/repair-vehicle/:customer_id', (req, res) => {
+    const customer_id = req.params.customer_id;
+    console.log(customer_id);
+    const data = { operation: 'sql', sql: `SELECT rv.VIN, rv.repair_status, rv.repair_id, rv.actual_time FROM Mechanics.RepairVehicle AS rv INNER JOIN Mechanics.Vehicle AS v ON rv.VIN = v.VIN WHERE v.customer_id = "${customer_id} "` };
 
     const config = {
         method: 'post',
@@ -1540,6 +1619,34 @@ app.delete('/online/harperdb/employeerepair/delete-employeerepair/:serial_id', (
         });
 });
 
+//GET get a customer by customer_id
+app.get('/online/harperdb/:customer_id', (req, res) => {
+  const customer_id = req.params.customer_id;
+  console.log(customer_id);
+
+  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Customer WHERE customer_id = "${customer_id}"` };
+
+  const config = {
+      method: 'post',
+      url: process.env.HARPERDB_URL,
+      headers: {
+          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+          'Content-Type': 'application/json',
+      },
+      data: data,
+  };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data);
+            res.json(data);
+            return res.redirect('http://localhost:5000/Customers');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
 
 //~~~~~~~~~~~~~~~~~~~~~End of Employee Table CRUD~~~~~~~~~~~~~~~~~~~~~
 const port = process.env.PORT || 5000;

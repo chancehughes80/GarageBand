@@ -11,7 +11,7 @@ function CustomerVehicle() {
     { title: 'Color', field: 'color'},
     { title: 'Plate', field: 'plate'},
     { title: 'Year', field: 'vehicle_year'},
-    { title: 'Customer ID', field: 'customer_id'},
+    { title: 'Customer ID', field: 'customer_id',editable: 'never'},
 
   ]
   const [status, setStatus] = useState(null);

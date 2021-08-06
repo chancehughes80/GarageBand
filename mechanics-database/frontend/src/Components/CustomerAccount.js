@@ -25,7 +25,7 @@ function CustomerAccount() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/customer/'+str;
+            const API = 'http://127.0.0.1:5000/online/harperdb/'+str;
 
             fetch(API)
                 .then((response) => {
@@ -63,7 +63,7 @@ function CustomerAccount() {
           errorList.push("Please enter an Customer Password")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/customer/update-customer", newData)
+            axios.put("http://127.0.0.1:5000/online/harperdb/update-customer", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.customer_id;

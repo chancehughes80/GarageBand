@@ -13,7 +13,7 @@ export default function App() {
   }
   if(token == 'employeetoken'){
     return (
-      <div className="App">
+      <div class="App">
         <Router>
           <Navigation />
           <Switch>
@@ -30,7 +30,7 @@ export default function App() {
   }
   else if(token.includes('customertoken')){
     return(
-      <div className="App">
+      <div class="App">
         <Router>
           <CustomerNavigation />
           <Switch>

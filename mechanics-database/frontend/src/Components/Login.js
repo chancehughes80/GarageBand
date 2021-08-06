@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './App.css';
 
-async function loginUser(credentials) {
+async function loginEmployee(credentials) {
  return fetch('http://localhost:8080/Login', {
    method: 'POST',
    headers: {
@@ -12,6 +12,18 @@ async function loginUser(credentials) {
  })
    .then(data => data.json())
 }
+
+async function loginUser(credentials) {
+ return fetch('http://localhost:8081/Login/customer/'+credentials.username, {
+   method: 'POST',
+   headers: {
+     'Content-Type': 'application/json'
+   },
+   body: JSON.stringify(credentials)
+ })
+   .then(data => data.json())
+}
+
 async function checkEmployee(credentials){
   return fetch('http://127.0.0.1:5000/online/harperdb/employee/' + credentials.username, {
     method: 'POST',
@@ -22,6 +34,7 @@ async function checkEmployee(credentials){
  })
    .then(data => data.json())
 };
+
 async function checkUser(credentials){
   return fetch('http://127.0.0.1:5000/online/harperdb/customer/' + credentials.username, {
     method: 'POST',
@@ -42,7 +55,7 @@ function Login({setToken}) {
       const test = await checkEmployee({username,password});
       console.log(test);
       if (password == test[0].employee_password){
-        const token = await loginUser(
+        const token = await loginEmployee(
         {username,
         password}
       );

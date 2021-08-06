@@ -6,7 +6,7 @@ function CustomerNavigation(props) {
     <div className="navigation">
       <nav class="navbar navbar-expand navbar-dark">
         <div class="container">
-          <Link class="navbar-brand" to="/CustomerHome">
+          <Link class="navbar-brand" to="/">
             The Mechanic's Database
           </Link>
 

@@ -16,7 +16,9 @@ function CustomerRepair() {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
     const [isError, setIsError] = useState(false);
-    const [errorMessages, setErrorMessages] = useState([])
+    const [errorMessages, setErrorMessages] = useState([]);
+    //var aValue = localStorage.getItem('token');
+    //let str = aValue.substring(13);
 
   useEffect(() => {
       const getAPI = () => {
@@ -68,6 +70,7 @@ function CustomerRepair() {
                             }}
                         />
                     </main>
+                    <p id="token"> </p>
 
 
         </div>

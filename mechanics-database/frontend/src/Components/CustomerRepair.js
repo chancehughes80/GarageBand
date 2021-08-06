@@ -42,14 +42,14 @@ function CustomerRepair() {
   return(
       <Fragment>
         <header>
-                  <h1>Vehicle Repair</h1>
+                  <h1>Check Your Repair Status</h1>
         </header>
         <div class="container">
 
                     <main class="spacer">
 
                         <MaterialTable
-                            title="VehicleRepair"
+                            title="Your Repairs"
                             columns={columns}
                             data={apiData}
                             style={{

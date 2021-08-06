@@ -79,38 +79,39 @@ function Login({setToken}) {
 
   return(
     
-      <div class="row align-items-center bigrow">
-
-        <div class="col-lg-6">
+      <div class="row justify-content-md-center bigrow login">
+        <div class="col-lg-5 logintile">
           <h1>Log in As Employee</h1>
           <form onSubmit={handleEmployeeSubmit}>
             <label>
-              <p>Username</p>
-              <input type="text" onChange={e => setUserName(e.target.value)}/>
+              <p class="labeling topside">Employee ID</p>
+              <input placeholder="Employee ID" type="text" onChange={e => setUserName(e.target.value)}/>
             </label>
             <label>
-              <p>Password</p>
-              <input type="password" onChange={e => setPassword(e.target.value)}/>
+              <p class="labeling">Password</p>
+              <input placeholder="Password" type="password" onChange={e => setPassword(e.target.value)}/>
             </label>
             <div>
-              <button type="submit">Submit</button>
+              <button class="better-button" type="submit">Submit</button>
             </div>
           </form>
         </div>
+        <div class="col-sm-1">
+        </div>
 
-        <div class="col-lg-6">
+        <div class="col-lg-5 logintile">
           <h1>Log in As Customer</h1>
           <form onSubmit={handleCustomerSubmit}>
             <label>
-              <p>Username</p>
-              <input type="text" onChange={e => setUserName(e.target.value)}/>
+              <p class="labeling topside">Customer ID</p>
+              <input placeholder="Customer ID" type="text" onChange={e => setUserName(e.target.value)}/>
             </label>
             <label>
-              <p>Password</p>
-              <input type="password" onChange={e => setPassword(e.target.value)}/>
+              <p class="labeling">Password</p>
+              <input placeholder="Password" type="password" onChange={e => setPassword(e.target.value)}/>
             </label>
             <div>
-              <button type="submit">Submit</button>
+              <button class="better-button" type="submit">Submit</button>
             </div>
           </form>
         </div>

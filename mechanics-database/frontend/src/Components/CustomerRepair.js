@@ -17,14 +17,14 @@ function CustomerRepair() {
     const [data, setData] = useState(null);
     const [isError, setIsError] = useState(false);
     const [errorMessages, setErrorMessages] = useState([]);
-    //var aValue = localStorage.getItem('token');
-    //let str = aValue.substring(13);
+    var aValue = localStorage.getItem('token');
+    let str = aValue.substring(23,26);
 
   useEffect(() => {
       const getAPI = () => {
           // Change this endpoint to whatever local or online address you have
           // Local PostgreSQL Database
-          const API = 'http://127.0.0.1:5000/online/harperdb/repair-vehicle/451';
+          const API = 'http://127.0.0.1:5000/online/harperdb/repair-vehicle/'+str;
 
           fetch(API)
               .then((response) => {

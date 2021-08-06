@@ -20,12 +20,14 @@ function CustomerVehicle() {
   const [data, setData] = useState(null);
   const [isError, setIsError] = useState(false);
   const [errorMessages, setErrorMessages] = useState([])
+  var aValue = localStorage.getItem('token');
+  let str = aValue.substring(23,26);
 
   useEffect(() => {
       const getAPI = () => {
           // Change this endpoint to whatever local or online address you have
           // Local PostgreSQL Database
-          const API = 'http://127.0.0.1:5000/online/harperdb/vehicle/455';
+          const API = 'http://127.0.0.1:5000/online/harperdb/vehicle/'+str;
 
           fetch(API)
               .then((response) => {

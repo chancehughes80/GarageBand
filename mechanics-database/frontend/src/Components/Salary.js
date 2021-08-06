@@ -19,7 +19,7 @@ function Salary() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/salary';
+            const API = 'http://127.0.0.1:5000/online/salary';
 
             fetch(API)
                 .then((response) => {
@@ -45,7 +45,7 @@ function Salary() {
         if(newData.wage === undefined){
           errorList.push("Please enter Wage")
         }
-        const url = 'http://127.0.0.1:5000/online/harperdb/salary/add-salary';
+        const url = 'http://127.0.0.1:5000/online/harperdb/add-salary';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)
           .then(res => {
@@ -70,7 +70,7 @@ function Salary() {
 
     }
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/salary/delete-salary/' + oldData.job_title;
+        const url = 'http://127.0.0.1:5000/online/harperdb/delete-salary/' + oldData.job_title;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
@@ -98,7 +98,7 @@ function Salary() {
             errorList.push("Please enter wage")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/salary/update-salary", newData)
+            axios.put("http://127.0.0.1:5000/online/harperdb/update-salary", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.job_title;

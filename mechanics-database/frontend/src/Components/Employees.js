@@ -22,7 +22,7 @@ function Employees() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/employee';
+            const API = 'http://127.0.0.1:5000/online/employee';
 
             fetch(API)
                 .then((response) => {
@@ -54,7 +54,7 @@ function Employees() {
         if(newData.employee_password === undefined){
           errorList.push("Please enter an Employee Password")
         }
-        const url = 'http://127.0.0.1:5000/online/harperdb/employee/add-employee';
+        const url = 'http://127.0.0.1:5000/online/harperdb/add-employee';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)
           .then(res => {
@@ -80,7 +80,7 @@ function Employees() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/employee/delete-employee/' + oldData.employee_id;
+        const url = 'http://127.0.0.1:5000/online/harperdb/delete-employee/' + oldData.employee_id;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
@@ -113,7 +113,7 @@ function Employees() {
             errorList.push("Please enter Job Title")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/employee/update-employee", newData)
+            axios.put("http://127.0.0.1:5000/online/harperdb/update-employee", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.employee_id;

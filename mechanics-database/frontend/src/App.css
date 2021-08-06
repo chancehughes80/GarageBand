@@ -83,8 +83,11 @@ form div {
     background: #500000;
     height: 100%;
 }
-#root{
+.home{
     height: 100%;
+}
+#root{
+    height: fit-content;
 }
 .employee-container {
     background: #fcee0b;

@@ -186,7 +186,7 @@ app.put('/online/harperdb/update-customer', (req, res) => {
 
     const data = { operation: 'sql', sql: `UPDATE Mechanics.Customer SET customer_name = "${customer_name}", customer_password = "${customer_password}",
     billing_address = "${billing_address}", email_address = "${email_address}", phone_number = "${phone_number}"
-    WHERE customer_id = ${customer_id}` };
+    WHERE customer_id = "${customer_id}"` };
 
     const config = {
         method: 'post',
@@ -247,7 +247,7 @@ app.delete('/online/harperdb/customer/delete-customer/:customer_id', (req, res) 
 
 
 //GET: get all employees
-app.get('/online/harperdb/employee/', (req, res) => {
+app.get('/online/employee/', (req, res) => {
     const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Employee' };
     const config = {
         method: 'post',
@@ -274,7 +274,7 @@ app.get('/online/harperdb/employee/', (req, res) => {
 
 
 //POST: Create employees and add them to the database
-app.post('/online/harperdb/employee/add-employee', (req, res) => {
+app.post('/online/harperdb/add-employee', (req, res) => {
   const { employee_id, employee_name, employee_password, job_title } = req.body;
   console.log(req.body);
 
@@ -315,7 +315,7 @@ app.post('/online/harperdb/employee/add-employee', (req, res) => {
 
 
 // PUT: Update employee by employee_id from the database
-app.put('/online/harperdb/employee/update-employee', (req, res) => {
+app.put('/online/harperdb/update-employee', (req, res) => {
   const {employee_id, employee_name, job_title, employee_password} = req.body;
   console.log(req.body);
 
@@ -344,7 +344,7 @@ app.put('/online/harperdb/employee/update-employee', (req, res) => {
 
 
 // DELETE: Delete employee by employee_id from the database
-app.delete('/online/harperdb/employee/delete-employee/:employee_id', (req, res) => {
+app.delete('/online/harperdb/delete-employee/:employee_id', (req, res) => {
     const employee_id = req.params.employee_id;
     console.log(employee_id);
 
@@ -1338,7 +1338,7 @@ app.delete('/online/harperdb/repair-vehicle/delete-repair-vehicle/:repair_id', (
 
 
 //GET: get all salaries
-app.get('/online/harperdb/salary/', (req, res) => {
+app.get('/online/salary/', (req, res) => {
     const data = { operation: 'sql', sql: 'SELECT * FROM Mechanics.Salary' };
     const config = {
         method: 'post',
@@ -1367,7 +1367,7 @@ app.get('/online/harperdb/salary/:job_title', (req, res) => {
   const job_title = req.params.job_title;
   console.log(job_title);
 
-  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Salary WHERE job_title = ${job_title}` };
+  const data = { operation: 'sql', sql: `SELECT * FROM Mechanics.Salary WHERE job_title = "${job_title}"` };
 
   const config = {
       method: 'post',
@@ -1393,7 +1393,7 @@ app.get('/online/harperdb/salary/:job_title', (req, res) => {
 
 
 //POST: Create salaries and add them to the database
-app.post('/online/harperdb/salary/add-salary', (req, res) => {
+app.post('/online/harperdb/add-salary', (req, res) => {
   const { job_title, wage } = req.body;
   console.log(req.body);
 
@@ -1432,7 +1432,7 @@ app.post('/online/harperdb/salary/add-salary', (req, res) => {
 
 
 // PUT: Update salary by job_title from the database
-app.put('/online/harperdb/salary/update-salary', (req, res) => {
+app.put('/online/harperdb/update-salary', (req, res) => {
 
   const {job_title, wage} = req.body;
   console.log(req.body);
@@ -1462,7 +1462,7 @@ app.put('/online/harperdb/salary/update-salary', (req, res) => {
 
 
 // DELETE: Delete salary by job_title from the database
-app.delete('/online/harperdb/salary/delete-salary/:job_title', (req, res) => {
+app.delete('/online/harperdb/delete-salary/:job_title', (req, res) => {
     const job_title = req.params.job_title;
     console.log(job_title);
 

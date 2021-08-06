@@ -2,9 +2,10 @@ import React from "react";
 import Car from "./Car1.png";
 import Repair from "./Repairs.png";
 import Customer from "./Customer.png";
+import './App.css';
 function CustomerHome() {
   return (
-    <div className="home">
+    <div className="home1">
       <div class="container">
 
         <div class="row align-items-center  my-5">

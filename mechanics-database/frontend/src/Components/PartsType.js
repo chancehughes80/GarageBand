@@ -19,7 +19,7 @@ function PartsType() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/partstype';
+            const API = 'http://127.0.0.1:5000/online/partstype';
 
             fetch(API)
                 .then((response) => {
@@ -44,7 +44,7 @@ function PartsType() {
         if(newData.make === undefined){
           errorList.push("Please enter Part make ")
         }
-        const url = 'http://127.0.0.1:5000/online/harperdb/partstype/add-type';
+        const url = 'http://127.0.0.1:5000/online/partstype/add-type';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)
           .then(res => {
@@ -70,7 +70,7 @@ function PartsType() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/partstype/delete-type/' + oldData.model;
+        const url = 'http://127.0.0.1:5000/online/partstype/delete-type/' + oldData.model;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
@@ -97,7 +97,7 @@ function PartsType() {
             errorList.push("Please enter Part make ")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/partstype/update-type", newData)
+            axios.put("http://127.0.0.1:5000/online/partstype/update-type", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.model;

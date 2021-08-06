@@ -23,7 +23,7 @@ function Parts() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/parts';
+            const API = 'http://127.0.0.1:5000/online/parts';
 
             fetch(API)
                 .then((response) => {
@@ -54,7 +54,7 @@ function Parts() {
         if(newData.model === undefined){
           errorList.push("Please enter a Model")
         }
-        const url = 'http://127.0.0.1:5000/online/harperdb/parts/add-part';
+        const url = 'http://127.0.0.1:5000/online/parts/add-part';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)
           .then(res => {
@@ -80,7 +80,7 @@ function Parts() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/parts/delete-part/' + oldData.part_id;
+        const url = 'http://127.0.0.1:5000/online/parts/delete-part/' + oldData.part_id;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
@@ -113,7 +113,7 @@ function Parts() {
             errorList.push("Please enter Job Title")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/parts/update-part", newData)
+            axios.put("http://127.0.0.1:5000/online/parts/update-part", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.part_id;

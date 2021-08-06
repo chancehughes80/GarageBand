@@ -24,7 +24,7 @@ function VehicleRepair() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/repair-vehicle';
+            const API = 'http://127.0.0.1:5000/online/repair-vehicle';
 
             fetch(API)
                 .then((response) => {
@@ -55,7 +55,7 @@ function VehicleRepair() {
         if(newData.actual_time === undefined){
             errorList.push("Please enter an Actual Repair Time")
         }
-        const url = 'http://127.0.0.1:5000/online/harperdb/repair-vehicle/add-repair-vehicle';
+        const url = 'http://127.0.0.1:5000/online/repair-vehicle/add-repair-vehicle';
         if(errorList.length < 1){ //no error
             axios.post(url, newData)
             .then(res => {
@@ -81,7 +81,7 @@ function VehicleRepair() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/repair-vehicle/delete-repair-vehicle/' + oldData.repair_id;
+        const url = 'http://127.0.0.1:5000/online/repair-vehicle/delete-repair-vehicle/' + oldData.repair_id;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
@@ -114,7 +114,7 @@ function VehicleRepair() {
             errorList.push("Please enter an Actual Repair Time")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/repair-vehicle/update-repair-vehicle", newData)
+            axios.put("http://127.0.0.1:5000/online/repair-vehicle/update-repair-vehicle", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.VIN;

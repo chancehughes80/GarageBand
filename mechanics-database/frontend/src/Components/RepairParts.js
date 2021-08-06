@@ -20,7 +20,7 @@ function RepairParts() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/repairparts';
+            const API = 'http://127.0.0.1:5000/online/repairparts';
 
             fetch(API)
                 .then((response) => {
@@ -47,7 +47,7 @@ function RepairParts() {
           errorList.push("Please enter Repair ID")
         }
 
-        const url = 'http://127.0.0.1:5000/online/harperdb/repairparts/add-repairparts';
+        const url = 'http://127.0.0.1:5000/online/repairparts/add-repairparts';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)
           .then(res => {
@@ -73,7 +73,7 @@ function RepairParts() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/repairparts/delete-repairparts/' + oldData.serial_id;
+        const url = 'http://127.0.0.1:5000/online/repairparts/delete-repairparts/' + oldData.serial_id;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
@@ -100,7 +100,7 @@ function RepairParts() {
         }
 
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/repairparts/update-repairparts", newData)
+            axios.put("http://127.0.0.1:5000/online/repairparts/update-repairparts", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.repair_id;

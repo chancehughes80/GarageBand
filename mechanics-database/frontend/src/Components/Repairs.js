@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom'
 import './App.css';
 const Type = React.lazy(()=>import('./EmployeeRepair'));
 const Type2 = React.lazy(()=>import('./RepairParts'));
-const Type3 = React.lazy(()=>import('./VehicleRepair'));
 
 function Repair() {
       var columns = [
@@ -25,7 +24,7 @@ function Repair() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/repair';
+            const API = 'http://127.0.0.1:5000/online/repair';
 
             fetch(API)
                 .then((response) => {
@@ -56,7 +55,7 @@ function Repair() {
         if(newData.repair_cost === undefined){
           errorList.push("Please enter an cost")
         }
-        const url = 'http://127.0.0.1:5000/online/harperdb/repair/add-repair';
+        const url = 'http://127.0.0.1:5000/online/repair/add-repair';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)
           .then(res => {
@@ -82,7 +81,7 @@ function Repair() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/repair/delete-repair/' + oldData.repair_id;
+        const url = 'http://127.0.0.1:5000/online/repair/delete-repair/' + oldData.repair_id;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
@@ -115,7 +114,7 @@ function Repair() {
           errorList.push("Please enter an cost")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/repair/update-repair-vehicle", newData)
+            axios.put("http://127.0.0.1:5000/online/repair/update-repair", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.employee_id;
@@ -192,12 +191,6 @@ function Repair() {
                 <div class="col-lg-6" >
                       <Suspense id="load" fallback={<div>Loading...</div>}>
                         <Type2 />
-                      </Suspense>
-                </div>
-
-                <div>
-                      <Suspense id="load" fallback={<div>Loading...</div>}>
-                        <Type3 />
                       </Suspense>
                 </div>
 

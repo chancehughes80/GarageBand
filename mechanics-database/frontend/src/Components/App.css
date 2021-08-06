@@ -52,12 +52,17 @@ section {
     color: white;
     height: 100%;
 }
+.home1{
+    color: white;
+    min-height: 100vh
+}
 .navigation{
     background: black;
 }
 .bigrow{
     margin: auto;
     background: #500000;
+    color: white;
 }
 form {
     display: flex;

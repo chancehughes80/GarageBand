@@ -25,7 +25,7 @@ function VehicleType() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/vehicle-type';
+            const API = 'http://127.0.0.1:5000/online/vehicle-type';
 
             fetch(API)
                 .then((response) => {
@@ -41,25 +41,6 @@ function VehicleType() {
         getAPI();
     }, []);
 
-    const handleSubmit = () => {
-        setLoading(true);
-        setIsError(false);
-        const data = {
-          model: model,
-          make: make,
-        }
-        axios.put('http://127.0.0.1:5000/online/harperdb/vehicle-type/update-vehicle-type', data)
-          .then(res => {
-            setData(res.data);
-            setModel('');
-            setMake('');
-            setLoading(false);
-          }).catch(err => {
-            setLoading(false);
-            setIsError(true);
-          });
-        }
-
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []
@@ -69,7 +50,7 @@ function VehicleType() {
         if(newData.make === undefined){
             errorList.push("Please enter Make")
         }
-        const url = 'http://127.0.0.1:5000/online/harperdb/vehicle-type/add-vehicle-type';
+        const url = 'http://127.0.0.1:5000/online/vehicle-type/add-vehicle_type';
         if(errorList.length < 1){ //no error
             axios.post(url, newData)
             .then(res => {
@@ -95,7 +76,7 @@ function VehicleType() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/vehicle-type/delete-vehicle-type/' + oldData.model;
+        const url = 'http://127.0.0.1:5000/online/vehicle-type/delete-vehicle-type/' + oldData.model;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
@@ -115,14 +96,14 @@ function VehicleType() {
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []
-        if(newData.VIN === undefined){
+        if(newData.model === undefined){
             errorList.push("Please enter Model: ")
         }
-        if(newData.repair_id === undefined){
+        if(newData.make === undefined){
             errorList.push("Please enter Make")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/vehicle-type/update-vehicle-type", newData)
+            axios.put("http://127.0.0.1:5000/online/vehicle-type/update-vehicle-type", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.VIN;

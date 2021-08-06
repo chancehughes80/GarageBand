@@ -4,6 +4,8 @@ import axios from 'axios';
 import './App.css';
 
 function CustomerVehicle() {
+  var aValue = localStorage.getItem('token');
+  let str = aValue.substring(23,26);
 
   var columns = [
     { title: 'VIN', field: 'VIN', editable: 'onAdd'},
@@ -11,7 +13,7 @@ function CustomerVehicle() {
     { title: 'Color', field: 'color'},
     { title: 'Plate', field: 'plate'},
     { title: 'Year', field: 'vehicle_year'},
-    { title: 'Customer ID', field: 'customer_id',editable: 'never'},
+    { title: 'Customer ID', field: 'customer_id',editable: 'never',initialEditValue: ''+str},
 
   ]
   const [status, setStatus] = useState(null);
@@ -20,8 +22,6 @@ function CustomerVehicle() {
   const [data, setData] = useState(null);
   const [isError, setIsError] = useState(false);
   const [errorMessages, setErrorMessages] = useState([])
-  var aValue = localStorage.getItem('token');
-  let str = aValue.substring(23,26);
 
   useEffect(() => {
       const getAPI = () => {
@@ -64,7 +64,7 @@ function CustomerVehicle() {
       if(newData.customer_id === undefined){
           errorList.push("Please enter an Customer ID")
       }
-      const url = 'http://127.0.0.1:5000/online/harperdb/vehicle/add-vehicle';
+      const url = 'http://127.0.0.1:5000/online/vehicle/add-vehicle';
       if(errorList.length < 1){ //no error
           axios.post(url, newData)
           .then(res => {
@@ -90,7 +90,7 @@ function CustomerVehicle() {
   }
 
   const handleRowDelete = (oldData, resolve) =>{
-      const url = 'http://127.0.0.1:5000/online/harperdb/vehicle/delete-vehicle/' + oldData.VIN;
+      const url = 'http://127.0.0.1:5000/online/vehicle/delete-vehicle/' + oldData.VIN;
       axios.delete(url)
         .then(res => {
           const dataDelete = [...data];
@@ -129,7 +129,7 @@ function CustomerVehicle() {
           errorList.push("Please enter a Customer ID")
       }
       if(errorList.length < 1){
-          axios.put("http://127.0.0.1:5000/online/harperdb/vehicle/update-vehicle", newData)
+          axios.put("http://127.0.0.1:5000/online/vehicle/update-vehicle", newData)
           .then(res => {
               const dataUpdate = [...data];
               const index = oldData.tableData.VIN;

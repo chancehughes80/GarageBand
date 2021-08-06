@@ -60,7 +60,7 @@ function Customers() {
         if(newData.customer_password === undefined){
           errorList.push("Please enter an Customer Password")
         }
-        const url = 'http://127.0.0.1:5000/online/harperdb/customer/add-customer';
+        const url = 'http://127.0.0.1:5000/online/customer/add-customer';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)
           .then(res => {
@@ -86,7 +86,7 @@ function Customers() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/customer/delete-customer/' + oldData.customer_id;
+        const url = 'http://127.0.0.1:5000/online/customer/delete-customer/' + oldData.customer_id;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
@@ -124,7 +124,7 @@ function Customers() {
           errorList.push("Please enter an Customer Password")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/customer/update-customer", newData)
+            axios.put("http://127.0.0.1:5000/online/customer/update-customer", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.customer_id;

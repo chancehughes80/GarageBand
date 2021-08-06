@@ -63,7 +63,7 @@ function CustomerAccount() {
           errorList.push("Please enter an Customer Password")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/update-customer", newData)
+            axios.put("http://127.0.0.1:5000/online/customer/update-customer", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.customer_id;

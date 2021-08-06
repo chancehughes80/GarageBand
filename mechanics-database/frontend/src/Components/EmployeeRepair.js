@@ -20,7 +20,7 @@ function EmployeeRepair() {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
             // Local PostgreSQL Database
-            const API = 'http://127.0.0.1:5000/online/harperdb/employeerepair';
+            const API = 'http://127.0.0.1:5000/online/employeerepair';
 
             fetch(API)
                 .then((response) => {
@@ -45,7 +45,7 @@ function EmployeeRepair() {
         if(newData.repair_id === undefined){
           errorList.push("Please enter repair_id ")
         }
-        const url = 'http://127.0.0.1:5000/online/harperdb/employeerepair/add-employeerepair';
+        const url = 'http://127.0.0.1:5000/online/employeerepair/add-employeerepair';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)
           .then(res => {
@@ -71,7 +71,7 @@ function EmployeeRepair() {
     }
 
     const handleRowDelete = (oldData, resolve) =>{
-        const url = 'http://127.0.0.1:5000/online/harperdb/employeerepair/delete-employeerepair/' + oldData.model;
+        const url = 'http://127.0.0.1:5000/online/employeerepair/delete-employeerepair/' + oldData.serial_id;
         axios.delete(url)
           .then(res => {
             const dataDelete = [...data];
@@ -98,7 +98,7 @@ function EmployeeRepair() {
             errorList.push("Please enter Repair ID ")
         }
         if(errorList.length < 1){
-            axios.put("http://127.0.0.1:5000/online/harperdb/employeerepair/update-employeerepair", newData)
+            axios.put("http://127.0.0.1:5000/online/employeerepair/update-employeerepair", newData)
             .then(res => {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.model;

@@ -5,13 +5,16 @@ import './App.css';
 
 function CustomerVehicle() {
 
+  var aValue = localStorage.getItem('token');
+  let str = aValue.substring(23,26);
+
   var columns = [
     { title: 'VIN', field: 'VIN', editable: 'onAdd'},
     { title: 'Model', field: 'model'},
     { title: 'Color', field: 'color'},
     { title: 'Plate', field: 'plate'},
     { title: 'Year', field: 'vehicle_year'},
-    { title: 'Customer ID', field: 'customer_id',editable: 'never'},
+    { title: 'Customer ID', field: 'customer_id',initialEditValue: str, editable: 'never'},
 
   ]
   const [status, setStatus] = useState(null);
@@ -20,8 +23,6 @@ function CustomerVehicle() {
   const [data, setData] = useState(null);
   const [isError, setIsError] = useState(false);
   const [errorMessages, setErrorMessages] = useState([])
-  var aValue = localStorage.getItem('token');
-  let str = aValue.substring(23,26);
 
   useEffect(() => {
       const getAPI = () => {
@@ -88,24 +89,6 @@ function CustomerVehicle() {
       window.location.reload(false);
 
   }
-
-  const handleRowDelete = (oldData, resolve) =>{
-      const url = 'http://127.0.0.1:5000/online/harperdb/vehicle/delete-vehicle/' + oldData.VIN;
-      axios.delete(url)
-        .then(res => {
-          const dataDelete = [...data];
-          const index = oldData.tableData.VIN;
-          dataDelete.splice(index, 1);
-          setData([...dataDelete]);
-          resolve()
-        })
-        .catch(error => {
-           setErrorMessages(["Delete failed! Server error"])
-           setIsError(true)
-           resolve()
-         })
-         window.location.reload(false);
-    }
 
   const handleRowUpdate = (newData, oldData, resolve) => {
       //validation

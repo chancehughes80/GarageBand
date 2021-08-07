@@ -81,7 +81,7 @@ function Login({setToken}) {
     
       <div class="row justify-content-md-center bigrow login">
         <div class="col-lg-5 logintile">
-          <h1>Log in As Employee</h1>
+          <h1>Employee login</h1>
           <form onSubmit={handleEmployeeSubmit}>
             <label>
               <p class="labeling topside">Employee ID</p>
@@ -100,7 +100,7 @@ function Login({setToken}) {
         </div>
 
         <div class="col-lg-5 logintile">
-          <h1>Log in As Customer</h1>
+          <h1>Customer login</h1>
           <form onSubmit={handleCustomerSubmit}>
             <label>
               <p class="labeling topside">Customer ID</p>
@@ -111,7 +111,8 @@ function Login({setToken}) {
               <input placeholder="Password" type="password" onChange={e => setPassword(e.target.value)}/>
             </label>
             <div>
-              <button class="better-button" type="submit">Submit</button>
+              <button class="better-button1" type="submit">Submit</button>
+              <a id="colored" class="better-button2">Register</a>
             </div>
           </form>
         </div>

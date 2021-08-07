@@ -2,6 +2,10 @@ import React from "react";
 import { Link, withRouter } from "react-router-dom";
 
 function Navigation(props) {
+  const logout = () => {
+    localStorage.clear();
+    window.location.href = '/';
+  }
   return (
     <div className="navigation">
       <nav class="navbar navbar-expand navbar-dark">
@@ -62,6 +66,12 @@ function Navigation(props) {
               >
                 <Link class="nav-link" to="/Repairs">
                   Repairs
+                </Link>
+              </li>
+
+              <li>
+                <Link class="nav-link" onClick={() => logout()}>
+                  Logout
                 </Link>
               </li>
 

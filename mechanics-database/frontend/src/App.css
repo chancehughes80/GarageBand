@@ -75,7 +75,8 @@ form button:hover {
 
 form div {
     display: flex;
-    flex-flow: column;
+    flex-flow: row;
+    justify-content: center;
     margin-bottom: 1.3rem;
 }
 

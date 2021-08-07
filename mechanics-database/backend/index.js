@@ -1250,7 +1250,7 @@ app.post('/online/repair-vehicle/add-repair-vehicle', (req, res) => {
             VIN: VIN,
             repair_id: repair_id,
             repair_status: repair_status,
-            actual_time: actual_time,   
+            actual_time: actual_time,
             },
         ],
     };
@@ -1649,5 +1649,61 @@ app.delete('/online/employeerepair/delete-employeerepair/:serial_id', (req, res)
 
 
 //~~~~~~~~~~~~~~~~~~~~~End of Employee Table CRUD~~~~~~~~~~~~~~~~~~~~~
+
+//~~~~~~~~~~~~~~~~~~~~~Validation~~~~~~~~~~~~~~~~~~~~~
+
+//Check if repair_id exists
+app.get('/online/validaterepair/:repair_id', (req, res) => {
+  const repair_id = req.params.repair_id;
+  console.log(repair_id);
+  const data = { operation: 'sql', sql: `SELECT repair_id FROM Mechanics.Repair WHERE repair_id = ${repair_id}` };
+    const config = {
+        method: 'post',
+        url: process.env.HARPERDB_URL,
+        headers: {
+            Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+            'Content-Type': 'application/json',
+        },
+        data: data,
+    };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data.length;
+            console.log(data);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+app.get('/online/validateemployee/:employee_id', (req, res) => {
+  const employee_id = req.params.employee_id;
+  console.log(employee_id);
+
+  const data = { operation: 'sql', sql: `SELECT employee_id FROM Mechanics.Employee WHERE employee_id = "${employee_id}"` };
+
+  const config = {
+      method: 'post',
+      url: process.env.HARPERDB_URL,
+      headers: {
+          Authorization: `Basic ${process.env.HARPERDB_AUTH}`,
+          'Content-Type': 'application/json',
+      },
+      data : data
+  };
+
+    axios(config)
+        .then((response) => {
+            const data = response.data;
+            console.log(data.length);
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server running on port ${port}, http://localhost:${port}`));

@@ -1,7 +1,13 @@
 import React from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, Redirect } from "react-router-dom";
+import {Login} from "./";
+import useToken from '../useToken';
 
 function Navigation(props) {
+  const logout = () => {
+  localStorage.clear();
+  window.location.href = '/';
+  }
   return (
     <div className="navigation">
       <nav class="navbar navbar-expand navbar-dark">
@@ -62,6 +68,12 @@ function Navigation(props) {
               >
                 <Link class="nav-link" to="/Repairs">
                   Repairs
+                </Link>
+              </li>
+
+              <li>
+                <Link class="nav-link" onClick={() => logout()} to="/Login">
+                  Logout
                 </Link>
               </li>
 

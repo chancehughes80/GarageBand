@@ -1,7 +1,13 @@
 import React from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, useHistory } from "react-router-dom";
+import {Login} from "./";
+import useToken from '../useToken';
 
 function CustomerNavigation(props) {
+  const logout = () => {
+    localStorage.clear();
+    window.location.href = '/';
+  }
   return (
     <div className="navigation">
       <nav class="navbar navbar-expand navbar-dark">
@@ -42,6 +48,12 @@ function CustomerNavigation(props) {
               >
                 <Link class="nav-link" to="/CustomerAccount">
                   Manage Your Account
+                </Link>
+              </li>
+
+              <li>
+                <Link class="nav-link" onClick={() => logout()} to="/Login">
+                  Logout
                 </Link>
               </li>
 

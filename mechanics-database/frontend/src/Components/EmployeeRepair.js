@@ -35,7 +35,14 @@ function EmployeeRepair() {
         };
         getAPI();
     }, []);
-
+    const validateRepair = (repair) =>{
+      const url = 'http://127.0.0.1:5000/online/validaterepair/' + repair;
+      return axios.get(url);
+    }
+    const validateEmployee = (employee) =>{
+      const url = 'http://127.0.0.1:5000/online/validateemployee/' + employee;
+      return axios.get(url);
+    }
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []
@@ -44,6 +51,12 @@ function EmployeeRepair() {
         }
         if(newData.repair_id === undefined){
           errorList.push("Please enter repair_id ")
+        }
+        if(validateRepair(newData.repair_id) === 1){
+          errorList.push("Please enter valid repair id ")
+        }
+        if(validateEmployee(newData.employee_id) === 1){
+          errorList.push("Please enter valid employee id ")
         }
         const url = 'http://127.0.0.1:5000/online/employeerepair/add-employeerepair';
         if(errorList.length < 1){ //no error

@@ -77,8 +77,7 @@ function EmployeeRepair() {
         if(validateEmployee(newData.employee_id) != 1){
           errorList.push("Please enter valid employee id ")
         }
-        const tt = ce(newData.employee_id);
-        document.getElementById('errorlist').innerHTML=tt;
+
         const url = 'http://127.0.0.1:5000/online/employeerepair/add-employeerepair';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)

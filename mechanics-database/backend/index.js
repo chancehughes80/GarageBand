@@ -1655,8 +1655,8 @@ app.delete('/online/employeerepair/delete-employeerepair/:serial_id', (req, res)
 //Check if repair_id exists
 app.get('/online/validaterepair/:repair_id', (req, res) => {
   const repair_id = req.params.repair_id;
-  console.log(repair_id);
-  const data = { operation: 'sql', sql: `SELECT repair_id FROM Mechanics.Repair WHERE repair_id = ${repair_id}` };
+  //console.log(repair_id);
+  const data = { operation: 'sql', sql: `SELECT repair_id FROM Mechanics.Repair WHERE repair_id = "${repair_id}"` };
     const config = {
         method: 'post',
         url: process.env.HARPERDB_URL,
@@ -1669,17 +1669,17 @@ app.get('/online/validaterepair/:repair_id', (req, res) => {
 
     axios(config)
         .then((response) => {
-            const data = response.data.length;
-            console.log(data);
+            const data = response.data;
+            console.log('Return repair_id: '+ data);
             res.json(data);
         })
         .catch((error) => {
             console.log(error);
         });
 });
-app.get('/online/validateemployee/:employee_id', (req, res) => {
+app.use('/online/validateemployee/:employee_id', (req, res) => {
   const employee_id = req.params.employee_id;
-  console.log(employee_id);
+  //console.log(employee_id);
 
   const data = { operation: 'sql', sql: `SELECT employee_id FROM Mechanics.Employee WHERE employee_id = "${employee_id}"` };
 
@@ -1696,13 +1696,16 @@ app.get('/online/validateemployee/:employee_id', (req, res) => {
     axios(config)
         .then((response) => {
             const data = response.data;
-            console.log(data.length);
+            const strdata = JSON.stringify(data);
+            console.log(data);
+            console.log(strdata);
             res.json(data);
         })
         .catch((error) => {
             console.log(error);
         });
 });
+
 
 
 const port = process.env.PORT || 5000;

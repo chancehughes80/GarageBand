@@ -38,11 +38,30 @@ function EmployeeRepair() {
     const validateRepair = (repair) =>{
       const url = 'http://127.0.0.1:5000/online/validaterepair/' + repair;
       return axios.get(url);
-    }
+    };
     const validateEmployee = (employee) =>{
       const url = 'http://127.0.0.1:5000/online/validateemployee/' + employee;
       return axios.get(url);
+    };
+
+    async function checkEmployee(employee){
+      return fetch('http://127.0.0.1:5000/online/validateemployee/' + employee, {
+        method: 'POST',
+        headers: {
+         'Content-Type': 'application/json'
+       },
+       body: JSON.stringify(employee)
+     })
+       .then(data => data.json())
+    };
+
+    const ce = async emp =>{
+        const test = await checkEmployee(emp);
+        return test;
     }
+
+
+
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []
@@ -52,12 +71,14 @@ function EmployeeRepair() {
         if(newData.repair_id === undefined){
           errorList.push("Please enter repair_id ")
         }
-        if(validateRepair(newData.repair_id) === 1){
+        if(validateRepair(newData.repair_id) != 1){
           errorList.push("Please enter valid repair id ")
         }
-        if(validateEmployee(newData.employee_id) === 1){
+        if(validateEmployee(newData.employee_id) != 1){
           errorList.push("Please enter valid employee id ")
         }
+        const tt = ce(newData.employee_id);
+        document.getElementById('errorlist').innerHTML=tt;
         const url = 'http://127.0.0.1:5000/online/employeerepair/add-employeerepair';
         if(errorList.length < 1){ //no error
           axios.post(url, newData)
@@ -74,13 +95,12 @@ function EmployeeRepair() {
             setIsError(true)
             resolve()
           })
+          window.location.reload(false);
         }else{
           setErrorMessages(errorList)
           setIsError(true)
           resolve()
         }
-        window.location.reload(false);
-
     }
 
     const handleRowDelete = (oldData, resolve) =>{
@@ -126,12 +146,12 @@ function EmployeeRepair() {
                 setIsError(true)
                 resolve()
             })
+            window.location.reload(false);
         }else{
             setErrorMessages(errorList)
             setIsError(true)
             resolve()
         }
-        window.location.reload(false);
     }
 
     return(
@@ -174,6 +194,7 @@ function EmployeeRepair() {
                         }}
                     />
                 </main>
+                <div id="errorlist"></div>
              </div>
          </Fragment>
     );

@@ -43,6 +43,7 @@ function CustomerVehicle() {
       getAPI();
   }, []);
 
+  //adds new row to the table from customer input
   const handleRowAdd = (newData, resolve) => {
       //validation
       let errorList = []
@@ -88,7 +89,7 @@ function CustomerVehicle() {
       window.location.reload(false);
 
   }
-
+//deletes a vehicle selected by the customer
   const handleRowDelete = (oldData, resolve) =>{
       const url = 'http://127.0.0.1:5000/online/vehicle/delete-vehicle/' + oldData.VIN;
       axios.delete(url)
@@ -106,7 +107,7 @@ function CustomerVehicle() {
          })
          window.location.reload(false);
     }
-
+//updates value in a row using values input by the customer
   const handleRowUpdate = (newData, oldData, resolve) => {
       //validation
       let errorList = []
@@ -152,7 +153,7 @@ function CustomerVehicle() {
       window.location.reload(false);
 }
 
-
+//creates the page seen by the customer
   return(
     <Fragment>
       <header>

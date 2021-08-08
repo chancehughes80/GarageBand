@@ -18,7 +18,7 @@ function Customers() {
   const [data, setData] = useState(null);
   const [isError, setIsError] = useState(false);
   const [errorMessages, setErrorMessages] = useState([])
-
+//connects the table on this page to the database
     useEffect(() => {
         const getAPI = () => {
             // Change this endpoint to whatever local or online address you have
@@ -38,7 +38,7 @@ function Customers() {
         };
         getAPI();
     }, []);
-    
+    //creases a new row in the table, checks for empty inputs
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []
@@ -84,7 +84,7 @@ function Customers() {
         window.location.reload(false);
 
     }
-
+//deletes a row from the table/database
     const handleRowDelete = (oldData, resolve) =>{
         const url = 'http://127.0.0.1:5000/online/customer/delete-customer/' + oldData.customer_id;
         axios.delete(url)
@@ -102,6 +102,7 @@ function Customers() {
            })
            window.location.reload(false);
       }
+    //updates a row with input from the user, checks for empty inputs
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []
@@ -146,7 +147,7 @@ function Customers() {
         }
         window.location.reload(false);
     }
-
+//creates the UI for the page and tables
     return(
       <Fragment>
         <header>

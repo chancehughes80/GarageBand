@@ -63,12 +63,12 @@ function RepairParts() {
             setIsError(true)
             resolve()
           })
+          window.location.reload(false);
         }else{
           setErrorMessages(errorList)
           setIsError(true)
           resolve()
         }
-        window.location.reload(false);
 
     }
 
@@ -115,12 +115,12 @@ function RepairParts() {
                 setIsError(true)
                 resolve()
             })
+            window.location.reload(false);
         }else{
             setErrorMessages(errorList)
             setIsError(true)
             resolve()
         }
-        window.location.reload(false);
     }
     return(
       <Fragment>

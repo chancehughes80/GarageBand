@@ -61,12 +61,12 @@ function Salary() {
             setIsError(true)
             resolve()
           })
+          window.location.reload(false);
         }else{
           setErrorMessages(errorList)
           setIsError(true)
           resolve()
         }
-        window.location.reload(false);
 
     }
     const handleRowDelete = (oldData, resolve) =>{
@@ -113,12 +113,12 @@ function Salary() {
                 setIsError(true)
                 resolve()
             })
+            window.location.reload(false);
         }else{
             setErrorMessages(errorList)
             setIsError(true)
             resolve()
         }
-        window.location.reload(false);
     }
 
     return(

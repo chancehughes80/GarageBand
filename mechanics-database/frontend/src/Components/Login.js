@@ -54,6 +54,7 @@ function Login({setToken}) {
       e.preventDefault();
       const test = await checkEmployee({username,password});
       var errors = '';
+      //Make sure the values are not undefined
       if((test[0] != undefined) && (password!=undefined) && (username!=undefined)){
         if (password == test[0].employee_password){
           const token = await loginEmployee(
@@ -73,6 +74,7 @@ function Login({setToken}) {
       e.preventDefault();
       const test = await checkUser({username,password});
       var errors = '';
+      //Make sure the values are not undefined
       if((test[0] != undefined) && (password!=undefined) && (username!=undefined)){
         if (password == test[0].customer_password){
           const token = await loginUser(

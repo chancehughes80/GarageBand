@@ -76,12 +76,12 @@ function Customers() {
             setIsError(true)
             resolve()
           })
+          window.location.reload(false);
         }else{
           setErrorMessages(errorList)
           setIsError(true)
           resolve()
         }
-        window.location.reload(false);
 
     }
 
@@ -139,12 +139,12 @@ function Customers() {
                 setIsError(true)
                 resolve()
             })
+            window.location.reload(false);
         }else{
             setErrorMessages(errorList)
             setIsError(true)
             resolve()
         }
-        window.location.reload(false);
     }
 
     return(

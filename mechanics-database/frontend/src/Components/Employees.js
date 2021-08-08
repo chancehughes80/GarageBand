@@ -38,7 +38,7 @@ function Employees() {
         getAPI();
 
     }, []);
-
+//adds a new row using input from the user; checks for empty inputs
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []
@@ -78,7 +78,7 @@ function Employees() {
         window.location.reload(false);
 
     }
-
+//deletes a row selected by the user
     const handleRowDelete = (oldData, resolve) =>{
         const url = 'http://127.0.0.1:5000/online/harperdb/delete-employee/' + oldData.employee_id;
         axios.delete(url)
@@ -96,7 +96,7 @@ function Employees() {
            })
            window.location.reload(false);
       }
-
+//updaters a row selected by the user with user input; checks for empty input
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []
@@ -135,6 +135,7 @@ function Employees() {
         }
         window.location.reload(false);
     }
+    //creates the UI and table styling for Employees page
     return(
       <Fragment>
         <header>

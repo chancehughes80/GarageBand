@@ -19,7 +19,7 @@ function CustomerRepair() {
     const [errorMessages, setErrorMessages] = useState([]);
     var aValue = localStorage.getItem('token');
     let str = aValue.substring(23,26);
-
+//connects the table on the page to the database
   useEffect(() => {
       const getAPI = () => {
           // Change this endpoint to whatever local or online address you have
@@ -39,6 +39,7 @@ function CustomerRepair() {
       };
       getAPI();
   }, []);
+  //creates the Vehicle Repair UI seen by the customer 
   return(
       <Fragment>
         <header>

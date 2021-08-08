@@ -2,16 +2,17 @@
 The Mechanics Database is a basic application used for the management of information regarding a mechanic garage. This application gives information on vehicles and customers that enter the garage. It also gives information on employees, repairs, and parts. This application allows employees to create, read, update, and delete all information regarding the database. Customers can view repair status and update their own personal and vehicle information.
 
 ## Setup
-1. Using the method of your choice Install the latest version of [Postgres](https://www.postgresql.org/download/macosx/), [Node.js](https://nodejs.org/en/download/package-manager/#windows) and [yarn](https://classic.yarnpkg.com/en/docs/install/#mac-stable)
+1. Using the method of your choice. Install the latest version of [Postgres](https://www.postgresql.org/download/macosx/), [Node.js](https://nodejs.org/en/download/package-manager/#windows) and [yarn](https://classic.yarnpkg.com/en/docs/install/#mac-stable)
+   *This package also depends on react. Please make sure you have it installed as well.
 2. Clone the repository
-3. Enter the root folder: ` cd mechanics-database`<br>
-In the mechanics-database folder you should see two folders, backend and frontend
-1. Start first with running the command: `yarn install` 
-4. Now enter into the backend folder: `cd backend` and run the command: `npm install`
+3. Enter the root folder: ` cd mechanics-database`
+   In the mechanics-database folder you should see two folders, 'backend' and 'frontend'
+4. Start first with running the command: `yarn install` 
+5. Now enter into the backend folder: `cd backend` and run the command: `npm install`
     * This ensures that the packages needed to run the login and backend api are installed.
-5. Now enter into the frontend folder and run the command: `yarn install`
+6. Now enter into the frontend folder and run the command: `yarn install`
     * This ensures what’s needed for the frontend is installed
-6. You are now ready to use the application
+7. You are now ready to use the application
 
 
 ## Running Locally and Testing:
@@ -49,7 +50,7 @@ In the mechanics-database folder you should see two folders, backend and fronten
     * To delete an entry simply click the delete button next to edit and confirm <img width="202" alt="Screen Shot 2021-08-07 at 8 21 33 PM" src="https://user-images.githubusercontent.com/70956807/128617769-9c0f8ac6-4eb1-4c94-a9a0-737cb7fb6971.png">
 4. Click the logout button in the navigation bar when done
 ### Customer Side 
-1. A customer sees a similar but more restricted view, showing information soley for them <img width="500" alt="Screen Shot 2021-08-07 at 8 25 45 PM" src="https://user-images.githubusercontent.com/70956807/128617834-a3a45ed3-5bfa-4b29-ae82-7e81d99186f4.png">
+1. A customer sees a similar but more restricted view, showing information solely for them <img width="500" alt="Screen Shot 2021-08-07 at 8 25 45 PM" src="https://user-images.githubusercontent.com/70956807/128617834-a3a45ed3-5bfa-4b29-ae82-7e81d99186f4.png">
 
 ### Remarks
 1. In case there are any errors with the start or login of the app, clear your cookies and/or delete the token found in localstorage

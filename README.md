@@ -34,7 +34,7 @@ In the mechanics-database folder you should see two folders, backend and fronten
     | 399         | guessit  |
     | 455         | airjordan|
 ### Employee Side
-1. Once logged in as an employee you'll be redirected to the employee home page where you'll be presented with the options to go to the Employee, Vehicle, Parts, Customer or Repair views either by clicking on their image or through the navigation bar <img width="500" alt="Screen Shot 2021-08-07 at 7 49 26 PM" src="https://user-images.githubusercontent.com/70956807/128617350-39983b52-d2b9-422b-a17b-a3abd37eed08.png">
+1. Once logged in as an employee you'll be redirected to the employee home page where you'll be presented with the options to go to the Employee, Vehicle, Parts, Customer or Repair views either by clicking on their image or through the navigation bar <br> <img width="500" alt="Screen Shot 2021-08-07 at 7 49 26 PM" src="https://user-images.githubusercontent.com/70956807/128617350-39983b52-d2b9-422b-a17b-a3abd37eed08.png">
 2. In each of these views, you'll see their corresponding information in tables, like so: <img width="500" alt="Screen Shot 2021-08-07 at 7 57 52 PM" src="https://user-images.githubusercontent.com/70956807/128617396-fd165d2a-7d2c-4c63-83e3-073d5be8ac69.png">
 3. Each of these tables function the same way, with the ability to search for specific entries, sort by the column categories, add new entries, update and delete
     * Search for entries with the search bar at the top right

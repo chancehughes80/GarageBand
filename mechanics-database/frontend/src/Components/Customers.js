@@ -76,12 +76,12 @@ function Customers() {
             setIsError(true)
             resolve()
           })
+          window.location.reload(false);
         }else{
           setErrorMessages(errorList)
           setIsError(true)
           resolve()
         }
-        window.location.reload(false);
 
     }
 //deletes a row from the table/database
@@ -140,12 +140,12 @@ function Customers() {
                 setIsError(true)
                 resolve()
             })
+            window.location.reload(false);
         }else{
             setErrorMessages(errorList)
             setIsError(true)
             resolve()
         }
-        window.location.reload(false);
     }
 //creates the UI for the page and tables
     return(

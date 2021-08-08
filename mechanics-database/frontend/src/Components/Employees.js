@@ -70,12 +70,12 @@ function Employees() {
             setIsError(true)
             resolve()
           })
+          window.location.reload(false);
         }else{
           setErrorMessages(errorList)
           setIsError(true)
           resolve()
         }
-        window.location.reload(false);
 
     }
 //deletes a row selected by the user
@@ -128,12 +128,12 @@ function Employees() {
                 setIsError(true)
                 resolve()
             })
+            window.location.reload(false);
         }else{
             setErrorMessages(errorList)
             setIsError(true)
             resolve()
         }
-        window.location.reload(false);
     }
     //creates the UI and table styling for Employees page
     return(

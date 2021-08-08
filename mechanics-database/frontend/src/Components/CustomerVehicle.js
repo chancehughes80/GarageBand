@@ -81,12 +81,12 @@ function CustomerVehicle() {
           setIsError(true)
           resolve()
           })
+          window.location.reload(false);
       }else{
           setErrorMessages(errorList)
           setIsError(true)
           resolve()
       }
-      window.location.reload(false);
 
   }
 //deletes a vehicle selected by the customer
@@ -145,12 +145,12 @@ function CustomerVehicle() {
               setIsError(true)
               resolve()
           })
+          window.location.reload(false);
       }else{
           setErrorMessages(errorList)
           setIsError(true)
           resolve()
       }
-      window.location.reload(false);
 }
 
 //creates the page seen by the customer

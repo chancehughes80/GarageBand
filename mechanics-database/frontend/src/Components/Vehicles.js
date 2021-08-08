@@ -51,33 +51,6 @@ function Vehicles() {
         getAPI();
     }, []);
 
-    const handleSubmit = () => {
-        setLoading(true);
-        setIsError(false);
-        const data = {
-          VIN: VIN,
-          model: model,
-          vehicle_year: vehicle_year,
-          color: color,
-          plate: plate,
-          customer_id: customer_id
-        }
-        axios.put('http://127.0.0.1:5000/online/vehicle/update-vehicle', data)
-          .then(res => {
-            setData(res.data);
-            setVIN('');
-            setModel('');
-            setYear('');
-            setColor('');
-            setPlate('');
-            setID('');
-            setLoading(false);
-          }).catch(err => {
-            setLoading(false);
-            setIsError(true);
-          });
-        }
-
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []
@@ -115,12 +88,12 @@ function Vehicles() {
             setIsError(true)
             resolve()
             })
+            window.location.reload(false);
         }else{
             setErrorMessages(errorList)
             setIsError(true)
             resolve()
         }
-        window.location.reload(false);
 
     }
 
@@ -179,12 +152,12 @@ function Vehicles() {
                 setIsError(true)
                 resolve()
             })
+            window.location.reload(false);
         }else{
             setErrorMessages(errorList)
             setIsError(true)
             resolve()
         }
-        window.location.reload(false);
     }
 
     return(

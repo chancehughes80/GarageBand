@@ -61,7 +61,7 @@ function EmployeeRepair() {
     }
 
 
-
+//adds new row to the table using input from the user; checks for empty inputs
     const handleRowAdd = (newData, resolve) => {
         //validation
         let errorList = []
@@ -101,7 +101,7 @@ function EmployeeRepair() {
           resolve()
         }
     }
-
+//deletes a row from the table of the user's choice
     const handleRowDelete = (oldData, resolve) =>{
         const url = 'http://127.0.0.1:5000/online/employeerepair/delete-employeerepair/' + oldData.serial_id;
         axios.delete(url)
@@ -119,7 +119,7 @@ function EmployeeRepair() {
            })
            window.location.reload(false);
       }
-
+//updates a row in the table using input frmo the customer; checks for empty inputs
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []
@@ -152,7 +152,7 @@ function EmployeeRepair() {
             resolve()
         }
     }
-
+//creates the UI for the page
     return(
         <Fragment>
             <div class="container">

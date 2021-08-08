@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
 
+//creates the customer navigation bar that appears at the top of the page on all customer pages
 function CustomerNavigation(props) {
   const logout = () => {
     localStorage.clear();

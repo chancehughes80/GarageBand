@@ -53,26 +53,37 @@ function Login({setToken}) {
   const handleEmployeeSubmit = async e => {
       e.preventDefault();
       const test = await checkEmployee({username,password});
-      console.log(test);
-      if (password == test[0].employee_password){
-        const token = await loginEmployee(
-        {username,
-        password}
-      );
-        setToken(token);
+      var errors = '';
+      if((test[0] != undefined) && (password!=undefined) && (username!=undefined)){
+        if (password == test[0].employee_password){
+          const token = await loginEmployee(
+          {username,
+          password}
+        );
+          setToken(token);
+        }
+      }else{
+        errors = errors + 'Incorrect name or password';
+        document.getElementById('errors1').innerHTML = errors;
+
       }
     };
 
   const handleCustomerSubmit = async e => {
       e.preventDefault();
       const test = await checkUser({username,password});
-      console.log(test);
-      if (password == test[0].customer_password){
-        const token = await loginUser(
-        {username,
-        password}
-      );
-        setToken(token);
+      var errors = '';
+      if((test[0] != undefined) && (password!=undefined) && (username!=undefined)){
+        if (password == test[0].customer_password){
+          const token = await loginUser(
+          {username,
+          password}
+        );
+          setToken(token);
+        }
+      }else{
+        errors = errors + 'Incorrect name or password';
+        document.getElementById('errors').innerHTML = errors;
       }
     };
 
@@ -94,6 +105,7 @@ function Login({setToken}) {
             <div>
               <button class="better-button" type="submit">Submit</button>
             </div>
+            <div id="errors1"></div>
           </form>
         </div>
         <div class="col-sm-1">
@@ -111,9 +123,9 @@ function Login({setToken}) {
               <input placeholder="Password" type="password" onChange={e => setPassword(e.target.value)}/>
             </label>
             <div>
-              <button class="better-button1" type="submit">Submit</button>
-              <a id="colored" class="better-button2">Register</a>
+              <button class="better-button" type="submit">Submit</button>
             </div>
+            <div id="errors"></div>
           </form>
         </div>
 

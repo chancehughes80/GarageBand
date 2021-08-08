@@ -3,6 +3,8 @@ import Car from "./Car1.png";
 import Repair from "./Repairs.png";
 import Customer from "./Customer.png";
 import './App.css';
+
+//Creates the customer home view that appears after customer login
 function CustomerHome() {
   return (
     <div className="home1">

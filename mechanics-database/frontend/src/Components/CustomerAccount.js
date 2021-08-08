@@ -3,6 +3,7 @@ import MaterialTable from 'material-table';
 import axios from 'axios';
 import './App.css';
 
+
 function CustomerAccount() {
     var columns = [
     { title: 'Customer ID', field: 'customer_id', editable: 'onAdd'},
@@ -40,7 +41,7 @@ function CustomerAccount() {
         };
         getAPI();
     }, []);
-    
+    //Updates row in a table
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
         let errorList = []

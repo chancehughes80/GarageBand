@@ -8,9 +8,12 @@ import useToken from './useToken';
 export default function App() {
   const { token, setToken } = useToken();
   
+  //checks if login info was entered (i.e. not null)
   if(!token) {
     return <Login setToken={setToken} />
   }
+    
+  //gives employee login access to employee pages
   if(token == 'employeetoken'){
     return (
       <div class="App">
@@ -28,6 +31,7 @@ export default function App() {
       </div>
     );
   }
+  //gives customer login access to customer pages
   else if(token.includes('customertoken')){
     return(
       <div class="App">

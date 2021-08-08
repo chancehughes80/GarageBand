@@ -3,6 +3,7 @@ The Mechanics Database is a basic application used for the management of informa
 
 ## Setup
 1. Using the method of your choice. Install the latest version of [Postgres](https://www.postgresql.org/download/macosx/), [Node.js](https://nodejs.org/en/download/package-manager/#windows) and [yarn](https://classic.yarnpkg.com/en/docs/install/#mac-stable)
+   
    *This package also depends on react. Please make sure you have it installed as well.
 2. Clone the repository
 3. Enter the root folder: ` cd mechanics-database`

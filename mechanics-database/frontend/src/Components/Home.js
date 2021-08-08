@@ -5,6 +5,7 @@ import cParts from "./Parts.png";
 import Repair from "./Repairs.png";
 import Customer from "./Customer.png";
 import './App.css';
+//creates the home UI seen by the employee after login
 function Home() {
   return (
     <div className="home">
